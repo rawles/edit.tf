@@ -1,8 +1,9 @@
 This is a teletext editor implemented in JavaScript, so that people now 
 need no more than a JavaScript-enabled browser in order to create their 
 own teletext frames. It was written for the 
-[teletext40](http://teletext40.com/100/1) project, but may be used as a 
-general-purpose editor.
+[teletext40](http://teletext40.com/100/1) project and
+you can try the editor out at http://editor.teletext40.com/ - however,
+it can also be used as a general-purpose editor.
 
 Most of the functionality of the editor is accessed through keystrokes, 
 shown in a table in the editor. Pressing escape takes you into command 
@@ -24,3 +25,4 @@ The source code is commented throughout and licenced under the GNU
 General Public Licence v3.0, with additional requirements concerning 
 minimisation of the source code. See the notice for more details. Bug 
 reports and pull requests are welcome.
+
