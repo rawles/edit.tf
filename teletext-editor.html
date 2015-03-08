@@ -692,8 +692,8 @@ function load_from_hash() {
 		if ( isNaN(metadata) ) { metadata = 0; }
 
 		var cset_reqd = metadata % 8;
-		var blackfg = 0; 
-		if ( metadata - cset_reqd > 0 ) { blackfg = 1; }
+		blackfg = 0; 
+		if ( metadata >= 8 ) { blackfg = 1; }
 
 		// A change of character set requires a reload of the font.
 		if ( cset_reqd >= 0 && cset_reqd < 8 && cset != cset_reqd ) { 
@@ -745,7 +745,12 @@ function load_from_hash() {
 // puts it there.
 function save_to_hash() { 
 	var encoding = "";
-	encoding += ( ( blackfg * 8 ) + cset);
+
+	// Construct the metadata as described above.
+	var metadata = cset;
+	if ( blackfg != 0 ) { metadata += 8; }
+
+	encoding += metadata.toString(16);
 	encoding += ":";
 	for (r=0; r<24; r++) {
 		for (c=0; c<40; c++) {
