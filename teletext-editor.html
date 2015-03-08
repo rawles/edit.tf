@@ -86,6 +86,8 @@ div#b {
 <th>&nbsp;</th>
 </tr>
 
+<tr><td class="keys">k</td><td>black text</td>
+	<td>black graphics</td><td class="keys">K</td></tr>
 <tr><td class="keys">r</td><td>red text</td>
 	<td>red graphics</td><td class="keys">R</td></tr>
 <tr><td class="keys">g</td><td>green text</td>
@@ -101,6 +103,8 @@ div#b {
 <tr><td class="keys">w</td><td>white text</td>
 	<td>white graphics</td><td class="keys">W</td></tr>
 
+<tr><td class="keys">a</td><td>ignore black fg</td>
+	<td>allow black fg</td><td class="keys">A</td></tr>
 <tr><td class="keys">d</td><td>normal height</td>
 	<td>double height</td><td class="keys">D</td></tr>
 <tr><td class="keys">f</td><td>steady</td>
@@ -180,47 +184,49 @@ div#b {
 
 // These mostly define the state of the frame or the editor UI.
 
-            	// Descriptions refer to (x,y), ie row y, column x.
+            	 // Descriptions refer to (x,y), ie row y, column x.
 
-var cc = [];	// cc[y][x] = the character code (0..127) at (x,y).
+var cc = [];	 // cc[y][x] = the character code (0..127) at (x,y).
 
-var fg = [];	// fg[y][x] = foreground colour (0..7) at (x,y).
+var fg = [];	 // fg[y][x] = foreground colour (0..7) at (x,y).
 
-var bg = [];	// bg[y][x] = background colour (0..7) at (x,y).
+var bg = [];	 // bg[y][x] = background colour (0..7) at (x,y).
 
-var tg = [];	// text or graphics at (x,y)?
-            	// tg[y][x] = 0 if text, 1 if graphics.
+var tg = [];	 // text or graphics at (x,y)?
+            	 // tg[y][x] = 0 if text, 1 if graphics.
 
-var cs = [];	// contiguous or separated graphics at (x,y)?
-            	// cs[y][x] = 0 if contiguous, 1 if separated.
+var cs = [];	 // contiguous or separated graphics at (x,y)?
+            	 // cs[y][x] = 0 if contiguous, 1 if separated.
 
-var nd = [];	// normal or double height text at (x,y)?
-            	// nd[y][x] = 0 if normal, 1 if double,
-            	//   2 if normal but has been reset from double.
+var nd = [];	 // normal or double height text at (x,y)?
+            	 // nd[y][x] = 0 if normal, 1 if double,
+            	 //   2 if normal but has been reset from double.
 
-var hg = [];	// has held graphics been enabled for (x,y)?
-            	// hg[y][x] = 0 if held graphics disabled, 1 if enabled.
+var hg = [];	 // has held graphics been enabled for (x,y)?
+            	 // hg[y][x] = 0 if held graphics disabled, 1 if enabled.
 
-var sc = [];	// is the character at (x,y) shown or concealed?
-            	// sc[y][x] = 0 if shown, 1 if concealed.
+var sc = [];	 // is the character at (x,y) shown or concealed?
+            	 // sc[y][x] = 0 if shown, 1 if concealed.
 
-var sf = [];	// is the character at (x,y) steady or flashing?
-             	// sf[y][x] = 0 if steady, 1 if flashing.
+var sf = [];	 // is the character at (x,y) steady or flashing?
+             	 // sf[y][x] = 0 if steady, 1 if flashing.
 
-var fs = [];	// is row y the first or second row of double height?
-            	// fs[y] = 0 if unassigned, 1 if first, 2 if second.
+var fs = [];	 // is row y the first or second row of double height?
+            	 // fs[y] = 0 if unassigned, 1 if first, 2 if second.
 
-var font = [];	// font[c][y] = integer describing the bit pattern for
-				// character c, row y.
+var font = [];	 // font[c][y] = integer describing the bit pattern for
+			     // character c, row y.
 
-var curx = 0;	// the column at which the cursor is currently.
-var cury = 0;	// the row at which the cursor is currently.
+var curx = 0;	 // the column at which the cursor is currently.
+var cury = 0;	 // the row at which the cursor is currently.
 
-var escape = 0;	// has escape been pressed? 0 if no, 1 if yes.
-var showcc = 0; // are we showing control characters? 0 if no, 1 if yes.
-var cset = 0;	// the current character set (1..8).
-var reveal = 0; // is reveal on? 0 if no, 1 if yes.
-var grid = 0;	// is the grid shown? 0 if no, 1 if yes.
+var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
+var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
+var cset = 0;	 // the current character set (1..8).
+var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
+var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
+var blackfg = 0; // do we permit the use of black foreground (0x0 and
+				 // 0x10) control codes? 0 if not, 1 if so.
 
 // Initialises the state of the screen.
 function init_state() { 
@@ -263,6 +269,15 @@ function plot_cursor(ctx) {
 function show_grid(newgrid) {
 	grid = newgrid;
 	render(0, 0, 40, 24);
+}
+
+// Changes whether we allow black foreground.
+function set_blackfg(newblackfg) { 
+	blackfg = newblackfg;
+
+	// We have to do a full redraw because the *meaning* of 
+	// some control codes have changed!
+	redraw();
 }
 
 // Enables or disables the display of control codes and
@@ -665,10 +680,19 @@ function load_from_hash() {
 		// The metadata is here, so split it out.
 		var parts = hashstring.split(":");
 
+		// metadata is one nybble. The most significant bit is 
+		// whether we're enabling black foreground. The three
+		// least significant bits describe the character set we're
+		// using.
+
 		// Extract the base-10 integer, assuming 0 (English) if it
 		// turns out not to make sense.
-		var cset_reqd = parseInt(parts[0], 10);
-		if ( isNaN(cset_reqd) ) { cset_reqd = 0; }
+		var metadata = parseInt(parts[0], 16);
+		if ( isNaN(metadata) ) { metadata = 0; }
+
+		var cset_reqd = metadata % 8;
+		var blackfg = 0; 
+		if ( metadata - cset_reqd > 0 ) { blackfg = 1; }
 
 		// A change of character set requires a reload of the font.
 		if ( cset_reqd >= 0 && cset_reqd < 8 && cset != cset_reqd ) { 
@@ -720,8 +744,7 @@ function load_from_hash() {
 // puts it there.
 function save_to_hash() { 
 	var encoding = "";
-	var cset_write = cset;
-	encoding += cset_write;
+	encoding += ( ( blackfg * 8 ) + cset);
 	encoding += ":";
 	for (r=0; r<24; r++) {
 		for (c=0; c<40; c++) {
@@ -879,8 +902,8 @@ function draw_status_bar() {
 	// is reveal on or off?
 	ctx.fillText(reveal==0?"No Rev.":"Reveal", offset+(8.75*spacing), 494);
 
-	// finally, indicate if we're in the escape mode.
-	if ( escape == 1 ) { ctx.fillText("ESC", 440, 494); }
+	// Are we allowing 0x0 chars?
+	ctx.fillText(blackfg==0?"No bfg":"bfg", offset+(10*spacing), 494)
 }
 
 ////////////////////
@@ -935,6 +958,7 @@ function keypress(event) {
 		var matched = 0; var placed_code = -1;
 
 		// First, the colours...
+		if ( blackfg != 0 && code == 107 ) { placed_code = 0; }  // blac[k]
 		if ( code == 114 ) { placed_code = 1; }  // [r]ed
 		if ( code == 103 ) { placed_code = 2; }  // [g]reen
 		if ( code == 121 ) { placed_code = 3; }  // [y]ellow
@@ -943,6 +967,7 @@ function keypress(event) {
 		if ( code == 99 )  { placed_code = 6; }  // [c]yan
 		if ( code == 119 ) { placed_code = 7; }  // [w]hite
 
+		if ( blackfg != 0 && code == 82 )  { placed_code = 16; } // Blac[K]
 		if ( code == 82 )  { placed_code = 17; } // [R]ed
 		if ( code == 71 )  { placed_code = 18; } // [G]reen
 		if ( code == 89 )  { placed_code = 19; } // [Y]ellow
@@ -950,6 +975,10 @@ function keypress(event) {
 		if ( code == 77 )  { placed_code = 21; } // [M]agenta
 		if ( code == 67 )  { placed_code = 22; } // [C]yan
 		if ( code == 87 )  { placed_code = 23; } // [W]hite
+
+		// A = allow or disallow black foreground
+		if ( code == 65 ) { set_blackfg(1); matched = 1; }
+		if ( code == 97 ) { set_blackfg(0); matched = 1; }
 
 		// Q = hide and show control codes
 		if ( code == 81 ) { show_codes(1); matched = 1; }
@@ -1331,7 +1360,6 @@ function placeable(code) {
 // and 1 where it has been removed.
 function adjustdh(x,y,andrender,removal) { 
 
-
 	// We start by considering the state of the row above.
 	var above = 0;
 	if ( y > 0 ) { above = fs[y-1]; } 
@@ -1415,6 +1443,12 @@ function place_code(x,y,code,andrender) {
 
 		cc[y][x] = code;
 
+		// Is black foregrounding allowed? If not, we only
+		// place the character, rather than letting it take any
+		// effect.
+		if ( blackfg == 0 && code == 0 ) { return; } 
+		if ( blackfg == 0 && code == 16 ) { return; } 
+
 		// Determine the colour we're changing to.
 		var col = code;
 		var gfx = 0;
@@ -1474,7 +1508,9 @@ function place_code(x,y,code,andrender) {
 			// we're no longer affecting the concealing of text.
 			if ( ( codehere >= 1 && codehere <= 7 )
 				|| ( codehere >= 16 && codehere <= 23)
-				|| ( codehere == 24 ) ) {
+				|| ( codehere == 24 ) 
+				|| ( blackfg != 0 && codehere == 0 ) 
+				|| ( blackfg != 0 && codehere == 16 ) ) {
 				sc_affected = -1;
 				}
 
@@ -1503,7 +1539,9 @@ function place_code(x,y,code,andrender) {
 
 			// Did another text or graphics code take over?
 			if ( ( codehere >= 1 && codehere <= 7)
-			|| ( codehere >= 17 && codehere <= 23) ) {
+			|| ( codehere >= 17 && codehere <= 23) 
+			|| ( blackfg != 0 && codehere == 0 )
+			|| ( blackfg != 0 && codehere == 16 ) ) {
 				fg_affected = -1;
 				tg_affected = -1;
 			}
@@ -1662,8 +1700,10 @@ function place_code(x,y,code,andrender) {
 
 			// Conceal is cancelled by a text or mosaic colour
 			// code.
-			if ( ( cc[y][c] >= 0 && cc[y][c] < 8 )
-			|| ( cc[y][c] >= 16 && cc[y][c] < 24 ) ) { 
+			if ( ( cc[y][c] > 0 && cc[y][c] < 8 )
+			|| ( cc[y][c] > 16 && cc[y][c] < 24 ) 
+			|| ( blackfg != 0 && cc[y][c] == 0 )
+			|| ( blackfg != 0 && cc[y][c] == 16 ) ) { 
 				limit = c; break;
 			}
 			// If another conceal character is encountered, then 
@@ -1741,13 +1781,15 @@ function place_code(x,y,code,andrender) {
 
 // Handles removal of a character code at (x,y), and, if andrender
 // is non-zero, renders the characters it affects.
-function check_for_remove_code(x,y,andrender) {  //++++
+function check_for_remove_code(x,y,andrender) {
 
 	var code = cc[y][x];
 
 	// The first case is that we're deleting a colour code.
 	if ( ( code >= 1 && code <= 7 )
-		|| ( code >= 17 && code <= 23 ) ) {
+		|| ( code >= 17 && code <= 23 ) 
+		|| ( blackfg != 0 && code == 0 )
+		|| ( blackfg != 0 && code == 16 ) ) {
 
 		// The character in (x,y) will inherit the attributes
 		// of the character before it. However, foreground 
@@ -1795,6 +1837,8 @@ function check_for_remove_code(x,y,andrender) {  //++++
 
 			if ( ( codehere >= 1 && codehere <= 7 )
 				|| ( codehere >= 17 && codehere <= 23)
+				|| ( blackfg != 0 && codehere == 0 ) 
+				|| ( blackfg != 0 && codehere == 16 ) 
 				|| ( codehere == 24 ) ) {
 				sc_affected = -1;
 				}
@@ -1814,7 +1858,8 @@ function check_for_remove_code(x,y,andrender) {  //++++
 			if ( tg_affected > -1 && latest_gfx < c ) { latest_gfx = c; }
 
 			// Now, set-after attributes
-			if ( ( codehere >= 1 && codehere <= 7 ) || ( codehere >= 17 && codehere <= 23 ) ) {
+			if ( ( codehere >= 1 && codehere <= 7 ) || ( codehere >= 17 && codehere <= 23 )
+				|| ( blackfg != 0 && codehere == 0 ) || ( blackfg != 0 && codehere == 16 ) ) {
 				fg_affected = -1; // another code took over
 				tg_affected = -1;
 			}
@@ -1967,7 +2012,9 @@ function check_for_remove_code(x,y,andrender) {  //++++
 		var limit = 40;
 		for ( var c = x + 1; c < 40; c++ ) { 
 			if ( ( cc[y][c] > 0 && cc[y][c] < 8 )
-			|| ( cc[y][c] > 16 && cc[y][c] < 24 ) ) { 
+			|| ( cc[y][c] > 16 && cc[y][c] < 24 ) 
+			|| ( blackfg != 0 && cc[y][c] == 0 )
+			|| ( blackfg != 0 && cc[y][c] == 16 ) ) { 
 				// text or graphics character has been found.
 				limit = c+1; break;
 			}
@@ -2233,10 +2280,14 @@ function render(x,y,w,h) {
 							// graphics mode:
 							if ( cc[py][px] > 16 && cc[py][px] <= 23
 								&& tg[py][px] == 0 ) { break; } 
+							if ( blackfg != 0 && cc[py][px] == 16
+								&& tg[py][px] == 0 ) { break; } 
 
 							// A text control character switches from graphics
 							// to text mode:
-							if ( cc[py][px] > 0  && cc[py][px] <= 7 
+							if ( cc[py][px] > 0 && cc[py][px] <= 7 
+								&& tg[py][px] == 1 ) { break; }
+							if ( blackfg != 0 && cc[py][px] == 0 
 								&& tg[py][px] == 1 ) { break; }
 
 							// A normal-height control character switches
@@ -2491,9 +2542,13 @@ function gfx_change(x1,y1,x2,y2) {
 		// A graphics control character has switched from text 
 		if ( cc[py][px] > 16 && cc[py][px] <= 23 && tg[py][px] == 0 ) {
 			state = 2; } 
+		if ( blackfg != 0 && cc[py][px] == 16 && tg[py][px] == 0 ) {
+			state = 2; } 
 
 		// A text control character has switched from graphics
-		if ( cc[py][px] > 0  && cc[py][px] <= 7  && tg[py][px] == 1 ) {
+		if ( cc[py][px] > 0 && cc[py][px] <= 7 && tg[py][px] == 1 ) {
+			state = 2; } 
+		if ( blackfg != 0 && cc[py][px] == 0 && tg[py][px] == 1 ) {
 			state = 2; } 
 
 		// A normal height control character has switched from double height.
@@ -2535,18 +2590,22 @@ function gfx_change(x1,y1,x2,y2) {
 		// is different - this time we just render the cell and return.
 		if ( cc[py][px] > 16 && cc[py][px] <= 23 && tg[py][px] == 0 ) {
 			render(px, py, 1, 1); break; } 
-		if ( cc[py][px] > 0  && cc[py][px] <= 7  && tg[py][px] == 1 ) {
-			render(px, py, 1, 1, 4); break; } 
+		if ( blackfg != 0 && cc[py][px] == 16 && tg[py][px] == 0 ) {
+			render(px, py, 1, 1); break; } 
+		if ( cc[py][px] > 0 && cc[py][px] <= 7 && tg[py][px] == 1 ) {
+			render(px, py, 1, 1); break; } 
+		if ( blackfg != 0 && cc[py][px] == 0 && tg[py][px] == 1 ) {
+			render(px, py, 1, 1); break; } 
 		if ( px > 0 && cc[py][px] == 12 && nd[py][px-1] == 1 ) {
-			render(px, py, 1, 1, 4); break; }
+			render(px, py, 1, 1); break; }
 		if ( cc[py][px] == 13 && nd[py][px] == 0 ) {
-			render(px, py, 1, 1, 4); break; }
+			render(px, py, 1, 1); break; }
 
 		// If none of these applied, the change would have affected
 		// this cell, providing held graphics is on and control codes
 		// are not being shown, so we re-render.
 		if ( cc[py][px] < 32 && showcc == 0 && hg[py][px] > 0 ) {
-			render(px, py, 1, 1, 4);
+			render(px, py, 1, 1);
 		} 
 
 		// And continue until we're finished.
