@@ -309,6 +309,11 @@ function delete_row(r) {
 		}
 	}
 
+	// Clear the bottom row.
+	for ( var x = 0; x < 40; x++ ) { 
+		clear_char(x,23)
+	}
+
 	// We may have deleted a double height character, so
 	// we need may need to adjust for this.
 	adjustdh_fullscreen(0);
