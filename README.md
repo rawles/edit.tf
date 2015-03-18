@@ -21,12 +21,13 @@ In the URL, the nybble before the colon describes the character set the
 page is encoded in (least significant three bytes) and whether the page 
 is intended to be rendered with black foreground colours enabled (the 
 most significant bit enabled if it is). The 1,920 (!) hexadecimal digits 
-after the colon are such that the byte for row r and column c (both 
+after the colon are such that the byte for row _r_ and column _c_ (both 
 zero-indexed) is described by the two hex digits starting at position 
-(80r+2c).
+_(80r+2c)_.
 
 The source code is commented throughout and licenced under the GNU 
 General Public Licence v3.0, with additional requirements concerning 
 minimisation of the source code. See the notice for more details. Bug 
-reports and pull requests are welcome.
-
+reports and pull requests are welcome. If you would like to contribute
+but cannot program, documentation and tutorials would be very welcome.
+If you're interested, please comment on issue #3.
