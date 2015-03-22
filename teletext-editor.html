@@ -666,6 +666,14 @@ function init_mouse() {
 // help us load from it and save to it. This should be very cheap
 // so while we could compress and decompress, we don't need to.
 
+// The URL contains a base-64-encoded sequence of bits. The encoding
+// is standard 'base64url' with URL and Filename Safe Alphabet (RFC
+// 4648 §5 'Table 2: The "URL and Filename safe" Base 64 Alphabet').
+// After decoding, the seven-bit character code for column c and row
+// r appears at bit positions (280r+7c) to (280r+7c+6), the most
+// significant bit appearing first. This gives hash strings of 'only'
+// 1122 characters.
+
 // Loads data from the hash into the frame.
 function load_from_hash() { 
 	
@@ -706,34 +714,94 @@ function load_from_hash() {
 		hashstring = parts[1];
 	}
 
-	// The alphabet of symbols!
-	var hexdigits = "0123456789abcdef";
+	// We may be dealing with old hexadecimal format, in which the
+	// 1920 hexadecimal digits after the colon are such that the
+	// byte for row r and column c (both zero-indexed) is described
+	// by the two hex digits starting at position 80r+2c. Base-64
+	// is the new format. If we get a URL in the hexadecimal format
+	// the editor will convert it.
 
-	// Iterate through each row and each column in that row.
-	for ( var r = 0; r < 24; r++) {
+	if ( hashstring.length == 1920 ) { 
+		// The alphabet of symbols!
+		var hexdigits = "0123456789abcdef";
 
-		// It's a good test to do this backwards!
-		for ( var c = 39 ; c >= 0; c--) {
+		// Iterate through each row and each column in that row.
+		for ( var r = 0; r < 24; r++) {
 
-			// Default to a space.
-			cc[r][c] = 32;
+			// It's a good test to do this backwards!
+			for ( var c = 39 ; c >= 0; c--) {
 
-			// The characte offset for this value is as follows:
-			var offset = 2 * ( ( r * 40 ) + c );
+				// Default to a space.
+				cc[r][c] = 32;
 
-			// If the data is here, turn it into an integer between 0 and
-			// 127, and set the cc-array with that code.
-			// If it's a control character, place it, so the attributes update.
-			if ( offset + 1 < hashstring.length ) { 
-				var hv1 = hexdigits.indexOf(hashstring.substr(offset, 1));
-				var hv2 = hexdigits.indexOf(hashstring.substr(offset + 1, 1));
-				if ( hv1 > -1 && hv2 > -1 ) { 
-					var newcode = ( ( hv1 * 16 ) + hv2 ) % 128;
-					if ( placeable(newcode) == 1 ) {
-						place_code(c, r, newcode, 0);
-					} else {
-						cc[r][c] = newcode;
+				// The characte offset for this value is as follows:
+				var offset = 2 * ( ( r * 40 ) + c );
+
+				// If the data is here, turn it into an integer between 0 and
+				// 127, and set the cc-array with that code.
+				// If it's a control character, place it, so the attributes update.
+				if ( offset + 1 < hashstring.length ) { 
+					var hv1 = hexdigits.indexOf(hashstring.substr(offset, 1));
+					var hv2 = hexdigits.indexOf(hashstring.substr(offset + 1, 1));
+					if ( hv1 > -1 && hv2 > -1 ) { 
+						var newcode = ( ( hv1 * 16 ) + hv2 ) % 128;
+						if ( placeable(newcode) == 1 ) {
+							place_code(c, r, newcode, 0);
+						} else {
+							cc[r][c] = newcode;
+						}
 					}
+				}
+			}
+		}
+	}
+
+	// This block deals with the new base 64 format.
+	if ( hashstring.length == 1120 ) {
+
+		// As we scan across the hashstring, we keep track of the
+		// code for the current character cell we're writing into.
+		var currentcode = 0;
+
+		// p is the position in the string.
+		for ( var p = 0; p < 1120; p++ ) {
+			var pc = hashstring.charAt(p);
+			var pc_dec = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+				.indexOf(hashstring.charAt(p));
+
+			// b is the bit in the 6-bit base-64 character.
+			for ( var b = 0; b < 6; b++ ) {
+
+				// The current bit posiiton in the character being
+				// written to.
+				var charbit = ( 6*p + b ) % 7;
+
+				// The bit value (set or unset) of the bit we're 
+				// reading from.
+				var b64bit = pc_dec & ( 1 << ( 5 - b ) ); 
+				if ( b64bit > 0 ) { b64bit = 1; }
+
+				// Update the current code.
+				currentcode |= b64bit << ( 6 - charbit );
+
+				// If we've reached the end of this character cell
+				// and it's the last bit in the character we're 
+				// writing to, set the character code or place the
+				// code.
+				if ( charbit == 6 ) { 
+
+					// Work out the cell to write to and put it there.
+					var charnum = ( ( 6*p + b ) - charbit ) / 7;
+					var c = charnum % 40;
+					var r = (charnum - c) / 40;
+					if ( placeable(currentcode) == 1 ) {
+						place_code(c, r, currentcode, 0);
+					} else {
+						cc[r][c] = currentcode;
+					}
+
+					// Reset for next time.
+					currentcode = 0;
 				}
 			}
 		}
@@ -749,15 +817,36 @@ function save_to_hash() {
 	// Construct the metadata as described above.
 	var metadata = cset;
 	if ( blackfg != 0 ) { metadata += 8; }
-
 	encoding += metadata.toString(16);
 	encoding += ":";
-	for (r=0; r<24; r++) {
-		for (c=0; c<40; c++) {
-			var code = cc[r][c];
-			if ( code < 16 ) { encoding += "0"; } 
-			encoding += code.toString(16);
+
+	// Construct a base-64 array by iterating over each character
+	// in the frame.
+	var b64 = [];
+	for ( var r=0; r<24; r++ ) {
+		for ( var c=0; c<40; c++ ) {
+			for ( var b=0; b<7; b++ ) {
+
+				// How many bits into the frame information we
+				// are.
+				var framebit = 7 * (( r * 40 ) + c) + b; 
+
+				// Work out the position of the character in the 
+				// base-64 encoding and the bit in that position.
+				var b64bitoffset = framebit % 6;
+				var b64charoffset = ( framebit - b64bitoffset ) / 6;
+
+				// Read a bit and write a bit.
+				var bitval = cc[r][c] & ( 1 << ( 6 - b ));
+				if ( bitval > 0 ) { bitval = 1; }
+				b64[b64charoffset] |= bitval << ( 5 - b64bitoffset );
+			}
 		}
+	}
+
+	// Encode bit-for-bit.
+	for ( var i = 0; i < 1120; i++ ) {
+		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
 	window.location.hash = encoding;
 }

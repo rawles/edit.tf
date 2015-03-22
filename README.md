@@ -20,10 +20,13 @@ email the URL to others.
 In the URL, the nybble before the colon describes the character set the 
 page is encoded in (least significant three bytes) and whether the page 
 is intended to be rendered with black foreground colours enabled (the 
-most significant bit enabled if it is). The 1,920 (!) hexadecimal digits 
-after the colon are such that the byte for row _r_ and column _c_ (both 
-zero-indexed) is described by the two hex digits starting at position 
-_(80r+2c)_.
+most significant bit enabled if it is). The part of the URL after the
+colon contains a base-64-encoded sequence of bits, amounting to 1120
+base 64 digits. The encoding is standard 'base64url' with URL and Filename
+Safe Alphabet (RFC 4648 §5 'Table 2: The "URL and Filename safe" Base 64
+Alphabet'). After decoding, the seven-bit character code for column _c_
+and row _r_ appears at bit positions _280r+7c_ to _280r+7c+6_, the most
+significant bit appearing first. 
 
 The source code is commented throughout and licenced under the GNU 
 General Public Licence v3.0, with additional requirements concerning 
