@@ -1037,6 +1037,10 @@ function keypress(event) {
 	// Code 0 means there was simply no keypress.
 	if ( code == 0 ) { return; }
 
+	// On Internet Explorer, ESC key triggers keypress too,
+	// so return since we've already handled ESC in keydown
+	if ( code == 27 ) { return; }
+
 	// Stop Firefox bringing up a search box when the apostrophe or 
 	// slash key is pressed.
 	if ( code == 39 ) { event.preventDefault(); }
