@@ -9,7 +9,7 @@ it also works as a general-purpose editor.
 
 Most of the functionality of the editor is accessed through key
 sequences beginning with the escape key. They are summarised in  
-in a table to the right of the the editor.
+a table to the right of the the editor. 
 Pressing the escape key takes you into command 
 mode, in which the status bar is coloured yellow, and then typing a 
 (possibly shifted) letter will insert a control character or perform 
@@ -50,3 +50,13 @@ If you're interested, please comment on issue #3.
 For IRC support, try the channel ##teletext on Freenode. If
 you don't have an IRC client installed, it may be more convenient to
 [chat using your browser](https://webchat.freenode.net/?channels=%23%23teletext&prompt=1).
+
+## Related links
+
+* Dan Farrimond has written a
+  [ten-minute tutorial](http://teletextart.co.uk/teletext40-editor-10-minute-tutorial/)
+  which is a great quick-start guide to using the editor.
+* Rob of the
+  [http://www.teletext.org.uk/](Teletext Preservation project) has contributed a
+  [test frame](http://editor.teletext40.com/#0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAa8WrVq3Jl2ZemVB00aeaDnww48qFAgQIECBAgQIECBAgQIBpH__Qf_6D-vXoP3__9Qf__9AgQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaRQL_69Ag__PiD_9-fEH___QIECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkUCD-gQIP_z4g2fPj9Ag-IECBAgQIECBAgQIECBAgQIECAaS________________________6BAgQIECBAgQIECBAgQIBpH_____________________-gQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaR____-vFmTEESfOi_______oECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkf_____________________6BAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAg)
+  for proper double-height handling.
