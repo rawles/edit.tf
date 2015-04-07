@@ -1396,7 +1396,7 @@ function cursor_bs() {
 
 	// If this is in a graphics bit, it may affect held graphics
 	// later on. (e.g. bs over graphics part)
-	gfx_change(curx,cury,curx,cury,"bs");
+	gfx_change(curx,cury,curx,cury);
 
 }
 
@@ -2356,8 +2356,8 @@ function render(x,y,w,h) {
 						// isn't a control character that is ignored,
 						// and this isn't concealed. We need to substitute
 						// held graphics here. At the moment this involves
-						// searching back for the most recent (in top-to-
-						// bottom, left-to-right order). We search for a 
+						// searching back for the most recent (in
+						// left-to-right order). We search for a 
 						// cell (copyfromx, copyfromy) which satisfies this.
 						var copyfromx = -1;
 						var copyfromy = -1;
@@ -2367,10 +2367,7 @@ function render(x,y,w,h) {
 						var px = c; px--;
 						var py = r;
 
-						// Have we searched back over a line.
-						if ( px < 0 ) { px += 40; py--; }
-
-						while ( px >= 0 && py >= 0 ) {
+						while ( px >= 0 ) {
 
 							// Transitions reset the held graphics character
 							// to a space:
@@ -2410,7 +2407,7 @@ function render(x,y,w,h) {
 
 							// If we haven't found it so far, step back a
 							// character and try again.
-							px--; if ( px < 0 ) { px += 40; py--; }
+							px--;
 						}
 
 						// If nothing was found, just use a space, otherwise
@@ -2681,8 +2678,7 @@ function gfx_change(x1,y1,x2,y2) {
 	var py = y2; 
 	var px = x2 + 1;
 
-	if ( px >= 40 ) { py++; px = 0; }
-	while ( px < 40 && py < 24 ) {
+	while ( px < 40 ) { 
 
 		// We need to keep checking whether the graphic character has
 		// changed. It's the same process as above, except the action
@@ -2709,7 +2705,6 @@ function gfx_change(x1,y1,x2,y2) {
 
 		// And continue until we're finished.
 		px++; 
-		if ( px > 39 ) { px = 0; py++; } 
 	}
 }
 
