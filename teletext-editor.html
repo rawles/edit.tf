@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>editor.teletext40.com</title>
+<title>teletext-editor</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
 <style type="text/css">
 body { 
@@ -977,7 +977,10 @@ function draw_status_bar() {
 	ctx.fillText(sc[cury][curx]==0?"shw":"hid", offset+(5.25*spacing), 494);
 
 	// normal or double height?
-	ctx.fillText(nd[cury][curx]==0?"norm":"dbl", offset+(6*spacing), 494);
+	var dhname = "norm";
+	if ( nd[cury][curx] == 1 ) { dhname = "dbl"; } 
+	if ( nd[cury][curx] == 2 ) { dhname = "nor*"; } 
+	ctx.fillText(dhname, offset+(6*spacing), 494);
 
 	// steady or flash?
 	ctx.fillText(sf[cury][curx]==0?"ste":"flash", offset+(6.75*spacing), 494);
@@ -1725,9 +1728,13 @@ function place_code(x,y,code,andrender) {
 
 		var limit = 40;
 		for ( var c = x + 1; c < 40; c++ ) { 
-			if ( ( cc[y][c] == 12 && nd[y][c] == 2 ) 
-				|| cc[y][c] == 13 ) { 
+			if ( cc[y][c] == 12 && nd[y][c] == 2 ) {
 				limit = c; break;
+			}
+			if ( cc[y][c] == 13 ) { 
+				// Set-after means we need to set the 
+				// nd attribute for one more cell.
+				limit = c+1; break;
 			}
 		}
 
@@ -2034,16 +2041,15 @@ function check_for_remove_code(x,y,andrender) {
 			if ( cc[y][c] == 12 && newheight == 2 ) {
 				// Here we are changing from double height to
 				// normal text.
-				limit = c; char_at_limit = 12; break; // set-at
+				limit = c; break; // set-at
 			}
 			if ( cc[y][c] == 13 ) {  
-				limit = c+1; char_at_limit = 13; break; // set-after
+				limit = c+1; break; // set-after
 			}
 		}
 		if ( code == 12 ) {
 			// Set-at, so we start at this character.
 			for ( var c = x; c < limit; c++ ) { 
-				if ( cc[y][c] == 12 ) { newheight = 2; }
 				nd[y][c] = newheight;
 			}
 		}
