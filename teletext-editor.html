@@ -2235,6 +2235,13 @@ function autorender(x,y,w,h) {
 			if ( cc[r][c] == 13 && fs[r] == 1 ) {
 				affectnext = 1;
 				if ( nextfrom == -1 ) { nextfrom = c; }
+
+				// If we've encountered a double height
+				// character after having limited nextto
+				// by a normal height character, we need
+				// to reset the limit of the next line 
+				// back to 40.
+				nextto = 40;
 			}
 		}
 	}
