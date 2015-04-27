@@ -156,7 +156,7 @@ div#b {
 </table>
 
 
-<canvas id="frame" width="480" height="500"></canvas>
+<canvas id="frame" width="480" height="520"></canvas>
 </div></div>
 
 <script type="text/javascript">
@@ -914,14 +914,14 @@ function colour(number, bright) {
 
 // This simple helper function just gives a name to each colour.
 function colour_name(col) { 
-	if ( col == 0 ) { return "blk"; }
+	if ( col == 0 ) { return "black"; }
 	if ( col == 1 ) { return "red"; }
-	if ( col == 2 ) { return "grn"; }
-	if ( col == 3 ) { return "yel"; }
-	if ( col == 4 ) { return "blu"; }
-	if ( col == 5 ) { return "mg"; }
-	if ( col == 6 ) { return "cya"; }
-	if ( col == 7 ) { return "whi"; }
+	if ( col == 2 ) { return "green"; }
+	if ( col == 3 ) { return "yellow"; }
+	if ( col == 4 ) { return "blue"; }
+	if ( col == 5 ) { return "magenta"; }
+	if ( col == 6 ) { return "cyan"; }
+	if ( col == 7 ) { return "white"; }
 }
 
 
@@ -939,51 +939,48 @@ function draw_status_bar() {
 
 	// If we're in escape mode, colour the status bar to make it clear.
 	if ( escape == 1 ) { ctx.fillStyle = "#993"; }
-		else { ctx.fillStyle = "#666"; }
+		else { ctx.fillStyle = "#808080"; }
 
 	// Draw the background to the bar and set up the font.
-	ctx.fillRect(0, 24*20+2, 40*12, 16);
+	ctx.fillRect(0, 24*20+2, 40*12, 36);
 	ctx.font = "13px Arial";
 	ctx.fillStyle = "#000";
 
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
-	var offset = 2;
+	var offset = 5;
 	var spacing = 43;
 
 	// The items in the status bar:
 
-	// position
-	ctx.fillText("("+curx+","+cury+")", offset, 494);
-
 	// character code
-	ctx.fillText("0x" + cc[cury][curx].toString(16), offset+spacing, 494);
+	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496);
+
+	// position
+	ctx.fillText(curx+","+cury, offset+spacing, 496);
 
 	// foreground and background colour
-	ctx.fillText(colour_name(fg[cury][curx])+"/"+colour_name(bg[cury][curx]),
-		offset+(2*spacing), 494);
-
-	// alpha or graphics?
-	ctx.fillText(tg[cury][curx]==0?"alph":"gfx", offset+(3*spacing), 494);
+	ctx.fillText(
+		colour_name(fg[cury][curx])
+		+" "+(tg[cury][curx]==0?"text":"graphics")
+		+" on "+colour_name(bg[cury][curx]),
+		offset+(2*spacing), 496);
 
 	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"cont":"sep", offset+(3.75*spacing), 494);
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(9*spacing), 496);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"rel":"held", offset+(4.5*spacing), 494);
+	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shw":"hid", offset+(5.25*spacing), 494);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512);
 
 	// normal or double height?
-	var dhname = "norm";
-	if ( nd[cury][curx] == 1 ) { dhname = "dbl"; } 
-	if ( nd[cury][curx] == 2 ) { dhname = "nor*"; } 
-	ctx.fillText(dhname, offset+(6*spacing), 494);
+	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.5*spacing), 496);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"ste":"flash", offset+(6.75*spacing), 494);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -995,13 +992,13 @@ function draw_status_bar() {
 	if ( cset == 5 ) { charsetname = "ASCII"; }
 	if ( cset == 6 ) { charsetname = "Hebrew"; }
 	if ( cset == 7 ) { charsetname = "Cyrillic"; }
-	ctx.fillText(charsetname, offset+(7.5*spacing), 494);
+	ctx.fillText(charsetname, offset, 512);
 
 	// is reveal on or off?
-	ctx.fillText(reveal==0?"No Rev.":"Reveal", offset+(8.75*spacing), 494);
+	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"No bfg":"bfg", offset+(10*spacing), 494)
+	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512)
 }
 
 ////////////////////
