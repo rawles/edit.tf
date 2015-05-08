@@ -7,38 +7,32 @@
 body { 
 	background-color: #222;
 	}
-table {
+table#hints {
 	margin-left: auto;
 	margin-right: auto;
-}
-table#hints {
 	border-collapse: collapse;
 	border: 1px solid #353;
 	position: absolute;
 	top: 1px;
 	right: 1px;
-	z-index: -1;
 }
-table#hints td, table#hints tr {
+table#hints td, table#hints tr , table#hints th {
 	border: 1px solid #353;
-}
-td,th {
 	color: #9b9;
 	vertical-align: center; 
 	text-align: center;
 	font-family: sans-serif;
 	line-height: 1.1;
 	font-size: 12px;
-}
-td#left {
-	text-align: center;
-	color: #cc0;
+    
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none;    
 }
 td a {
 	color: inherit;
-}
-td.keys {
-	text-align: center;
 }
 canvas {
 	background-color: #181818;
@@ -47,6 +41,8 @@ canvas {
 	-moz-border-radius: 3px;
 	margin: 0 20px 0 20px;
     cursor: crosshair;
+    position:relative;
+    z-index: 1;
 }
 tr.newsection {
 	background-color: #353;
@@ -68,6 +64,10 @@ div#b {
 	padding: 0;
 	margin: 0;
 	}
+    
+[onclick] {
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -79,74 +79,79 @@ div#b {
 <td colspan="4">First press escape then the following:</td>
 </tr>
 <tr>
-<th>&nbsp;</th>
-<th>lowercase</th>
-<th>uppercase</th>
-<th>&nbsp;</th>
+<th colspan="2">lowercase</th>
+<th colspan="2">uppercase</th>
 </tr>
 
-<tr><td class="keys">r</td><td>red text</td>
-	<td>red graphics</td><td class="keys">R</td></tr>
-<tr><td class="keys">g</td><td>green text</td>
-	<td>green graphics</td><td class="keys">G</td></tr>
-<tr><td class="keys">y</td><td>yellow text</td>
-	<td>yellow graphics</td><td class="keys">Y</td></tr>
-<tr><td class="keys">b</td><td>blue text</td>
-	<td>blue graphics</td><td class="keys">B</td></tr>
-<tr><td class="keys">m</td><td>magenta text</td>
-	<td>magenta graphics</td><td class="keys">M</td></tr>
-<tr><td class="keys">c</td><td>cyan text</td>
-	<td>cyan graphics</td><td class="keys">C</td></tr>
-<tr><td class="keys">w</td><td>white text</td>
-	<td>white graphics</td><td class="keys">W</td></tr>
+<tr><td onclick="fakepress('r')">r</td><td onclick="fakepress('r')">red text</td>
+	<td onclick="fakepress('R')">red graphics</td><td onclick="fakepress('R')">R</td></tr>
+<tr><td onclick="fakepress('g')">g</td><td onclick="fakepress('g')">green text</td>
+	<td onclick="fakepress('G')">green graphics</td><td onclick="fakepress('G')">G</td></tr>
+<tr><td onclick="fakepress('y')">y</td><td onclick="fakepress('y')">yellow text</td>
+	<td onclick="fakepress('Y')">yellow graphics</td><td onclick="fakepress('Y')">Y</td></tr>
+<tr><td onclick="fakepress('b')">b</td><td onclick="fakepress('b')">blue text</td>
+	<td onclick="fakepress('B')">blue graphics</td><td onclick="fakepress('B')">B</td></tr>
+<tr><td onclick="fakepress('m')">m</td><td onclick="fakepress('m')">magenta text</td>
+	<td onclick="fakepress('M')">magenta graphics</td><td onclick="fakepress('M')">M</td></tr>
+<tr><td onclick="fakepress('c')">c</td><td onclick="fakepress('c')">cyan text</td>
+	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
+<tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
+	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
 
-<tr><td class="keys">d</td><td>normal height</td>
-	<td>double height</td><td class="keys">D</td></tr>
-<tr><td class="keys">f</td><td>steady</td>
-	<td>flash</td><td class="keys">F</td></tr>
-<tr><td class="keys">h</td><td>release graphics</td>
-	<td>hold graphics</td><td class="keys">H</td></tr>
-<tr><td class="keys">i</td><td>insert row</td>
-	<td>delete row</td><td class="keys">I</td></tr>
-<tr><td class="keys">n</td><td>black background</td>
-	<td>new background</td><td class="keys">N</td></tr>
-<tr><td class="keys">q</td><td>hide codes</td>
-	<td>show codes</td><td class="keys">Q</td></tr>
-<tr><td class="keys">s</td><td>contiguous graphics</td>
-	<td>separated graphics</td><td class="keys">S</td></tr>
-<tr><td class="keys">v</td><td>reveal off</td>
-	<td>reveal on</td><td class="keys">V</td></tr>
-<tr><td class="keys">x</td><td>no grid</td>
-	<td>grid</td><td class="keys">X</td></tr>
-<tr><td class="keys">z</td><td>redraw screen</td>
-	<td>clear screen</td><td class="keys">Z</td></tr>
+<tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
+	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
+<tr><td onclick="fakepress('f')">f</td><td onclick="fakepress('f')">steady</td>
+	<td onclick="fakepress('F')">flash</td><td onclick="fakepress('F')">F</td></tr>
+<tr><td onclick="fakepress('h')">h</td><td onclick="fakepress('h')">release graphics</td>
+	<td onclick="fakepress('H')">hold graphics</td><td onclick="fakepress('H')">H</td></tr>
+<tr><td onclick="fakepress('i')">i</td><td onclick="fakepress('i')">insert row</td>
+	<td onclick="fakepress('I')">delete row</td><td onclick="fakepress('I')">I</td></tr>
+<tr><td onclick="fakepress('n')">n</td><td onclick="fakepress('n')">black background</td>
+	<td onclick="fakepress('N')">new background</td><td onclick="fakepress('N')">N</td></tr>
+<tr><td onclick="fakepress('q')">q</td><td onclick="fakepress('q')">hide codes</td>
+	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
+<tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
+	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
+<tr><td onclick="fakepress('v')">v</td><td onclick="fakepress('v')">reveal off</td>
+	<td onclick="fakepress('V')">reveal on</td><td onclick="fakepress('V')">V</td></tr>
+<tr><td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">no grid</td>
+	<td onclick="fakepress('X')">grid</td><td onclick="fakepress('X')">X</td></tr>
+<tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
+	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
+<tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
+	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
 
-<tr><td class="keys">o</td><td colspan="2">conceal</td>
-	<td class="keys">O</td></tr>
-<tr><td class="keys">j</td><td colspan="2">insert block character</td>
-	<td class="keys">J</td></tr>
-<tr><td class="keys">u</td><td colspan="2">duplicate row</td>
-	<td class="keys">U</td></tr>
-<tr><td class="keys">1-8</td><td colspan="2">switch character sets</td>
-	<td class="keys">1-8</td></tr>
+<tr onclick="fakepress('o')">
+    <td>o</td><td colspan="2">conceal</td>
+	<td>O</td></tr>
+<tr onclick="fakepress('j')">
+    <td>j</td><td colspan="2">insert block character</td>
+	<td>J</td></tr>
+<tr onclick="fakepress('u')">
+    <td>u</td><td colspan="2">duplicate row</td>
+	<td>U</td></tr>
+<tr><td>1-8</td><td colspan="2">switch character sets</td>
+	<td>1-8</td></tr>
 
 <tr class="newsection"><td colspan="4">If you need black foreground:</td>
-<tr><td class="keys">a</td><td>ignore black fg</td>
-	<td>allow black fg</td><td class="keys">A</td></tr>
-<tr><td class="keys">k</td><td>black text</td>
-	<td>black graphics</td><td class="keys">K</td></tr>
+<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
+	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
+<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
+	<td onclick="fakepress('k')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
 
 <tr class="newsection"><td colspan="4">No escape required for:</td></tr>
 
-<tr><td class="keys">TAB</td><td colspan="2">insert space</td>
-	<td class="keys">TAB</td></tr>
-<tr><td class="keys">BS</td><td colspan="2">delete character</td>
-	<td class="keys">BS</td></tr>
+<tr onclick="cursor_tab()">
+    <td>TAB</td><td colspan="2">insert space</td>
+	<td>TAB</td></tr>
+<tr onclick="cursor_bs()">
+    <td>BS</td><td colspan="2">delete character</td>
+	<td>BS</td></tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
 
-<tr><td class="keys" colspan="2">Q/W/A/S/Z/X/R/C/F</td><td colspan="2">subpixel twiddling</td></tr>
+<tr><td colspan="2">Q/W/A/S/Z/X/R/C/F</td><td colspan="2">subpixel twiddling</td></tr>
 
 <tr class="newsection"><td colspan="4">Bug reports and pull requests welcome:</td></tr>
 
@@ -156,7 +161,7 @@ div#b {
 </table>
 
 
-<canvas id="frame" width="480" height="520"></canvas>
+<canvas id="frame"></canvas>
 </div></div>
 
 <script type="text/javascript">
@@ -228,10 +233,15 @@ var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
 var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 				 // 0x10) control codes? 0 if not, 1 if so.
+                 
+var pix_scale=2;  // draw at a higher resolution than we display at, to look better zoomed in
+var aspect_ratio=1.2; // specifies how much to stretch the x direction
 
 // Initialises the state of the screen.
 function init_state() { 
 
+    init_canvas();
+    
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
 		cc[r] = []; fg[r] = []; bg[r] = [];
@@ -250,6 +260,19 @@ function init_state() {
 	load_from_hash();
 }
 
+function init_canvas() {
+	var c = document.getElementById("frame");
+    
+    // set the 'logical' width and height, the code is designed for 480x520,
+    // scaled up to look better when zoomed in
+    c.width = 480*pix_scale;
+    c.height = 520*pix_scale;
+    
+    // set the width and hight to display on-screen, with the modified aspect ratio
+    c.style.width = (480*aspect_ratio)+'px';
+    c.style.height = 520+'px';    
+}
+
 // Resets an individual character at position (x,y) to default 
 // attributes, like you would find at the start of a line.
 function clear_char(x,y) {
@@ -262,7 +285,7 @@ function clear_char(x,y) {
 // character cell, so should be drawn first.
 function plot_cursor(ctx) { 
 	ctx.fillStyle = "#666";
-	ctx.fillRect((12*curx),(20*cury),12,20);
+	ctx.fillRect((12*curx*pix_scale),(20*cury*pix_scale),12*pix_scale,20*pix_scale);
 }
 
 // Sets the grid on or off and renders the whole 
@@ -303,7 +326,7 @@ function show_codes(newcode) {
 // The cells' top-left corner is (x,y), and the area has width
 // w and height h.
 function cls(ctx,x,y,w,h) { 
-	ctx.clearRect(x*12, y*20, w*12, h*20);
+	ctx.clearRect(x*12*pix_scale, y*20*pix_scale, w*12*pix_scale, h*20*pix_scale);
 }
 
 // Performs a fill character copy, including attributes.
@@ -456,9 +479,9 @@ function mouse_click(canvasx, canvasy, state) {
 
 	// First, locate the position in the character grid (x,y) of this click,
 	// and the position in the character cell (sx,sy) itself.
-	var x = Math.floor( canvasx / 12 );
+	var x = Math.floor( canvasx / (12*aspect_ratio) );
 	var y = Math.floor( canvasy / 20 );
-	var sx = canvasx - ( 12 * x );
+	var sx = canvasx - ( 12 * x * aspect_ratio);
 	var sy = canvasy - ( 20 * y );
 
 	// Double height, of course, complicates things. If we are in double
@@ -600,7 +623,7 @@ function click_listener(event, state) {
     x -= 10;
     y -= 10;
     if ( x < 0 ) { x = 0; } 
-    if ( x >= 12*40 ) { x = 12*40 - 1; } 
+    if ( x >= 12*40*aspect_ratio ) { x = 12*40*aspect_ratio - 1; } 
     if ( y < 0 ) { y = 0; } 
     if ( y >= 20*24 ) { x = 20*24 - 1; } 
 
@@ -641,6 +664,9 @@ function init_mouse() {
 		mouse_span_y1 = -1;
 		mouse_span_x2 = -1;
 		mouse_span_y2 = -1;
+        
+        // update the url now the mouse has been released
+        save_to_hash();
     }, false);
 
     // ... and when it's dragged.
@@ -812,6 +838,11 @@ function load_from_hash() {
 // converts the character set and page data into a hex string and
 // puts it there.
 function save_to_hash() { 
+    if (mouse_button == 1) {
+        // optimisation: don't update hash while drawing
+        return;
+    }
+
 	var encoding = "";
 
 	// Construct the metadata as described above.
@@ -848,7 +879,9 @@ function save_to_hash() {
 	for ( var i = 0; i < 1120; i++ ) {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
-	window.location.hash = encoding;
+    if (window.location.hash != encoding) {
+        window.location.hash = encoding;
+    }
 }
 
 
@@ -860,53 +893,51 @@ function save_to_hash() {
 // The colours for the frame, and some related colours like for
 // cursors and control codes, are decided by this function.
 // The colour numbers are described below. For each colour the
-// option to return a bright version (bright == 1) is given.
+// option to return a highlighted version (highlight == 1) is given.
 // this is for the highlighting that a cursor does, mostly.
-// The non-bright colours are not full lightness because we need
-// some room for this brightening.
-function colour(number, bright) { 
+function colour(number, highlight) { 
 
 	// 0: black
-	if ( number == 0 && bright == 0 ) { return "#181818"; }
-	if ( number == 0 && bright == 1 ) { return "#585858"; }
+	if ( number == 0 && highlight == 0 ) { return "#000000"; }
+	if ( number == 0 && highlight == 1 ) { return "#585858"; }
 
 	// 1: red
-	if ( number == 1 && bright == 0 ) { return "#b00"; }
-	if ( number == 1 && bright == 1 ) { return "#f44"; }
+	if ( number == 1 && highlight == 0 ) { return "#ff0000"; }
+	if ( number == 1 && highlight == 1 ) { return "#bb0000"; }
 
 	// 2: green
-	if ( number == 2 && bright == 0 ) { return "#0b0"; }
-	if ( number == 2 && bright == 1 ) { return "#4f4"; }
+	if ( number == 2 && highlight == 0 ) { return "#00ff00"; }
+	if ( number == 2 && highlight == 1 ) { return "#00bb00"; }
 
 	// 3: yellow
-	if ( number == 3 && bright == 0 ) { return "#bb0"; }
-	if ( number == 3 && bright == 1 ) { return "#ff4"; }
+	if ( number == 3 && highlight == 0 ) { return "#ffff00"; }
+	if ( number == 3 && highlight == 1 ) { return "#bbbb00"; }
 
 	// 4: blue
-	if ( number == 4 && bright == 0 ) { return "#00b"; }
-	if ( number == 4 && bright == 1 ) { return "#44f"; }
+	if ( number == 4 && highlight == 0 ) { return "#0000ff"; }
+	if ( number == 4 && highlight == 1 ) { return "#0000bb"; }
 
 	// 5: magenta
-	if ( number == 5 && bright == 0 ) { return "#b0b"; }
-	if ( number == 5 && bright == 1 ) { return "#f4f"; }
+	if ( number == 5 && highlight == 0 ) { return "#ff00ff"; }
+	if ( number == 5 && highlight == 1 ) { return "#bb00bb"; }
 
 	// 6: cyan
-	if ( number == 6 && bright == 0 ) { return "#0bb"; }
-	if ( number == 6 && bright == 1 ) { return "#4ff"; }
+	if ( number == 6 && highlight == 0 ) { return "#00ffff"; }
+	if ( number == 6 && highlight == 1 ) { return "#00bbbb"; }
 
 	// 7: white
-	if ( number == 7 && bright == 0 ) { return "#bbb"; }
-	if ( number == 7 && bright == 1 ) { return "#fff"; }
+	if ( number == 7 && highlight == 0 ) { return "#ffffff"; }
+	if ( number == 7 && highlight == 1 ) { return "#bbbbbb"; }
 
 	// 8 is a special colour number for control characters
-	if ( number == 8 && bright == 0 ) { return "#666"; }
-	if ( number == 8 && bright == 1 ) { return "#aaa"; }
+	if ( number == 8 && highlight == 0 ) { return "#888888"; }
+	if ( number == 8 && highlight == 1 ) { return "#333333"; }
 
 	// 9 is for control characters copied from the line
 	// above in the case of double height, so we can see
 	// the relationship.
-	if ( number == 9 && bright == 0 ) { return "#333"; }
-	if ( number == 9 && bright == 1 ) { return "#777"; }
+	if ( number == 9 && highlight == 0 ) { return "#555555"; }
+	if ( number == 9 && highlight == 1 ) { return "#222222"; }
 
 	// For all other values just return white!
 	return "#fff";
@@ -942,45 +973,39 @@ function draw_status_bar() {
 		else { ctx.fillStyle = "#808080"; }
 
 	// Draw the background to the bar and set up the font.
-	ctx.fillRect(0, 24*20+2, 40*12, 36);
-	ctx.font = "13px Arial";
+	ctx.fillRect(0, (24*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
+	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
 
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
-	var offset = 5;
-	var spacing = 43;
+	var offset = 5*pix_scale;
+	var spacing = 43*pix_scale;
 
 	// The items in the status bar:
 
 	// character code
-	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496);
+	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496*pix_scale);
 
 	// position
-	ctx.fillText(curx+","+cury, offset+spacing, 496);
+	ctx.fillText(curx+","+cury, offset+spacing, 496*pix_scale);
 
 	// foreground and background colour
 	ctx.fillText(
 		colour_name(fg[cury][curx])
 		+" "+(tg[cury][curx]==0?"text":"graphics")
 		+" on "+colour_name(bg[cury][curx]),
-		offset+(2*spacing), 496);
-
-	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(9*spacing), 496);
-
-	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512);
-
-	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512);
+		offset+(2*spacing), 496*pix_scale);
 
 	// normal or double height?
-	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.5*spacing), 496);
+	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.25*spacing), 496*pix_scale);
 
-	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512);
+	// contiguous or separated?
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.25*spacing), 496*pix_scale);
+
+	// aspect ratio
+	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10*spacing, 496*pix_scale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -992,13 +1017,23 @@ function draw_status_bar() {
 	if ( cset == 5 ) { charsetname = "ASCII"; }
 	if ( cset == 6 ) { charsetname = "Hebrew"; }
 	if ( cset == 7 ) { charsetname = "Cyrillic"; }
-	ctx.fillText(charsetname, offset, 512);
+    
+	ctx.fillText(charsetname, offset, 512*pix_scale);
 
 	// is reveal on or off?
-	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512);
+	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512*pix_scale);
+
+	// released or held graphics?
+	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512*pix_scale);
+
+	// is this concealed? (shown or hidden?)
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512*pix_scale);
+
+	// steady or flash?
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512*pix_scale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512)
+	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512*pix_scale)
 }
 
 ////////////////////
@@ -1030,6 +1065,13 @@ function keydown(event) {
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
 	}
+    
+function fakepress(character) {
+    var event = new Object;
+    event["charCode"]=character.charCodeAt(0);
+    escape = 1;
+    keypress(event);
+}    
 
 function keypress(event) {
 	var code = ( 'charCode' in event ) ? event.charCode : event.keyCode;
@@ -1128,8 +1170,12 @@ function keypress(event) {
 		if ( code == 115 ) { placed_code = 25; }
 
 		// Z = wipe or redraw the screen
-		if ( code == 90 ) { matched = 1; wipe(1); }
+		if ( code == 90 ) { matched = 1; if (confirm("Clear whole screen?")) wipe(1); }
 		if ( code == 122 ) { matched = 1; redraw(); }
+        
+        // [ and ] = narrower/wider screen
+		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,24,0);}
+		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,24,0);}
 
 		// We can also switch between character sets here.													     
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
@@ -2550,7 +2596,7 @@ function render(x,y,w,h) {
 							ctx.fillStyle = cell_grid; } 
 
 						// Finally, we draw the pixel!
-						ctx.fillRect((c*12)+(sx), (r*20)+(sy), 1, 1);
+						ctx.fillRect(((c*12)+(sx))*pix_scale, ((r*20)+(sy))*pix_scale, 1*pix_scale, 1*pix_scale);
 
 						continue; // Skip the code below which renders
 						          // this pixel as text.
@@ -2583,7 +2629,7 @@ function render(x,y,w,h) {
 						ctx.fillStyle = cell_grid; } 
 
 					// And finally draw the pixel!
-					ctx.fillRect((c*12)+(sx), (r*20)+(sy), 1, 1);
+					ctx.fillRect(((c*12)+(sx))*pix_scale, ((r*20)+(sy))*pix_scale, 1*pix_scale, 1*pix_scale);
 				}
 			}
 		}
