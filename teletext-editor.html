@@ -68,6 +68,10 @@ div#b {
 	padding: 0;
 	margin: 0;
 	}
+    
+.clickable {
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -85,62 +89,87 @@ div#b {
 <th>&nbsp;</th>
 </tr>
 
-<tr><td class="keys">r</td><td>red text</td>
-	<td>red graphics</td><td class="keys">R</td></tr>
-<tr><td class="keys">g</td><td>green text</td>
-	<td>green graphics</td><td class="keys">G</td></tr>
-<tr><td class="keys">y</td><td>yellow text</td>
-	<td>yellow graphics</td><td class="keys">Y</td></tr>
-<tr><td class="keys">b</td><td>blue text</td>
-	<td>blue graphics</td><td class="keys">B</td></tr>
-<tr><td class="keys">m</td><td>magenta text</td>
-	<td>magenta graphics</td><td class="keys">M</td></tr>
-<tr><td class="keys">c</td><td>cyan text</td>
-	<td>cyan graphics</td><td class="keys">C</td></tr>
-<tr><td class="keys">w</td><td>white text</td>
-	<td>white graphics</td><td class="keys">W</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('r')">r</td><td onClick="fakepress('r')">red text</td>
+	<td onClick="fakepress('R')">red graphics</td><td class="keys" onClick="fakepress('R')">R</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('g')">g</td><td onClick="fakepress('g')">green text</td>
+	<td onClick="fakepress('G')">green graphics</td><td class="keys" onClick="fakepress('G')">G</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('y')">y</td><td onClick="fakepress('y')">yellow text</td>
+	<td onClick="fakepress('Y')">yellow graphics</td><td class="keys" onClick="fakepress('Y')">Y</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('b')">b</td><td onClick="fakepress('b')">blue text</td>
+	<td onClick="fakepress('B')">blue graphics</td><td class="keys" onClick="fakepress('B')">B</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('m')">m</td><td onClick="fakepress('m')">magenta text</td>
+	<td onClick="fakepress('M')">magenta graphics</td><td class="keys" onClick="fakepress('M')">M</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('c')">c</td><td onClick="fakepress('c')">cyan text</td>
+	<td onClick="fakepress('C')">cyan graphics</td><td class="keys" onClick="fakepress('C')">C</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('w')">w</td><td onClick="fakepress('w')">white text</td>
+	<td onClick="fakepress('W')">white graphics</td><td class="keys" onClick="fakepress('W')">W</td></tr>
 
-<tr><td class="keys">d</td><td>normal height</td>
-	<td>double height</td><td class="keys">D</td></tr>
-<tr><td class="keys">f</td><td>steady</td>
-	<td>flash</td><td class="keys">F</td></tr>
-<tr><td class="keys">h</td><td>release graphics</td>
-	<td>hold graphics</td><td class="keys">H</td></tr>
-<tr><td class="keys">i</td><td>insert row</td>
-	<td>delete row</td><td class="keys">I</td></tr>
-<tr><td class="keys">n</td><td>black background</td>
-	<td>new background</td><td class="keys">N</td></tr>
-<tr><td class="keys">q</td><td>hide codes</td>
-	<td>show codes</td><td class="keys">Q</td></tr>
-<tr><td class="keys">s</td><td>contiguous graphics</td>
-	<td>separated graphics</td><td class="keys">S</td></tr>
-<tr><td class="keys">v</td><td>reveal off</td>
-	<td>reveal on</td><td class="keys">V</td></tr>
-<tr><td class="keys">x</td><td>no grid</td>
-	<td>grid</td><td class="keys">X</td></tr>
-<tr><td class="keys">z</td><td>redraw screen</td>
-	<td>clear screen</td><td class="keys">Z</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('d')">d</td><td onClick="fakepress('d')">normal height</td>
+	<td onClick="fakepress('D')">double height</td><td class="keys" onClick="fakepress('D')">D</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('f')">f</td><td onClick="fakepress('f')">steady</td>
+	<td onClick="fakepress('F')">flash</td><td class="keys" onClick="fakepress('F')">F</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('h')">h</td><td onClick="fakepress('h')">release graphics</td>
+	<td onClick="fakepress('H')">hold graphics</td><td class="keys" onClick="fakepress('H')">H</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('i')">i</td><td onClick="fakepress('i')">insert row</td>
+	<td onClick="fakepress('I')">delete row</td><td class="keys" onClick="fakepress('I')">I</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('n')">n</td><td onClick="fakepress('n')">black background</td>
+	<td onClick="fakepress('N')">new background</td><td class="keys" onClick="fakepress('N')">N</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('q')">q</td><td onClick="fakepress('q')">hide codes</td>
+	<td onClick="fakepress('!')">show codes</td><td class="keys" onClick="fakepress('Q')">Q</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('s')">s</td><td onClick="fakepress('s')">contiguous graphics</td>
+	<td onClick="fakepress('S')">separated graphics</td><td class="keys" onClick="fakepress('S')">S</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('v')">v</td><td onClick="fakepress('v')">reveal off</td>
+	<td onClick="fakepress('V')">reveal on</td><td class="keys" onClick="fakepress('V')">V</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('x')">x</td><td onClick="fakepress('x')">no grid</td>
+	<td onClick="fakepress('X')">grid</td><td class="keys" onClick="fakepress('X')">X</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('z')">z</td><td onClick="fakepress('z')">redraw screen</td>
+	<td onClick="fakepress('Z')">clear screen</td><td class="keys" onClick="fakepress('Z')">Z</td></tr>
 
-<tr><td class="keys">o</td><td colspan="2">conceal</td>
+<tr class="clickable" onClick="fakepress('o')">
+    <td class="keys">o</td><td colspan="2">conceal</td>
 	<td class="keys">O</td></tr>
-<tr><td class="keys">j</td><td colspan="2">insert block character</td>
+<tr class="clickable" onClick="fakepress('j')">
+    <td class="keys">j</td><td colspan="2">insert block character</td>
 	<td class="keys">J</td></tr>
-<tr><td class="keys">u</td><td colspan="2">duplicate row</td>
+<tr class="clickable" onClick="fakepress('u')">
+    <td class="keys">u</td><td colspan="2">duplicate row</td>
 	<td class="keys">U</td></tr>
-<tr><td class="keys">1-8</td><td colspan="2">switch character sets</td>
+<tr>
+    <td class="keys">1-8</td><td colspan="2">switch character sets</td>
 	<td class="keys">1-8</td></tr>
 
 <tr class="newsection"><td colspan="4">If you need black foreground:</td>
-<tr><td class="keys">a</td><td>ignore black fg</td>
-	<td>allow black fg</td><td class="keys">A</td></tr>
-<tr><td class="keys">k</td><td>black text</td>
-	<td>black graphics</td><td class="keys">K</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('z')">a</td><td onClick="fakepress('a')">ignore black fg</td>
+	<td onClick="fakepress('A')">allow black fg</td><td class="keys" onClick="fakepress('A')">A</td></tr>
+<tr class="clickable">
+    <td class="keys" onClick="fakepress('k')">k</td><td onClick="fakepress('k')">black text</td>
+	<td onClick="fakepress('k')">black graphics</td><td class="keys" onClick="fakepress('K')">K</td></tr>
 
 <tr class="newsection"><td colspan="4">No escape required for:</td></tr>
 
-<tr><td class="keys">TAB</td><td colspan="2">insert space</td>
+<tr class="clickable" onClick="cursor_tab()">
+    <td class="keys">TAB</td><td colspan="2">insert space</td>
 	<td class="keys">TAB</td></tr>
-<tr><td class="keys">BS</td><td colspan="2">delete character</td>
+<tr class="clickable" onClick="cursor_bs()">
+    <td class="keys">BS</td><td colspan="2">delete character</td>
 	<td class="keys">BS</td></tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
@@ -152,11 +181,13 @@ div#b {
 
 <tr><td colspan="4"><a href="https://github.com/rawles/teletext-editor">https://github.com/rawles/teletext-editor</a></td></tr>
 <tr><td colspan="4">The frame data is in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
+<tr><td colspan="4"><a href="http://teletextart.co.uk/teletext40-editor-10-
+minute-tutorial/">View a 10-minute tutorial</a></td></tr>
 
 </table>
 
 
-<canvas id="frame" width="480" height="520"></canvas>
+<canvas id="frame"></canvas>
 </div></div>
 
 <script type="text/javascript">
@@ -228,10 +259,22 @@ var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
 var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 				 // 0x10) control codes? 0 if not, 1 if so.
+                 
+var pixScale=2;  // draw at a higher resolution than we display at, to look better zoomed in
+var aspectRatio=1.25; // specifies how much to stretch the x direction
 
 // Initialises the state of the screen.
 function init_state() { 
 
+	var c = document.getElementById("frame");
+    // set the 'logical' width and height, the code is designed for 480x520,
+    // scaled up to look better when zoomed in
+    c.width = 480*pixScale;
+    c.height = 520*pixScale;
+    // set the width and hight to display on-screen, with the modified aspect ratio
+    c.style.width = (480*aspectRatio)+'px';
+    c.style.height = 520+'px';    
+    
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
 		cc[r] = []; fg[r] = []; bg[r] = [];
@@ -262,7 +305,7 @@ function clear_char(x,y) {
 // character cell, so should be drawn first.
 function plot_cursor(ctx) { 
 	ctx.fillStyle = "#666";
-	ctx.fillRect((12*curx),(20*cury),12,20);
+	ctx.fillRect((12*curx*pixScale),(20*cury*pixScale),12*pixScale,20*pixScale);
 }
 
 // Sets the grid on or off and renders the whole 
@@ -303,7 +346,7 @@ function show_codes(newcode) {
 // The cells' top-left corner is (x,y), and the area has width
 // w and height h.
 function cls(ctx,x,y,w,h) { 
-	ctx.clearRect(x*12, y*20, w*12, h*20);
+	ctx.clearRect(x*12*pixScale, y*20*pixScale, w*12*pixScale, h*20*pixScale);
 }
 
 // Performs a fill character copy, including attributes.
@@ -456,9 +499,9 @@ function mouse_click(canvasx, canvasy, state) {
 
 	// First, locate the position in the character grid (x,y) of this click,
 	// and the position in the character cell (sx,sy) itself.
-	var x = Math.floor( canvasx / 12 );
+	var x = Math.floor( canvasx / (12*aspectRatio) );
 	var y = Math.floor( canvasy / 20 );
-	var sx = canvasx - ( 12 * x );
+	var sx = canvasx - ( 12 * x * aspectRatio);
 	var sy = canvasy - ( 20 * y );
 
 	// Double height, of course, complicates things. If we are in double
@@ -600,7 +643,7 @@ function click_listener(event, state) {
     x -= 10;
     y -= 10;
     if ( x < 0 ) { x = 0; } 
-    if ( x >= 12*40 ) { x = 12*40 - 1; } 
+    if ( x >= 12*40*aspectRatio ) { x = 12*40*aspectRatio - 1; } 
     if ( y < 0 ) { y = 0; } 
     if ( y >= 20*24 ) { x = 20*24 - 1; } 
 
@@ -668,7 +711,7 @@ function init_mouse() {
 
 // The URL contains a base-64-encoded sequence of bits. The encoding
 // is standard 'base64url' with URL and Filename Safe Alphabet (RFC
-// 4648 §5 'Table 2: The "URL and Filename safe" Base 64 Alphabet').
+// 4648 ยง5 'Table 2: The "URL and Filename safe" Base 64 Alphabet').
 // After decoding, the seven-bit character code for column c and row
 // r appears at bit positions (280r+7c) to (280r+7c+6), the most
 // significant bit appearing first. This gives hash strings of 'only'
@@ -860,53 +903,51 @@ function save_to_hash() {
 // The colours for the frame, and some related colours like for
 // cursors and control codes, are decided by this function.
 // The colour numbers are described below. For each colour the
-// option to return a bright version (bright == 1) is given.
+// option to return a highlighted version (highlight == 1) is given.
 // this is for the highlighting that a cursor does, mostly.
-// The non-bright colours are not full lightness because we need
-// some room for this brightening.
-function colour(number, bright) { 
+function colour(number, highlight) { 
 
 	// 0: black
-	if ( number == 0 && bright == 0 ) { return "#181818"; }
-	if ( number == 0 && bright == 1 ) { return "#585858"; }
+	if ( number == 0 && highlight == 0 ) { return "#000000"; }
+	if ( number == 0 && highlight == 1 ) { return "#585858"; }
 
 	// 1: red
-	if ( number == 1 && bright == 0 ) { return "#b00"; }
-	if ( number == 1 && bright == 1 ) { return "#f44"; }
+	if ( number == 1 && highlight == 0 ) { return "#ff0000"; }
+	if ( number == 1 && highlight == 1 ) { return "#bb0000"; }
 
 	// 2: green
-	if ( number == 2 && bright == 0 ) { return "#0b0"; }
-	if ( number == 2 && bright == 1 ) { return "#4f4"; }
+	if ( number == 2 && highlight == 0 ) { return "#00ff00"; }
+	if ( number == 2 && highlight == 1 ) { return "#00bb00"; }
 
 	// 3: yellow
-	if ( number == 3 && bright == 0 ) { return "#bb0"; }
-	if ( number == 3 && bright == 1 ) { return "#ff4"; }
+	if ( number == 3 && highlight == 0 ) { return "#ffff00"; }
+	if ( number == 3 && highlight == 1 ) { return "#bbbb00"; }
 
 	// 4: blue
-	if ( number == 4 && bright == 0 ) { return "#00b"; }
-	if ( number == 4 && bright == 1 ) { return "#44f"; }
+	if ( number == 4 && highlight == 0 ) { return "#0000ff"; }
+	if ( number == 4 && highlight == 1 ) { return "#0000bb"; }
 
 	// 5: magenta
-	if ( number == 5 && bright == 0 ) { return "#b0b"; }
-	if ( number == 5 && bright == 1 ) { return "#f4f"; }
+	if ( number == 5 && highlight == 0 ) { return "#ff00ff"; }
+	if ( number == 5 && highlight == 1 ) { return "#bb00bb"; }
 
 	// 6: cyan
-	if ( number == 6 && bright == 0 ) { return "#0bb"; }
-	if ( number == 6 && bright == 1 ) { return "#4ff"; }
+	if ( number == 6 && highlight == 0 ) { return "#00ffff"; }
+	if ( number == 6 && highlight == 1 ) { return "#00bbbb"; }
 
 	// 7: white
-	if ( number == 7 && bright == 0 ) { return "#bbb"; }
-	if ( number == 7 && bright == 1 ) { return "#fff"; }
+	if ( number == 7 && highlight == 0 ) { return "#ffffff"; }
+	if ( number == 7 && highlight == 1 ) { return "#bbbbbb"; }
 
 	// 8 is a special colour number for control characters
-	if ( number == 8 && bright == 0 ) { return "#666"; }
-	if ( number == 8 && bright == 1 ) { return "#aaa"; }
+	if ( number == 8 && highlight == 0 ) { return "#888888"; }
+	if ( number == 8 && highlight == 1 ) { return "#333333"; }
 
 	// 9 is for control characters copied from the line
 	// above in the case of double height, so we can see
 	// the relationship.
-	if ( number == 9 && bright == 0 ) { return "#333"; }
-	if ( number == 9 && bright == 1 ) { return "#777"; }
+	if ( number == 9 && highlight == 0 ) { return "#555555"; }
+	if ( number == 9 && highlight == 1 ) { return "#222222"; }
 
 	// For all other values just return white!
 	return "#fff";
@@ -942,45 +983,45 @@ function draw_status_bar() {
 		else { ctx.fillStyle = "#808080"; }
 
 	// Draw the background to the bar and set up the font.
-	ctx.fillRect(0, 24*20+2, 40*12, 36);
-	ctx.font = "13px Arial";
+	ctx.fillRect(0, (24*20+2)*pixScale, 40*12*pixScale, 36*pixScale);
+	ctx.font = (13*pixScale)+"px Arial";
 	ctx.fillStyle = "#000";
 
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
-	var offset = 5;
-	var spacing = 43;
+	var offset = 5*pixScale;
+	var spacing = 43*pixScale;
 
 	// The items in the status bar:
 
 	// character code
-	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496);
+	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496*pixScale);
 
 	// position
-	ctx.fillText(curx+","+cury, offset+spacing, 496);
+	ctx.fillText(curx+","+cury, offset+spacing, 496*pixScale);
 
 	// foreground and background colour
 	ctx.fillText(
 		colour_name(fg[cury][curx])
 		+" "+(tg[cury][curx]==0?"text":"graphics")
 		+" on "+colour_name(bg[cury][curx]),
-		offset+(2*spacing), 496);
+		offset+(2*spacing), 496*pixScale);
 
 	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(9*spacing), 496);
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(9*spacing), 496*pixScale);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512);
+	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512*pixScale);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512*pixScale);
 
 	// normal or double height?
-	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.5*spacing), 496);
+	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.5*spacing), 496*pixScale);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512*pixScale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -992,13 +1033,14 @@ function draw_status_bar() {
 	if ( cset == 5 ) { charsetname = "ASCII"; }
 	if ( cset == 6 ) { charsetname = "Hebrew"; }
 	if ( cset == 7 ) { charsetname = "Cyrillic"; }
-	ctx.fillText(charsetname, offset, 512);
+    
+	ctx.fillText(charsetname, offset, 512*pixScale);
 
 	// is reveal on or off?
-	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512);
+	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512*pixScale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512)
+	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512*pixScale)
 }
 
 ////////////////////
@@ -1030,6 +1072,13 @@ function keydown(event) {
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
 	}
+    
+function fakepress(character) {
+    var event = new Object;
+    event["charCode"]=character.charCodeAt(0);
+    escape = 1;
+    keypress(event);
+}    
 
 function keypress(event) {
 	var code = ( 'charCode' in event ) ? event.charCode : event.keyCode;
@@ -1128,7 +1177,7 @@ function keypress(event) {
 		if ( code == 115 ) { placed_code = 25; }
 
 		// Z = wipe or redraw the screen
-		if ( code == 90 ) { matched = 1; wipe(1); }
+		if ( code == 90 ) { matched = 1; if (confirm("Clear whole screen?")) wipe(1); }
 		if ( code == 122 ) { matched = 1; redraw(); }
 
 		// We can also switch between character sets here.													     
@@ -2550,7 +2599,7 @@ function render(x,y,w,h) {
 							ctx.fillStyle = cell_grid; } 
 
 						// Finally, we draw the pixel!
-						ctx.fillRect((c*12)+(sx), (r*20)+(sy), 1, 1);
+						ctx.fillRect(((c*12)+(sx))*pixScale, ((r*20)+(sy))*pixScale, 1*pixScale, 1*pixScale);
 
 						continue; // Skip the code below which renders
 						          // this pixel as text.
@@ -2583,7 +2632,7 @@ function render(x,y,w,h) {
 						ctx.fillStyle = cell_grid; } 
 
 					// And finally draw the pixel!
-					ctx.fillRect((c*12)+(sx), (r*20)+(sy), 1, 1);
+					ctx.fillRect(((c*12)+(sx))*pixScale, ((r*20)+(sy))*pixScale, 1*pixScale, 1*pixScale);
 				}
 			}
 		}
