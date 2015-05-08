@@ -1174,8 +1174,8 @@ function keypress(event) {
 		if ( code == 122 ) { matched = 1; redraw(); }
         
         // [ and ] = narrower/wider screen
-		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); }
-		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); }
+		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,24,0);}
+		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,24,0);}
 
 		// We can also switch between character sets here.													     
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
