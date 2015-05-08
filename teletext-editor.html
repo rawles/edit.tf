@@ -682,6 +682,9 @@ function init_mouse() {
 		mouse_span_y1 = -1;
 		mouse_span_x2 = -1;
 		mouse_span_y2 = -1;
+        
+        // update the url now the mouse has been released
+        save_to_hash();
     }, false);
 
     // ... and when it's dragged.
@@ -853,6 +856,11 @@ function load_from_hash() {
 // converts the character set and page data into a hex string and
 // puts it there.
 function save_to_hash() { 
+    if (mouse_button == 1) {
+        // optimisation: don't update hash while drawing
+        return;
+    }
+
 	var encoding = "";
 
 	// Construct the metadata as described above.
@@ -889,7 +897,9 @@ function save_to_hash() {
 	for ( var i = 0; i < 1120; i++ ) {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
-	window.location.hash = encoding;
+    if (window.location.hash != encoding) {
+        window.location.hash = encoding;
+    }
 }
 
 
