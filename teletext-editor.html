@@ -999,7 +999,10 @@ function draw_status_bar() {
 		offset+(2*spacing), 496*pix_scale);
 
 	// normal or double height?
-	ctx.fillText(nd[cury][curx]==0?"normal height":"double height", offset+(6.25*spacing), 496*pix_scale);
+	var heighttext = "normal height";
+	if ( nd[cury][curx] == 1 ) { heighttext = "double height"; } 
+	if ( nd[cury][curx] == 2 ) { heighttext = "height reset"; } 
+	ctx.fillText(heighttext, offset+(6.25*spacing), 496*pix_scale);
 
 	// contiguous or separated?
 	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.25*spacing), 496*pix_scale);

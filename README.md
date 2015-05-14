@@ -38,7 +38,7 @@ significant bit appearing first. Contributions of scripts to convert
 these URLs to formats required by other teletext systems would be very 
 welcome.
 
-## Licensing and support
+## Licensing
 
 The source code is commented throughout and licenced under the GNU 
 General Public Licence v3.0, with additional requirements concerning 
@@ -46,11 +46,6 @@ minimisation of the source code. See the notice for more details. Bug
 reports and pull requests are welcome. If you would like to contribute 
 but cannot program, documentation and tutorials would be very welcome. 
 If you're interested, please comment on issue #3.
-
-For IRC support, try the channel ##teletext on Freenode. If you don't 
-have an IRC client installed, it may be more convenient to [chat using 
-your 
-browser](https://webchat.freenode.net/?channels=%23%23teletext&prompt=1).
 
 ## Related links
 
