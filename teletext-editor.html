@@ -167,7 +167,7 @@ div#b {
 <script type="text/javascript">
 
 
-// Copyright (C) 2015  Simon Rawles
+// Copyright (C) 2015, Simon Rawles and others
 //
 // The JavaScript code in this page is free software: you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -234,8 +234,9 @@ var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 				 // 0x10) control codes? 0 if not, 1 if so.
                  
-var pix_scale=2;  // draw at a higher resolution than we display at, to look better zoomed in
-var aspect_ratio=1.2; // specifies how much to stretch the x direction
+var pix_scale = 2;  // draw at a higher resolution than we display at, to
+                 // look better zoomed in.
+var aspect_ratio=1.2; // specifies how much to stretch the x direction.
 
 // Initialises the state of the screen.
 function init_state() { 
@@ -1027,16 +1028,16 @@ function draw_status_bar() {
 	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512*pix_scale);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.5*spacing), 512*pix_scale);
+	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.25*spacing), 512*pix_scale);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6.5*spacing), 512*pix_scale);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6*spacing), 512*pix_scale);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.75*spacing), 512*pix_scale);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.25*spacing), 512*pix_scale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(9*spacing), 512*pix_scale)
+	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 512*pix_scale);
 }
 
 ////////////////////
