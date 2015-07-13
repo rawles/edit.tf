@@ -431,9 +431,9 @@ function wipe(andrender) {
 	for ( var r = 0; r < 24; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
 			clear_char(c, r);
-			}
-		fs[r] = 0;
 		}
+		fs[r] = 0;
+	}
 	if ( andrender != 0 ) {
 		render(0,0,40,24,0);
 	}
@@ -1280,7 +1280,6 @@ function keypress(event) {
 	if ( old_esc != escape ) { draw_status_bar(); }
 }
 
-
 //////////////////
 ///// CURSOR /////
 //////////////////
@@ -1378,16 +1377,44 @@ function cursor_tab() {
 	}
 
 	// Update the attributes of the current cell by copying those of the
-	// next cell, apart from the actual character code, which should be
-	// a space.
+	// previous cell, apart from the actual character code, which should be
+	// a space. The exception is where the previous cell is a set-after
+	// control code, in which case, its individual effect (specific to
+	// the code in question) needs to be copied.
+
+	// We first do this default behaviour, then, if needed, overwrite
+	// the attributes.
+
 	var newbg = 0; var newfg = 0; var newtg = 0;
 	var newcs = 0; var newnd = 0; var newhg = 0;
 	var newsc = 0; var newsf = 0;
-	if ( curx < 39 ) {
-		newfg = fg[cury][curx+1]; newbg = bg[cury][curx+1];
-		newtg = tg[cury][curx+1]; newcs = cs[cury][curx+1];
-		newnd = nd[cury][curx+1]; newhg = hg[cury][curx+1];
-		newsc = sc[cury][curx+1]; newsf = sf[cury][curx+1];
+	if ( curx > 0  ) {
+		newfg = fg[cury][curx-1]; newbg = bg[cury][curx-1];
+		newtg = tg[cury][curx-1]; newcs = cs[cury][curx-1];
+		newnd = nd[cury][curx-1]; newhg = hg[cury][curx-1];
+		newsc = sc[cury][curx-1]; newsf = sf[cury][curx-1];
+	}
+
+	var prev_char = 32;
+	if ( curx > 0 ) { prev_char = cc[cury][curx-1]; }
+	if ( curx < 39 &&
+		( ( prev_char >= 1 && prev_char <= 7 )
+		|| ( blackfg != 0 && prev_char == 0 )
+		|| ( prev_char >= 17 && prev_char <= 23 )
+		|| ( blackfg != 0 && prev_char == 16 )  
+		) ) { 
+		newfg = fg[cury][curx+1];
+		newtg = tg[cury][curx+1];
+		newsc = sc[cury][curx+1];
+	}
+	if ( curx < 39 && prev_char == 8 ) { // flash
+		newsf = sf[cury][curx+1];
+	}
+	if ( curx < 39 && prev_char == 13 ) { // double
+		newnd = nd[cury][curx+1];
+	}
+	if ( curx < 39 && prev_char == 31 ) { // release
+		newnd = hg[cury][curx+1];
 	}
 	fg[cury][curx] = newfg; bg[cury][curx] = newbg;
 	tg[cury][curx] = newtg; cs[cury][curx] = newcs;
@@ -1844,7 +1871,8 @@ function place_code(x,y,code,andrender) {
 		}
 	}
 
-	// Conceal is set-after, 
+	// Conceal is set-at - previous versions has it as set-after,
+	// but ETS 300 706 is clear on the matter.
 	if ( code == 24 ) {
 		cc[y][x] = code;
 
@@ -1861,14 +1889,14 @@ function place_code(x,y,code,andrender) {
 			}
 			// If another conceal character is encountered, then 
 			// it has 'taken over' and we can stop. Conceal is 
-			// set-after so we set the limit ahead.
+			// set-at so we set the limit at this point
 			if  ( cc[y][c] == 24 ) {
-				limit = c+1; break;
+				limit = c; break;
 			}
 		}
 
 		// Update started from the next character...
-		for ( var c = x + 1; c < limit; c++ ) { 
+		for ( var c = x; c < limit; c++ ) { 
 			sc[y][c] = 1;
 		}
 
@@ -1917,7 +1945,7 @@ function place_code(x,y,code,andrender) {
 
 // Just like we have to call place_code() to determine the effects
 // of a control character we place, we also need to call
-// check_for_remove_code() to process teh effects of a control
+// check_for_remove_code() to process the effects of a control
 // character we remove, for example text no longer be marked in 
 // a particular colour. We call this before we delete anything.
 
@@ -1952,7 +1980,7 @@ function check_for_remove_code(x,y,andrender) {
 		var gfx = tg[y][x];
 
 		// We also consider concealed text, which is set-at and
-		// therefore requirest that we check the character before.
+		// therefore requires that we check the character before.
 		var lastsc = 0;
 		var sc_affected = -1;
 		if ( x > 0 ) { 
@@ -2070,7 +2098,7 @@ function check_for_remove_code(x,y,andrender) {
 		}
 	}
 
-	// Double and norma height. Normal is set-at and double is
+	// Double and normal height. Normal is set-at and double is
 	// set-after, so things are a little more complicated.
 	if ( code == 12 || code == 13 ) {
 
@@ -2154,7 +2182,7 @@ function check_for_remove_code(x,y,andrender) {
 		}
 	}
 
-	// Concealed text is set-after and is cancelled by a change of
+	// Concealed text is set-at and is cancelled by a change of
 	// text or graphics colour.
 	if ( code == 24 ) {
 		var newsc = 0;
@@ -2168,15 +2196,15 @@ function check_for_remove_code(x,y,andrender) {
 			|| ( blackfg != 0 && cc[y][c] == 0 )
 			|| ( blackfg != 0 && cc[y][c] == 16 ) ) { 
 				// text or graphics character has been found.
-				limit = c+1; break;
+				limit = c; break;
 			}
 			if  ( cc[y][c] == 24 ) {
 				// Another conceal character has taken over. It's
 				// set-after.
-				limit = c+1; break;
+				limit = c; break;
 			}
 		}
-		for ( var c = x + 1; c < limit; c++ ) { 
+		for ( var c = x; c < limit; c++ ) { 
 			sc[y][c] = newsc;
 		}
 		if ( andrender != 0 ) {
