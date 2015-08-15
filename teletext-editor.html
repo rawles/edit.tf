@@ -151,7 +151,7 @@ div#b {
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
 
-<tr><td colspan="2">Q/W/A/S/Z/X/R/C/F</td><td colspan="2">subpixel twiddling</td></tr>
+<tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
 
 <tr class="newsection"><td colspan="4">Bug reports and pull requests welcome:</td></tr>
 
@@ -1234,17 +1234,17 @@ function keypress(event) {
 				var occ = cc[cury][curx];
 
 				// QWASZX do subpixel twiddling.
-				if ( code == 113 ) { cc[cury][curx] ^= 1; }   // [q]
-				if ( code == 119 ) { cc[cury][curx] ^= 2; }   // [w]
-				if ( code == 97 )  { cc[cury][curx] ^= 4; }   // [a]
-				if ( code == 115 ) { cc[cury][curx] ^= 8; }   // [s]
-				if ( code == 122 ) { cc[cury][curx] ^= 16; }  // [z]
-				if ( code == 120 ) { cc[cury][curx] ^= 64; }  // [x]
+				if ( code == 113 || code == 55 ) { cc[cury][curx] ^= 1; }   // [q] or [7]
+				if ( code == 119 || code == 56 ) { cc[cury][curx] ^= 2; }   // [w] or [8]
+				if ( code == 97 || code == 52 )  { cc[cury][curx] ^= 4; }   // [a] or [4]
+				if ( code == 115 || code == 53 ) { cc[cury][curx] ^= 8; }   // [s] or [5]
+				if ( code == 122 || code == 49 ) { cc[cury][curx] ^= 16; }  // [z] or [1]
+				if ( code == 120 || code == 50 ) { cc[cury][curx] ^= 64; }  // [x] or [2]
 
 				// Some operations on the whole cell - all six subpixels.
-				if ( code == 114 ) { cc[cury][curx] ^= 95; }  // [r]everse
-				if ( code == 99 )  { cc[cury][curx] &= 32; }  // [c]lear
-				if ( code == 102 ) { cc[cury][curx] |= 95; }  // [f]ill
+				if ( code == 99 || code == 57 )  { cc[cury][curx] &= 32; }  // [c]lear or [9]
+				if ( code == 102 || code == 54 ) { cc[cury][curx] |= 95; }  // [f]ill or [6]
+				if ( code == 114 || code == 51 ) { cc[cury][curx] ^= 95; }  // [r]everse or [3]
 
 				// If anything changed, update the canvas.
 				if ( occ != cc ) { 
