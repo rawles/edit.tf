@@ -74,6 +74,6 @@ for ( my $y = 0; $y < 24; $y++ ) {
 			$cc[$y*40+$x] |= 128;
 		} 
 		print chr($cc[$y*40+$x]);
-		}
-	print "\n";
 	}
+	print "\n";
+}
