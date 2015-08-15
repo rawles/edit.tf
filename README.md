@@ -34,18 +34,28 @@ Filename Safe Alphabet ([RFC 4648](https://tools.ietf.org/html/rfc4648)
 §5 'Table 2: The "URL and Filename safe" Base 64 Alphabet'). After 
 decoding, the seven-bit character code for column _c_ and row _r_ 
 appears at bit positions _280r+7c_ to _280r+7c+6_ inclusive, the most 
-significant bit appearing first. Contributions of scripts to convert 
-these URLs to formats required by other teletext systems would be very 
-welcome.
+significant bit appearing first.
+
+A script, `url2raw.pl`, in the `tools/` directory, is provided to assist 
+with this conversion. Supply an editor URL on standard input and it will 
+output the raw frame, with lines delimited with newlines, on standard 
+output. Contributions of scripts to convert these URLs to formats 
+required by other teletext systems would be very welcome.
 
 ## Licensing
 
 The source code is commented throughout and licenced under the GNU 
 General Public Licence v3.0, with additional requirements concerning 
-minimisation of the source code. See the notice for more details. Bug 
-reports and pull requests are welcome. If you would like to contribute 
-but cannot program, documentation and tutorials would be very welcome. 
-If you're interested, please comment on issue #3.
+minimisation of the source code. See the notice for more details.
+
+Associated scripts and other tools are licenced under the same terms.
+
+## Ways to contribute
+
+Bug reports, enhancement requests and pull requests are welcome. If you 
+would like to contribute but cannot program, documentation and tutorials 
+would also be very welcome. If you're interested in contributing in this 
+way, please comment on issue #3.
 
 ## Related links
 
@@ -56,4 +66,9 @@ If you're interested, please comment on issue #3.
   [Teletext Preservation project](http://www.teletext.org.uk/) has contributed a
   [test frame](http://editor.teletext40.com/#0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAa8WrVq3Jl2ZemVB00aeaDnww48qFAgQIECBAgQIECBAgQIBpH__Qf_6D-vXoP3__9Qf__9AgQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaRQL_69Ag__PiD_9-fEH___QIECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkUCD-gQIP_z4g2fPj9Ag-IECBAgQIECBAgQIECBAgQIECAaS________________________6BAgQIECBAgQIECBAgQIBpH_____________________-gQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaR____-vFmTEESfOi_______oECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkf_____________________6BAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAg)
   for proper double-height handling.
-* The editor was used at a workshop called [Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015) at the Tate Britain in June 2015.
+* The editor was used at a workshop called [Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015) 
+  at the Tate Britain in June 2015.
+* The editor was used by the [CCC Video Operation Center|http://c3voc.de/]
+  as part of their DVB-T system. It broadcasted a signal containing 
+  teletext to to the televisions belonging to participants of the
+  [Chaos Communication Camp 2015|https://events.ccc.de/camp/2015/wiki/Main_Page].
