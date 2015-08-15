@@ -68,7 +68,7 @@ way, please comment on issue #3.
   for proper double-height handling.
 * The editor was used at a workshop called [Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015) 
   at the Tate Britain in June 2015.
-* The editor was used by the [CCC Video Operation Center|http://c3voc.de/]
+* The editor was used by the [CCC Video Operation Center](http://c3voc.de/)
   as part of their DVB-T system. It broadcasted a signal containing 
   teletext to to the televisions belonging to participants of the
-  [Chaos Communication Camp 2015|https://events.ccc.de/camp/2015/wiki/Main_Page].
+  [Chaos Communication Camp 2015](https://events.ccc.de/camp/2015/wiki/Main_Page).
