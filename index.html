@@ -12,9 +12,6 @@ table#hints {
 	margin-right: auto;
 	border-collapse: collapse;
 	border: 1px solid #353;
-	position: absolute;
-	top: 1px;
-	right: 1px;
 }
 table#hints td, table#hints tr , table#hints th {
 	border: 1px solid #353;
@@ -120,20 +117,12 @@ div#b {
 	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
 <tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
 	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
+<tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
+    <td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
 
-<tr onclick="fakepress('o')">
-    <td>o</td><td colspan="2">conceal</td>
-	<td>O</td></tr>
-<tr onclick="fakepress('j')">
-    <td>j</td><td colspan="2">insert block character</td>
-	<td>J</td></tr>
-<tr onclick="fakepress('u')">
-    <td>u</td><td colspan="2">duplicate row</td>
-	<td>U</td></tr>
-<tr><td>1-8</td><td colspan="2">switch character sets</td>
-	<td>1-8</td></tr>
+<tr> <td onclick="fakepress('u')">u</td><td onclick="fakepress('u')">duplicate row</td>
+<td>switch char. sets</td><td>1-8</td></tr>
 
-<tr class="newsection"><td colspan="4">If you need black foreground:</td>
 <tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
 	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
 <tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
@@ -141,25 +130,21 @@ div#b {
 
 <tr class="newsection"><td colspan="4">No escape required for:</td></tr>
 
-<tr onclick="cursor_tab()">
-    <td>TAB</td><td colspan="2">insert space</td>
-	<td>TAB</td></tr>
-<tr onclick="cursor_bs()">
-    <td>BS</td><td colspan="2">delete character</td>
-	<td>BS</td></tr>
+<tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
+<td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
 
 <tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
 
-<tr class="newsection"><td colspan="4">Bug reports and pull requests welcome:</td></tr>
+<tr class="newsection"><td colspan="4"><a href="https://github.com/rawles/teletext-editor">Bug reports and pull requests welcome</a>.</td></tr>
 
-<tr><td colspan="4"><a href="https://github.com/rawles/teletext-editor">https://github.com/rawles/teletext-editor</a></td></tr>
-<tr><td colspan="4">The frame data is in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
+<tr><td colspan="4">The frame's data is all in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
 
 </table>
-
+</div> 
+<div id="b">
 
 <canvas id="frame"></canvas>
 </div></div>
