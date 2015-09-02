@@ -69,20 +69,21 @@ way, please comment on issue #3.
 
 The editor has been used for various events and systems:
 
-* The editor was used by Dan Farrimond (@illarterate) and Carl Attrill at a
+* The editor was used by Dan Farrimond - @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
   at the Tate Britain art gallery in June 2015.
   It was also used by Dan at *St. Helens Versus the Lizards* and continues to
   be used at other teletext events.
-* The editor was used by the [CCC Video Operation Center](http://c3voc.de/)
-  as part of their DVB-T system. It broadcasted a signal containing 
+* The editor was used by the [CCC Video Operation Center](http://c3voc.de/) -
+  @voc - as part of their DVB-T system. It broadcasted a signal containing 
   teletext to televisions belonging to the participants of the
   [Chaos Communication Camp 2015](https://events.ccc.de/camp/2015/wiki/Main_Page) in August 2015.
 
 ### Compatibility
 
-* The Windows-based teletext editor [wxTED](http://teastop.co.uk/teletext/wxted/) by Peter Kwan (who also produces a Raspberry Pi teletext inserter!) has 
+* The Windows-based teletext editor [wxTED](http://teastop.co.uk/teletext/wxted/) by Peter Kwan - @peterkvt80 - has 
   implemented import from, and export to, the URLs used in this editor.
+  Peter has also produced a Raspberry Pi teletext inserter!
 
 ### Test frames
 
