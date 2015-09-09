@@ -13,22 +13,29 @@ table#hints {
 	border-collapse: collapse;
 	border: 1px solid #353;
 }
-table#hints td, table#hints tr , table#hints th {
-	border: 1px solid #353;
+table#hints td, table#hints tr , table#hints th, div#export {
 	color: #9b9;
 	vertical-align: center; 
 	text-align: center;
 	font-family: sans-serif;
 	line-height: 1.1;
 	font-size: 12px;
-    
-   -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;    
 }
-td a {
+div.exportbox {
+	margin-bottom: 1em;
+	background-color: #353;
+	padding: 3px;
+	border: 2px solid #9b9;
+	}
+table#hints td, table#hints tr , table#hints th {
+	border: 1px solid #353;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;    
+}
+td a, div#export a {
 	color: inherit;
 }
 canvas {
@@ -71,6 +78,8 @@ div#b {
 
 <div id="a"><div id="b">
 
+<div id="export">
+</div>
 <table id="hints">
 <tr class="newsection">
 <td colspan="4">First press escape then the following:</td>
@@ -132,6 +141,9 @@ div#b {
 
 <tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
 <td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
+<td onclick="fakepress('e')">E</td><td onclick="fakepress('e')" colspan="2">export frame</td>
+<td onclick="fakepress('e')">E</td>
+</tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
@@ -865,10 +877,33 @@ function save_to_hash() {
 	for ( var i = 0; i < 1120; i++ ) {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
-    if (window.location.hash != encoding) {
-        window.location.hash = encoding;
-    }
+	if (window.location.hash != encoding) { window.location.hash = encoding; }
+
+	invalidate_export_raw();
 }
+
+function export_raw() { 
+	// We can't substitute characters for the base64 in the address bar becase
+	// the output must constain newlines and the addressbar uses seven bits for
+	// each character. Therefore we must export in a different way.
+
+	var rawstring = "";
+	for ( var r=0; r<24; r++ ) {
+		for ( var c=0; c<40; c++ ) {
+			rawstring = rawstring + String.fromCharCode(cc[r][c]);
+		}
+		rawstring = rawstring + "\n";
+	}
+
+	var data_uri = "data:text/plain;base64,"+window.btoa(rawstring);
+	document.getElementById('export').innerHTML = "<div class=\"exportbox\">Export as: "
+		+"<a href="+data_uri+">raw</a></div>";
+}
+
+function invalidate_export_raw() { 
+	document.getElementById('export').innerHTML = "";
+}
+
 
 
 ///////////////////
@@ -1161,12 +1196,15 @@ function keypress(event) {
 		// Z = wipe or redraw the screen
 		if ( code == 90 ) { matched = 1; if (confirm("Clear whole screen?")) wipe(1); }
 		if ( code == 122 ) { matched = 1; redraw(); }
+
+		// E = export frame
+		if ( code == 69 || code == 101 ) { matched = 1; export_raw(); }
         
-        // [ and ] = narrower/wider screen
+		// [ and ] = narrower/wider screen
 		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,24,0);}
 		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,24,0);}
 
-		// We can also switch between character sets here.													     
+		// We can also switch between character sets here.
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
 		if ( code == 50 ) { matched = 1; set_charset(1); }   // [2] German
 		if ( code == 51 ) { matched = 1; set_charset(2); }   // [3] Swedish
