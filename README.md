@@ -3,7 +3,7 @@
 This is a teletext editor implemented in JavaScript, so that people now 
 need no more than a JavaScript-enabled browser in order to create their 
 own teletext frames. It was written for the 
-[teletext40](http://teletext40.com/100/1) project and you can try the 
+[teletext40](http://www.teletext40.com/100/1) project and you can try the 
 editor out at http://editor.teletext40.com/ - however, it also works as 
 a general-purpose editor, and is intended to be completely independent of
 teletext40.
