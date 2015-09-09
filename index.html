@@ -229,11 +229,15 @@ var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
 var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
-				 // 0x10) control codes? 0 if not, 1 if so.
+		 // 0x10) control codes? 0 if not, 1 if so.
                  
 var pix_scale = 2;  // draw at a higher resolution than we display at, to
                  // look better zoomed in.
 var aspect_ratio=1.2; // specifies how much to stretch the x direction.
+
+var active_export = 0;
+		 // if non-zero, there are URLs for export on the screen
+		 // which should be invalidated on a change.
 
 // Initialises the state of the screen.
 function init_state() { 
@@ -339,6 +343,8 @@ function copy_char(x1, y1, x2, y2) {
 
 // Deletes the row that the cursor is on.
 function delete_row(r) {
+	invalidate_export();
+
 	// For each row, copy the data from the row above.
 	for ( var y = r; y < 24; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
@@ -361,6 +367,8 @@ function delete_row(r) {
 
 // Inserts an empty row at row r.
 function insert_row(r) { 
+	invalidate_export();
+
 	// Working up from the bottom of the screen, copy the
 	// data from the row above.
 	for ( var y = 23; y >= r; y-- ) { 
@@ -381,6 +389,8 @@ function insert_row(r) {
 // Duplicates row r to the one below it, shifting all 
 // the rows below it down.
 function duplicate_row(r) { 
+	invalidate_export();
+
 	// Working up from the bottom of the screen, copy the
 	// data from the row above.
 	for ( var y = 23; y >= r; y-- ) { 
@@ -425,6 +435,8 @@ function redraw() {
 // row. If andrender is non-zero, also re-renders the
 // frame.
 function wipe(andrender) { 
+	invalidate_export();
+
 	for ( var r = 0; r < 24; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
 			clear_char(c, r);
@@ -878,8 +890,6 @@ function save_to_hash() {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
 	if (window.location.hash != encoding) { window.location.hash = encoding; }
-
-	invalidate_export_raw();
 }
 
 function export_raw() { 
@@ -898,10 +908,14 @@ function export_raw() {
 	var data_uri = "data:text/plain;base64,"+window.btoa(rawstring);
 	document.getElementById('export').innerHTML = "<div class=\"exportbox\">Export as: "
 		+"<a href="+data_uri+">raw</a></div>";
+	active_export = 1;
 }
 
-function invalidate_export_raw() { 
-	document.getElementById('export').innerHTML = "";
+function invalidate_export() { 
+	if ( active_export != 0 ) {
+		document.getElementById('export').innerHTML = "";
+		active_export = 0;
+	}
 }
 
 
@@ -1229,6 +1243,7 @@ function keypress(event) {
 		}
 
 	if ( escape == 0 ) { // if we're not in escape mode...
+		invalidate_export();
 		if ( tg[cury][curx] == 0 ) {
 			if ( code >= 32 && code <= 127 ) { // and this is a simple text character...
 
@@ -1634,6 +1649,9 @@ function adjustdh_fullscreen(andrender) {
 // position (x,y). If andrender is non-zero, it also renders the 
 // character.
 function place_code(x,y,code,andrender) {
+
+	// Quickly invalidate any export we have going
+	invalidate_export();
 
 	// Firstly, text and graphic colour codes. These change the
 	// foreground colour and text/graphics mode.
