@@ -6,7 +6,7 @@
 <style type="text/css">
 body { 
 	background-color: #222;
-	}
+}
 table#hints {
 	margin-left: auto;
 	margin-right: auto;
@@ -26,7 +26,7 @@ div.exportbox {
 	background-color: #353;
 	padding: 3px;
 	border: 2px solid #9b9;
-	}
+}
 table#hints td, table#hints tr , table#hints th {
 	border: 1px solid #353;
 	-moz-user-select: -moz-none;
@@ -44,9 +44,9 @@ canvas {
 	border-radius: 10px;
 	-moz-border-radius: 3px;
 	margin: 0 20px 0 20px;
-    cursor: crosshair;
-    position:relative;
-    z-index: 1;
+	cursor: crosshair;
+	position:relative;
+	z-index: 1;
 }
 tr.newsection {
 	background-color: #353;
@@ -60,17 +60,16 @@ div#a {
 	margin: 0;
 	padding: 0;
 	border-collapse: collapse;
-	}
+}
 div#b {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 	padding: 0;
 	margin: 0;
-	}
-    
+}
 [onclick] {
-    cursor: pointer;
+	cursor: pointer;
 }
 </style>
 </head>
@@ -892,25 +891,45 @@ function save_to_hash() {
 	if (window.location.hash != encoding) { window.location.hash = encoding; }
 }
 
+// Many people asked for a way to export frames from the editor. This function
+// provides one way to do that which is easier than converting the URL. It
+// converts the frame to raw format, and then edits the document to show a link
+// using the data URI scheme. The user can save this link to their own computer
+// without the server needing to store it.
 function export_raw() { 
-	// We can't substitute characters for the base64 in the address bar becase
-	// the output must constain newlines and the addressbar uses seven bits for
-	// each character. Therefore we must export in a different way.
+	// We can't substitute characters for the base64 in the address bar
+	// becase the output must constain newlines and the addressbar uses
+	// seven bits for each character. Therefore we must export in a
+	// different way.
 
-	var rawstring = "";
+	var rawstring_0 = "";
+	var rawstring_1 = ""
+
 	for ( var r=0; r<24; r++ ) {
 		for ( var c=0; c<40; c++ ) {
-			rawstring = rawstring + String.fromCharCode(cc[r][c]);
+			var xcc = cc[r][c];
+			rawstring_0 = rawstring_0 + String.fromCharCode(xcc);
+			if ( xcc < 32 ) { xcc += 128; } 
+			rawstring_1 = rawstring_1 + String.fromCharCode(xcc);
 		}
-		rawstring = rawstring + "\n";
+		rawstring_0 = rawstring_0 + "\n";
+		rawstring_1 = rawstring_1 + "\n";
 	}
 
-	var data_uri = "data:text/plain;base64,"+window.btoa(rawstring);
-	document.getElementById('export').innerHTML = "<div class=\"exportbox\">Export as: "
-		+"<a href="+data_uri+">raw</a></div>";
+	var datauri_0 = "data:text/plain;base64,"+window.btoa(rawstring_0);
+	var datauri_1 = "data:text/plain;base64,"+window.btoa(rawstring_1);
+
+	document.getElementById('export').innerHTML =
+		"<div class=\"exportbox\">Export as: "
+		+ "<a href="+datauri_0+">raw_0</a>"
+		+ " or " 
+		+ "<a href="+datauri_1+">raw_1</a>"
+		+ "</div>";
 	active_export = 1;
 }
 
+// When a page changes, invalidate_export is called to remove any export links
+// on the screen, since they no longer reflect the frame as shown.
 function invalidate_export() { 
 	if ( active_export != 0 ) {
 		document.getElementById('export').innerHTML = "";
