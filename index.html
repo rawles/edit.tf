@@ -2366,7 +2366,7 @@ function render(x,y,w,h) {
 			var cop = 0;
 
 			// If we're on the second row of double height, we copy
-			// everything from the row above.
+			// the value of all attributes from the row above.
 			if ( r > 0 && nd[r-1][c] == 1 && fs[r] == 2 ) {
 				ecc = cc[r-1][c]; efg = fg[r-1][c]; ebg = bg[r-1][c];
 				etg = tg[r-1][c]; ecs = cs[r-1][c]; end = nd[r-1][c];
@@ -2439,6 +2439,12 @@ function render(x,y,w,h) {
 						// We start one character back.
 						var px = c; px--;
 						var py = r;
+
+						// If this is the second line of double height, we need
+						// to start searching from the first line instead.
+						// Note that a change in height stops the search, so 
+						// we don't need to revert to the original line later.
+						if ( r > 0 && nd[r-1][c] == 1 && fs[r] == 2 ) { py--; }
 
 						while ( px >= 0 ) {
 
