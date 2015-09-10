@@ -128,7 +128,7 @@ div#b {
 <tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
     <td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
 
-<tr> <td onclick="fakepress('u')">u</td><td onclick="fakepress('u')">duplicate row</td>
+<tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
 <td>switch char. sets</td><td>1-8</td></tr>
 
 <tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
@@ -140,8 +140,8 @@ div#b {
 
 <tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
 <td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
-<td onclick="fakepress('e')">E</td><td onclick="fakepress('e')" colspan="2">export frame</td>
-<td onclick="fakepress('e')">E</td>
+<td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td>
+<td onclick="fakepress('l')">L</td>
 </tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
@@ -156,7 +156,6 @@ div#b {
 </table>
 </div> 
 <div id="b">
-
 <canvas id="frame"></canvas>
 </div></div>
 
@@ -223,6 +222,9 @@ var curx = 0;	 // the column at which the cursor is currently.
 var cury = 0;	 // the row at which the cursor is currently.
 
 var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
+var statusmode = 0; // what is the statusbar showing? 
+		 // 0 means the usual information about the current cell.
+		 // 1 means the additional teletext metadata
 var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
 var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
@@ -238,10 +240,32 @@ var active_export = 0;
 		 // if non-zero, there are URLs for export on the screen
 		 // which should be invalidated on a change.
 
+// Page metadata:
+var m_page = 0x100; // This page's number within the magazine.
+		    // This is hexadecimal. range: 0x100..0x7ff
+var m_subpage = 0;  // This page's subpage number within the
+		    // page. Not necessarily the subcode. Range
+		    // is 0x00 to 0xff.
+var m_subcode = 0x3f7f;  // This page's subcode/subpage number.
+		    // This is hexadecimal. range: 0x0..0x3f7f
+		    // Note that the third nybble may only range from
+		    // 0 to 7.
+var m_control = [];  // The control bits for this page.
+
+var m_fastext_red = 0;
+var m_fastext_green = 0;
+var m_fastext_yellow = 0;
+var m_fastext_cyan = 0;
+var m_fastext_link = 0;
+var m_fastext_index = 0;
+		    // These are fastext links to other pages.
+		    // Also hexadecimal, but may be 0 to indicate
+		    // no link.
+
 // Initialises the state of the screen.
 function init_state() { 
 
-    init_canvas();
+	init_canvas();
     
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
@@ -256,6 +280,9 @@ function init_state() {
 
 	// Initialise the font to the default character set.
 	init_font(cset);
+
+	// Set the control bits
+	for ( var i = 4; i <= 14; i++ ) { m_control[i] = 0; } 
 
 	// Load the page data from the hash, if possible.
 	load_from_hash();
@@ -903,27 +930,79 @@ function export_raw() {
 	// different way.
 
 	var rawstring_0 = "";
-	var rawstring_1 = ""
+	var rawstring_1 = "";
+
+	// We also construct TTI files for wxTED.
+	// PN: page number
+	var ttistring = "PN,"
+		+ m_page.toString(16).toUpperCase()
+		+ padstring("0", 2, m_subpage.toString())
+		+ "\r\n";
+	// CT: cycle time
+	ttistring = ttistring + "CT,1,C\r\n";
+	// DE: description
+	ttistring = ttistring + "DE,teletext-editor\r\n";
+
+	// We construct the TTI page status (PS) value by copying over
+	// the values of the control bits.
+	var tti_ps = 0x8000; // normal parallel transmission
+	if ( m_control[4] != 0 ) { tti_ps += 0x4000; } 
+	if ( m_control[5] != 0 ) { tti_ps += 0x0001; } 
+	if ( m_control[6] != 0 ) { tti_ps += 0x0002; } 
+	if ( m_control[7] != 0 ) { tti_ps += 0x0004; } 
+	if ( m_control[8] != 0 ) { tti_ps += 0x0008; } 
+	if ( m_control[9] != 0 ) { tti_ps += 0x0010; } 
+	if ( m_control[10] != 0 ) { tti_ps += 0x0020; } 
+	if ( m_control[11] != 0 ) { tti_ps += 0x0040; } 
+	if ( m_control[12] != 0 ) { tti_ps += 0x0200; } 
+	if ( m_control[13] != 0 ) { tti_ps += 0x0100; } 
+	if ( m_control[14] != 0 ) { tti_ps += 0x0080; } 
+
+	ttistring = ttistring + "PS,"
+		+ padstring("0", 4, tti_ps.toString(16).toUpperCase())
+		+ "\r\n";
+
+	// SC: subcode
+	ttistring = ttistring + "SC,"
+		+ padstring("0", 4, m_subcode.toString(16).toUpperCase())
+		+ "\r\n";
 
 	for ( var r=0; r<24; r++ ) {
+		// OL: output line
+		ttistring = ttistring + "OL," + (r+1) + ",";
 		for ( var c=0; c<40; c++ ) {
 			var xcc = cc[r][c];
 			rawstring_0 = rawstring_0 + String.fromCharCode(xcc);
 			if ( xcc < 32 ) { xcc += 128; } 
 			rawstring_1 = rawstring_1 + String.fromCharCode(xcc);
+			ttistring = ttistring + String.fromCharCode(xcc);
 		}
 		rawstring_0 = rawstring_0 + "\n";
 		rawstring_1 = rawstring_1 + "\n";
+		ttistring = ttistring + "\r\n";
 	}
+
+	// FL: fastext link
+	ttistring = ttistring + "FL,"
+		+ m_fastext_red.toString(16)
+		+","+ m_fastext_green.toString(16)
+		+","+ m_fastext_yellow.toString(16)
+		+","+ m_fastext_cyan.toString(16)
+		+","+ m_fastext_link.toString(16)
+		+","+ m_fastext_index.toString(16)
+		+"\r\n";
 
 	var datauri_0 = "data:text/plain;base64,"+window.btoa(rawstring_0);
 	var datauri_1 = "data:text/plain;base64,"+window.btoa(rawstring_1);
+	var datauri_tti = "data:text/plain;base64,"+window.btoa(ttistring);
 
 	document.getElementById('export').innerHTML =
-		"<div class=\"exportbox\">Export as: "
-		+ "<a href="+datauri_0+">raw_0</a>"
+		"<div class=\"exportbox\">Export as:<br/>"
+		+ "<a href="+datauri_0+">raw (0x00-0x7f)</a>"
 		+ " or " 
-		+ "<a href="+datauri_1+">raw_1</a>"
+		+ "<a href="+datauri_1+">raw (0x20-0x9f)</a>"
+		+ "<br/>or " 
+		+ "<a href="+datauri_tti+">TTI (8-bit)</a>"
 		+ "</div>";
 	active_export = 1;
 }
@@ -1017,6 +1096,12 @@ function colour_name(col) {
 // The status bar appears at the bottom of the editor and gives lots
 // of handy information about the state of the editor. It is called
 // frequently, whenever the state of the editor changes. 
+// There are two flavours of status bar. One shows mostly
+// the attributes for the current cell, and is used in editing.
+// The other shows the metadata for the frame, and is used
+// when attaching links and other metadata to the frame prior
+// to export.
+// The variable 'statusmode' indicates which of these is active.
 function draw_status_bar() {
 
 	var c = document.getElementById("frame");
@@ -1031,6 +1116,104 @@ function draw_status_bar() {
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
 
+	if ( statusmode == 0 ) { draw_status_bar_frame(ctx); }
+	if ( statusmode == 1 ) { draw_status_bar_metadata(ctx); } 
+}
+
+function draw_status_bar_metadata(ctx) { 
+	var offset = 5*pix_scale;
+	var spacing = 43*pix_scale;
+
+	ctx.fillText("p" + m_page.toString(16), offset, 496*pix_scale);
+	ctx.fillText("subpage " +
+		padstring("0", 2, m_subpage.toString()),
+		offset+(0.75*spacing), 496*pix_scale);
+	ctx.fillText("subcode=" +
+		padstring(" ", 4, m_subcode.toString(16).toUpperCase()),
+		offset+(2.5*spacing), 496*pix_scale);
+	ctx.fillText("fastext links: ", offset+(4.75*spacing), 496*pix_scale);
+
+	ctx.fillStyle = "#f00";
+	// XXX is displayed when there is no link.
+	var displayed_page = "XXX";
+	if ( m_fastext_red >= 0x100 && m_fastext_red <= 0x8ff ) { 
+		displayed_page = m_fastext_red.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(6.5*spacing), 496*pix_scale);
+
+	ctx.fillStyle = "#0f0";
+	displayed_page = "XXX";
+	if ( m_fastext_green >= 0x100 && m_fastext_green <= 0x8ff ) { 
+		displayed_page = m_fastext_green.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(7.25*spacing), 496*pix_scale);
+
+	ctx.fillStyle = "#ff0";
+	displayed_page = "XXX";
+	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow <= 0x8ff ) { 
+		displayed_page = m_fastext_yellow.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(8*spacing), 496*pix_scale);
+
+	ctx.fillStyle = "#0ff";
+	displayed_page = "XXX";
+	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan <= 0x8ff ) { 
+		displayed_page = m_fastext_cyan.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(8.75*spacing), 496*pix_scale);
+
+	// This link is just a hint to the decoder to cache an possible
+	// subsequent page. I didn't know what colour to use, so, because
+	// it's less important, I used grey.
+	ctx.fillStyle = "#666";
+	displayed_page = "XXX";
+	if ( m_fastext_link >= 0x100 && m_fastext_link <= 0x8ff ) { 
+		displayed_page = m_fastext_link.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(9.5*spacing), 496*pix_scale);
+
+	// The index link is white.
+	ctx.fillStyle = "#fff";
+	displayed_page = "XXX";
+	if ( m_fastext_index >= 0x100 && m_fastext_index <= 0x8ff ) { 
+		displayed_page = m_fastext_index.toString(16);
+	}
+	ctx.fillText(displayed_page, offset+(10.25*spacing), 496*pix_scale);
+
+	// And now the control bits. These are a bit esoteric for most
+	// usages, but the user may need to refer to them or edit them.
+	// There's no attempt to explain the meaning of each bit - I 
+	// think that would take up too much space on the bar.
+	ctx.fillStyle = "#000";
+	ctx.fillText("control: ", offset, 512*pix_scale);
+	ctx.fillText((m_control[4]==0)?"c4=0":"c4=1", offset+(1.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[5]==0)?"c5=0":"c5=1", offset+(2.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[6]==0)?"c6=0":"c6=1", offset+(3.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[7]==0)?"c7=0":"c7=1", offset+(4.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[8]==0)?"c8=0":"c8=1", offset+(5.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[9]==0)?"c9=0":"c9=1", offset+(6.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[10]==0)?"c10=0":"c10=1", offset+(7.25*spacing),
+		512*pix_scale);
+	ctx.fillText((m_control[11]==0)?"c11=0":"c11=1", offset+(8.25*spacing),
+		512*pix_scale);
+
+	// This is the national option character subset. We display it as a 
+	// binary string.
+	var charsubset =
+		((m_control[12]!=0)?"0":"1")
+	+	((m_control[13]!=0)?"0":"1")
+	+	((m_control[14]!=0)?"0":"1");
+	ctx.fillText("c12..c14=" + charsubset, offset+(9.25*spacing),
+		512*pix_scale);
+}
+
+function draw_status_bar_frame(ctx) { 
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
@@ -1105,7 +1288,8 @@ function keydown(event) {
 	var code = ('which' in event) ? event.which : event.keyCode;
 
 	// Escape key toggles the escape mode and redraws the status bar.
-	if ( code == 27 ) { escape++; escape = escape % 2; draw_status_bar(); return; } 
+	if ( code == 27 ) { escape++; escape = escape % 2;
+		draw_status_bar(); return; } 
 
 	// The four cursor keys are handled by their own functions.
 	if ( code == 37 ) { cursor_left(); return; }
@@ -1124,10 +1308,10 @@ function keydown(event) {
 	}
     
 function fakepress(character) {
-    var event = new Object;
-    event["charCode"]=character.charCodeAt(0);
-    escape = 1;
-    keypress(event);
+	var event = new Object;
+	event["charCode"]=character.charCodeAt(0);
+	escape = 1;
+	keypress(event);
 }    
 
 function keypress(event) {
@@ -1154,6 +1338,11 @@ function keypress(event) {
 		// We keep track of whether we've found an action for this key
 		// with these two variables.
 		var matched = 0; var placed_code = -1;
+
+		// I want to reserve the following keys for future features
+		// that I expect to be used a lot: [P]age [T]ransmit 
+		// Te[L]etext metadata
+		// Currently free: [9] [0]...
 
 		// First, the colours...
 		if ( blackfg != 0 && code == 107 ) { placed_code = 0; }  // blac[k]
@@ -1232,6 +1421,11 @@ function keypress(event) {
 
 		// E = export frame
 		if ( code == 69 || code == 101 ) { matched = 1; export_raw(); }
+
+		// L = teletext metadata
+		if ( code == 76 || code == 108 ) {
+			matched = 1; statusmode = 1 - statusmode;
+		} 
         
 		// [ and ] = narrower/wider screen
 		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,24,0);}
@@ -2690,7 +2884,13 @@ function render(x,y,w,h) {
 
 						// Unless the grid is being shown, and then we
 						// set the pixel if it's on this grid... 
-						if ( grid == 1 && ( sx == 11 || sy == 0 ) ) {
+						// We also mark the first eight characters
+						// differently in order to show they are usually
+						// not reproduced in a teletext frame (they are
+						// used for page metadata)
+						if ( grid == 1 && 
+							(	( sx == 11 && !( r == 0 && c < 7 ) ) 
+							||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 							ctx.fillStyle = cell_grid; } 
 
 						// Finally, we draw the pixel!
@@ -2723,7 +2923,9 @@ function render(x,y,w,h) {
 					}
 
 					// If the grid is being shown, set the pixel as above.
-					if ( grid == 1 && ( sx == 11 || sy == 0 ) ) {
+					if ( grid == 1 && 
+						(	( sx == 11 && !( r == 0 && c < 7 ) ) 
+						||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 						ctx.fillStyle = cell_grid; } 
 
 					// And finally draw the pixel!
@@ -3862,6 +4064,20 @@ function init_font(charset) {
 
 	add_font_char(127,31,31,31,31,31,31,31,31,0);
 		// block
+}
+
+
+////////////////////////////
+///// HELPER FUNCTIONS /////
+////////////////////////////
+
+// Sometimes it's necessary to pad a string by prepending characters
+// to it, most commonly because we want to add leading zeroes to a 
+// displayed number. That's what this function does.
+function padstring(char, width, string) {
+	var output = string;
+	while ( output.length < width ) { output = char + output; }
+	return output;
 }
 
 
