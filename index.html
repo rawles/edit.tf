@@ -606,6 +606,9 @@ function mouse_click(canvasx, canvasy, state) {
 	if ( state == 0 ) { cc[ey][ex] &= ~bitflip } // Switch off
 	if ( state == 1 ) { cc[ey][ex] |= bitflip; } // Switch on
 
+	// This will invalidate any export.
+	invalidate_export();
+
 	// Extend the span if we're outside of it, so we can update the
 	// effects of this flip on characters affected by held graphics.
 	if ( mouse_span_x1 == -1 || mouse_span_y1 == -1 || ey < mouse_span_y1
