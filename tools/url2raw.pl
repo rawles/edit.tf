@@ -46,11 +46,13 @@ if ( $url =~ /#/ ) { $url =~ s/^[^#]*#(.*)$/$1/; }
 # since the output is agnostic to it.
 $url =~ s/^[0-9a-fA-F]:(.*)$/$1/;
 
-if ( length($url) != 1120 ) { die "The encoded frame should be exactly 1120 characters in length"; } 
+if ( length($url) != 1120 && length($url) != 1167 ) {
+	die "The encoded frame should be exactly 1120 or 1167 characters in length";
+} 
 
 # Compute the characters in the output frame, bit-by-bit.
 my @cc = ();
-for ( my $i = 0; $i < 1120; $i++ ) { 
+for ( my $i = 0; $i < length($url); $i++ ) { 
 	my $val = index($alphabet, substr($url, $i, 1));
 	if ( $val == -1 ) { 
 		die "The encoded character at position $i should be one from the alphabet";
@@ -66,8 +68,11 @@ for ( my $i = 0; $i < 1120; $i++ ) {
 	}
 }
 
+my $numlines = 25;
+if ( length($url) == 1120 ) { $numlines = 24; } 
+
 # Output the frame.
-for ( my $y = 0; $y < 24; $y++ ) { 
+for ( my $y = 0; $y < $numlines; $y++ ) { 
 	for ( my $x = 0; $x < 40; $x++ ) { 
 		# Set the high bit if needed.
 		if ( $sethighbit != 0 && $cc[$y*40+$x] < 32 ) {

@@ -822,14 +822,23 @@ function load_from_hash() {
 	}
 
 	// This block deals with the new base 64 format.
-	if ( hashstring.length == 1120 ) {
+
+	// We need to be able to handle two cases here, depending on the
+	// size of the frame. 24-line frames have 1120 characters, and
+	// 25-line frames, the new way we do things, have 1167 characters.
+	// 25-line frames have two bits at the end which are ignored and
+	// just exist for padding.
+
+	if ( hashstring.length == 1120 || hashstring.length == 1167 ) {
+		var numlines = 25;
+		if ( hashstring.length == 1120 ) { numlines = 24; } 
 
 		// As we scan across the hashstring, we keep track of the
 		// code for the current character cell we're writing into.
 		var currentcode = 0;
 
 		// p is the position in the string.
-		for ( var p = 0; p < 1120; p++ ) {
+		for ( var p = 0; p < hashstring.length; p++ ) {
 			var pc = hashstring.charAt(p);
 			var pc_dec = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
 				.indexOf(hashstring.charAt(p));
@@ -870,17 +879,28 @@ function load_from_hash() {
 				}
 			}
 		}
+
+		// If we only read in a 24-line file, we need to blank the final
+		// line.
+		if ( numlines == 24 ) { 
+			for ( var x = 0; x < 40; x++ ) { clear_char(x,24) }
+		} 
 	}
 }
 
 // Similarly, we want to save the page to the hash. This simply
 // converts the character set and page data into a hex string and
 // puts it there.
+
+// Now that the editor is 25 lines, this format is the one we 
+// save to. There are two whole left-over bits at the end of
+// the encoding. Yes, it's wasteful, but for now, we'll have to
+// let that go.
 function save_to_hash() { 
-    if (mouse_button == 1) {
-        // optimisation: don't update hash while drawing
-        return;
-    }
+	if (mouse_button == 1) {
+		// optimisation: don't update hash while drawing
+		return;
+	}
 
 	var encoding = "";
 
@@ -893,7 +913,7 @@ function save_to_hash() {
 	// Construct a base-64 array by iterating over each character
 	// in the frame.
 	var b64 = [];
-	for ( var r=0; r<24; r++ ) {
+	for ( var r=0; r<25; r++ ) {
 		for ( var c=0; c<40; c++ ) {
 			for ( var b=0; b<7; b++ ) {
 
@@ -915,7 +935,7 @@ function save_to_hash() {
 	}
 
 	// Encode bit-for-bit.
-	for ( var i = 0; i < 1120; i++ ) {
+	for ( var i = 0; i < 1167; i++ ) {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
 	if (window.location.hash != encoding) { window.location.hash = encoding; }
@@ -926,7 +946,7 @@ function save_to_hash() {
 // converts the frame to raw format, and then edits the document to show a link
 // using the data URI scheme. The user can save this link to their own computer
 // without the server needing to store it.
-function export_raw() { 
+function export_frame() { 
 	// We can't substitute characters for the base64 in the address bar
 	// becase the output must constain newlines and the addressbar uses
 	// seven bits for each character. Therefore we must export in a
@@ -1425,7 +1445,7 @@ function keypress(event) {
 		if ( code == 122 ) { matched = 1; redraw(); }
 
 		// E = export frame
-		if ( code == 69 || code == 101 ) { matched = 1; export_raw(); }
+		if ( code == 69 || code == 101 ) { matched = 1; export_frame(); }
 
 		// L = teletext metadata
 		if ( code == 76 || code == 108 ) {
