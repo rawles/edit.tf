@@ -942,7 +942,7 @@ function export_raw() {
 		+ padstring("0", 2, m_subpage.toString())
 		+ "\r\n";
 	// CT: cycle time
-	ttistring = ttistring + "CT,1,C\r\n";
+	ttistring = ttistring + "CT,7,T\r\n";
 	// DE: description
 	ttistring = ttistring + "DE,teletext-editor\r\n";
 
@@ -972,17 +972,19 @@ function export_raw() {
 
 	for ( var r=0; r<24; r++ ) {
 		// OL: output line
-		ttistring = ttistring + "OL," + (r+1) + ",";
+		if ( r > 0 ) { ttistring = ttistring + "OL," + r + ","; }
 		for ( var c=0; c<40; c++ ) {
 			var xcc = cc[r][c];
 			rawstring_0 = rawstring_0 + String.fromCharCode(xcc);
 			if ( xcc < 32 ) { xcc += 128; } 
 			rawstring_1 = rawstring_1 + String.fromCharCode(xcc);
-			ttistring = ttistring + String.fromCharCode(xcc);
+			if ( r > 0 ) { 
+				ttistring = ttistring + String.fromCharCode(xcc);
+			}
 		}
 		rawstring_0 = rawstring_0 + "\n";
 		rawstring_1 = rawstring_1 + "\n";
-		ttistring = ttistring + "\r\n";
+		if ( r > 0 ) { ttistring = ttistring + "\r\n"; }
 	}
 
 	// FL: fastext link
