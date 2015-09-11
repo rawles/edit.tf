@@ -131,6 +131,10 @@ div#b {
 <tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
 <td>switch char. sets</td><td>1-8</td></tr>
 
+<tr> <td onclick="fakepress('0')">0</td><td onclick="fakepress('0')">hide status bar</td><td></td><td></td></tr>
+
+<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td><td onclick="fakepress('l')">L</td></tr>
+
 <tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
 	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
 <tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
@@ -140,9 +144,6 @@ div#b {
 
 <tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
 <td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
-<td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td>
-<td onclick="fakepress('l')">L</td>
-</tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
@@ -639,8 +640,6 @@ function mouse_click(canvasx, canvasy, state) {
 // click_listener takes the mouse events along with the current state
 // and extracts the position of the click relative to the canvas.
 function click_listener(event, state) {
-
-	unhide_status_bar();
 
 	// Compute the position of the canvas.
     var offsetx = 0;
@@ -1313,8 +1312,8 @@ function draw_status_bar_frame(ctx) {
 
 // If we have hidden the status bar, we only want to do so until something
 // else happens, to avoid the user from editing with no guidance. This 
-// function is called when there's a keyboard or mouse event to make sure
-// the status bar is back.
+// function is called when there's a keyboard event, to make sure the
+// status bar is back.
 function unhide_status_bar() { 
 	if ( statushidden != 0 ) { 
 		statushidden = 0;
