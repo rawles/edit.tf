@@ -294,11 +294,11 @@ function init_canvas() {
     // set the 'logical' width and height, the code is designed for 480x520,
     // scaled up to look better when zoomed in
     c.width = 480*pix_scale;
-    c.height = 520*pix_scale;
+    c.height = 540*pix_scale;
     
     // set the width and hight to display on-screen, with the modified aspect ratio
     c.style.width = (480*aspect_ratio)+'px';
-    c.style.height = 520+'px';    
+    c.style.height = 540+'px';    
 }
 
 // Resets an individual character at position (x,y) to default 
@@ -320,7 +320,7 @@ function plot_cursor(ctx) {
 // frame again to show it.
 function show_grid(newgrid) {
 	grid = newgrid;
-	render(0, 0, 40, 24);
+	render(0, 0, 40, 25);
 }
 
 // Changes whether we allow black foreground.
@@ -338,7 +338,7 @@ function show_codes(newcode) {
 	showcc = newcode;
 
 	// Update all cells which contain a control character
-	for (var r = 0; r < 24; r++) {
+	for (var r = 0; r < 25; r++) {
 		for (var c = 0; c < 40; c++) {
 			if ( 
 				( cc[r][c] >= 0 && cc[r][c] <= 31 ) // a control character
@@ -371,7 +371,7 @@ function copy_char(x1, y1, x2, y2) {
 function delete_row(r) {
 	invalidate_export();
 
-	// For each row, copy the data from the row above.
+	// For each row, copy the data from the row below.
 	for ( var y = r; y < 24; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
 			copy_char(x,y+1,x,y);
@@ -380,7 +380,7 @@ function delete_row(r) {
 
 	// Clear the bottom row.
 	for ( var x = 0; x < 40; x++ ) { 
-		clear_char(x,23)
+		clear_char(x,24)
 	}
 
 	// We may have deleted a double height character, so
@@ -388,7 +388,7 @@ function delete_row(r) {
 	adjustdh_fullscreen(0);
 
 	// Re-render the affected area.
-	render(0, r, 40, 24-r);
+	render(0, r, 40, 25-r);
 }
 
 // Inserts an empty row at row r.
@@ -409,7 +409,7 @@ function insert_row(r) {
 	}
 
 	adjustdh_fullscreen(0);
-	render(0, r, 40, 24-r);
+	render(0, r, 40, 25-r);
 }
 
 // Duplicates row r to the one below it, shifting all 
@@ -426,14 +426,14 @@ function duplicate_row(r) {
 	}
 
 	adjustdh_fullscreen(0);
-	render(0, r, 40, 24-r);
+	render(0, r, 40, 25-r);
 }
 
 // Redraw the whole screen by deleting its contents and 
 // re-writing each character onto it.
 function redraw() { 
 	// Clear all attributes
-	for ( var y = 0; y < 24; y++ ) { 
+	for ( var y = 0; y < 25; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
 			fg[y][x] = 7; bg[y][x] = 0;
 			tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
@@ -442,7 +442,7 @@ function redraw() {
 	}
 
 	// Write each character back to the screen.
-	for ( var r = 0; r < 24; r++) {
+	for ( var r = 0; r < 25; r++) {
 		for ( var c = 0; c < 40; c++) {
 			var code = cc[r][c];
 			if ( placeable(code) == 1 ) { 
@@ -454,7 +454,7 @@ function redraw() {
 	}
 
 	// Re-render the whole screen.
-	render(0,0,40,24);
+	render(0,0,40,25);
 }
 
 // Clear each character and reset the double height
@@ -463,14 +463,14 @@ function redraw() {
 function wipe(andrender) { 
 	invalidate_export();
 
-	for ( var r = 0; r < 24; r++ ) { 
+	for ( var r = 0; r < 25; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
 			clear_char(c, r);
 		}
 		fs[r] = 0;
 	}
 	if ( andrender != 0 ) {
-		render(0,0,40,24,0);
+		render(0,0,40,25,0);
 	}
 }
 
@@ -664,7 +664,7 @@ function click_listener(event, state) {
     if ( x < 0 ) { x = 0; } 
     if ( x >= 12*40*aspect_ratio ) { x = 12*40*aspect_ratio - 1; } 
     if ( y < 0 ) { y = 0; } 
-    if ( y >= 20*24 ) { x = 20*24 - 1; } 
+    if ( y >= 20*25 ) { x = 20*25 - 1; } 
 
     // mouse_click will assign a new state which we can store in the
     // global variable mouse_state
@@ -970,7 +970,7 @@ function export_raw() {
 		+ padstring("0", 4, m_subcode.toString(16).toUpperCase())
 		+ "\r\n";
 
-	for ( var r=0; r<24; r++ ) {
+	for ( var r=0; r<25; r++ ) {
 		// OL: output line
 		if ( r > 0 ) { ttistring = ttistring + "OL," + r + ","; }
 		for ( var c=0; c<40; c++ ) {
@@ -1117,7 +1117,7 @@ function draw_status_bar() {
 		else { ctx.fillStyle = "#808080"; }
 
 	// Draw the background to the bar and set up the font.
-	ctx.fillRect(0, (24*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
+	ctx.fillRect(0, (25*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
 
@@ -1129,14 +1129,14 @@ function draw_status_bar_metadata(ctx) {
 	var offset = 5*pix_scale;
 	var spacing = 43*pix_scale;
 
-	ctx.fillText("p" + m_page.toString(16), offset, 496*pix_scale);
+	ctx.fillText("p" + m_page.toString(16), offset, 516*pix_scale);
 	ctx.fillText("subpage " +
 		padstring("0", 2, m_subpage.toString()),
-		offset+(0.75*spacing), 496*pix_scale);
+		offset+(0.75*spacing), 516*pix_scale);
 	ctx.fillText("subcode=" +
 		padstring(" ", 4, m_subcode.toString(16).toUpperCase()),
-		offset+(2.5*spacing), 496*pix_scale);
-	ctx.fillText("fastext links: ", offset+(4.75*spacing), 496*pix_scale);
+		offset+(2.5*spacing), 516*pix_scale);
+	ctx.fillText("fastext links: ", offset+(4.75*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#f00";
 	// XXX is displayed when there is no link.
@@ -1144,28 +1144,28 @@ function draw_status_bar_metadata(ctx) {
 	if ( m_fastext_red >= 0x100 && m_fastext_red <= 0x8ff ) { 
 		displayed_page = m_fastext_red.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(6.5*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(6.5*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0f0";
 	displayed_page = "XXX";
 	if ( m_fastext_green >= 0x100 && m_fastext_green <= 0x8ff ) { 
 		displayed_page = m_fastext_green.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(7.25*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(7.25*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#ff0";
 	displayed_page = "XXX";
 	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow <= 0x8ff ) { 
 		displayed_page = m_fastext_yellow.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(8*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(8*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0ff";
 	displayed_page = "XXX";
 	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan <= 0x8ff ) { 
 		displayed_page = m_fastext_cyan.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(8.75*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(8.75*spacing), 516*pix_scale);
 
 	// This link is just a hint to the decoder to cache an possible
 	// subsequent page. I didn't know what colour to use, so, because
@@ -1175,7 +1175,7 @@ function draw_status_bar_metadata(ctx) {
 	if ( m_fastext_link >= 0x100 && m_fastext_link <= 0x8ff ) { 
 		displayed_page = m_fastext_link.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(9.5*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(9.5*spacing), 516*pix_scale);
 
 	// The index link is white.
 	ctx.fillStyle = "#fff";
@@ -1183,30 +1183,30 @@ function draw_status_bar_metadata(ctx) {
 	if ( m_fastext_index >= 0x100 && m_fastext_index <= 0x8ff ) { 
 		displayed_page = m_fastext_index.toString(16);
 	}
-	ctx.fillText(displayed_page, offset+(10.25*spacing), 496*pix_scale);
+	ctx.fillText(displayed_page, offset+(10.25*spacing), 516*pix_scale);
 
 	// And now the control bits. These are a bit esoteric for most
 	// usages, but the user may need to refer to them or edit them.
 	// There's no attempt to explain the meaning of each bit - I 
 	// think that would take up too much space on the bar.
 	ctx.fillStyle = "#000";
-	ctx.fillText("control: ", offset, 512*pix_scale);
+	ctx.fillText("control: ", offset, 532*pix_scale);
 	ctx.fillText((m_control[4]==0)?"c4=0":"c4=1", offset+(1.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[5]==0)?"c5=0":"c5=1", offset+(2.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[6]==0)?"c6=0":"c6=1", offset+(3.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[7]==0)?"c7=0":"c7=1", offset+(4.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[8]==0)?"c8=0":"c8=1", offset+(5.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[9]==0)?"c9=0":"c9=1", offset+(6.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[10]==0)?"c10=0":"c10=1", offset+(7.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 	ctx.fillText((m_control[11]==0)?"c11=0":"c11=1", offset+(8.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 
 	// This is the national option character subset. We display it as a 
 	// binary string.
@@ -1215,7 +1215,7 @@ function draw_status_bar_metadata(ctx) {
 	+	((m_control[13]!=0)?"0":"1")
 	+	((m_control[14]!=0)?"0":"1");
 	ctx.fillText("c12..c14=" + charsubset, offset+(9.25*spacing),
-		512*pix_scale);
+		532*pix_scale);
 }
 
 function draw_status_bar_frame(ctx) { 
@@ -1228,29 +1228,29 @@ function draw_status_bar_frame(ctx) {
 	// The items in the status bar:
 
 	// character code
-	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 496*pix_scale);
+	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 516*pix_scale);
 
 	// position
-	ctx.fillText(curx+","+cury, offset+spacing, 496*pix_scale);
+	ctx.fillText(curx+","+cury, offset+spacing, 516*pix_scale);
 
 	// foreground and background colour
 	ctx.fillText(
 		colour_name(fg[cury][curx])
 		+" "+(tg[cury][curx]==0?"text":"graphics")
 		+" on "+colour_name(bg[cury][curx]),
-		offset+(2*spacing), 496*pix_scale);
+		offset+(2*spacing), 516*pix_scale);
 
 	// normal or double height?
 	var heighttext = "normal height";
 	if ( nd[cury][curx] == 1 ) { heighttext = "double height"; } 
 	if ( nd[cury][curx] == 2 ) { heighttext = "height reset"; } 
-	ctx.fillText(heighttext, offset+(6.25*spacing), 496*pix_scale);
+	ctx.fillText(heighttext, offset+(6.25*spacing), 516*pix_scale);
 
 	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.25*spacing), 496*pix_scale);
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.25*spacing), 516*pix_scale);
 
 	// aspect ratio
-	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10*spacing, 496*pix_scale);
+	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10*spacing, 516*pix_scale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -1263,22 +1263,22 @@ function draw_status_bar_frame(ctx) {
 	if ( cset == 6 ) { charsetname = "Hebrew"; }
 	if ( cset == 7 ) { charsetname = "Cyrillic"; }
     
-	ctx.fillText(charsetname, offset, 512*pix_scale);
+	ctx.fillText(charsetname, offset, 532*pix_scale);
 
 	// is reveal on or off?
-	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 512*pix_scale);
+	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 532*pix_scale);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.25*spacing), 512*pix_scale);
+	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.25*spacing), 532*pix_scale);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6*spacing), 512*pix_scale);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6*spacing), 532*pix_scale);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.25*spacing), 512*pix_scale);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.25*spacing), 532*pix_scale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 512*pix_scale);
+	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 532*pix_scale);
 }
 
 ////////////////////
@@ -1433,8 +1433,8 @@ function keypress(event) {
 		} 
         
 		// [ and ] = narrower/wider screen
-		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,24,0);}
-		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,24,0);}
+		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,25,0);}
+		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,25,0);}
 
 		// We can also switch between character sets here.
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
@@ -1471,7 +1471,7 @@ function keypress(event) {
 
 				// The cursor move handles the rendering of this insertion, so
 				// we only need update the cell below if we're in double height.
-				if ( nd[cury][curx] > 0 && fs[cury] == 1 && cury < 23 ) {
+				if ( nd[cury][curx] > 0 && fs[cury] == 1 && cury < 24 ) {
 					render(curx, cury+1, 1, 1); }
 
 				// Move the cursor right (and render that)
@@ -1558,7 +1558,7 @@ function cursor_right() {
 	// Move the cursor and wrap it if needed.
 	curx++;
 	if ( curx > 39 ) { cury++; curx = 0; } else { split = 0; } 
-	if ( cury > 23 ) { cury = 0; } 
+	if ( cury > 24 ) { cury = 0; } 
 
 	// Render, depending on whether it's a split or not.
 	if ( split == 0 ) { render(curx-1, cury, 2, 1, 1); }
@@ -1575,7 +1575,7 @@ function cursor_left() {
 	var split = 1; // is it necessary to call render() twice?
 	curx--;
 	if ( curx < 0 ) { cury--; curx = 39; } else { split = 0; } 
-	if ( cury < 0 ) { cury = 23; } 
+	if ( cury < 0 ) { cury = 24; } 
 	if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
 	if ( split == 1 ) {
 		render(old_curx, old_cury, 1, 1);
@@ -1588,7 +1588,7 @@ function cursor_up() {
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
 	cury--;
-	if ( cury < 0 ) { cury = 23; } else { split = 0; } 
+	if ( cury < 0 ) { cury = 24; } else { split = 0; } 
 	if ( split == 0 ) { render(curx, cury, 1, 2, 1); }
 	if ( split == 1 ) {
 		render(old_curx, old_cury, 1, 1);
@@ -1601,7 +1601,7 @@ function cursor_down() {
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
 	cury++;
-	if ( cury > 23 ) { cury = 0; } else { split = 0; } 
+	if ( cury > 24 ) { cury = 0; } else { split = 0; } 
 	if ( split == 0 ) { render(curx, cury-1, 1, 2, 1); }
 	if ( split == 1 ) {
 		render(old_curx, old_cury, 1, 1);
@@ -1615,7 +1615,7 @@ function cursor_nl() {
 	var old_curx = curx;
 	var old_cury = cury;
 	cury++; curx = 0;
-	if ( cury > 23 ) { cury = 0; }
+	if ( cury > 24 ) { cury = 0; }
 	render(old_curx, old_cury, 1, 1);
 	render(curx, cury, 1, 1);
 } 
@@ -1683,7 +1683,7 @@ function cursor_tab() {
 	// any double height effects, etc
 	curx++;
 	if ( curx > 39 ) { cury++; curx = 0; } else { split = 0; } 
-	if ( cury > 23 ) { cury = 0; } 
+	if ( cury > 24 ) { cury = 0; } 
 	if ( split == 0 ) { 
 		autorender(old_curx, cury, 40-old_curx, 1);
 	}
@@ -1706,7 +1706,7 @@ function cursor_bs() {
 	var split = 1;
 	curx--;
 	if ( curx < 0 ) { cury--; curx = 39; } else { split = 0; } 
-	if ( cury < 0 ) { cury = 23; } 
+	if ( cury < 0 ) { cury = 24; } 
 
 	// Are we deleting a control code? If so correct for this.
 	check_for_remove_code(curx, cury, 0);
@@ -1797,7 +1797,7 @@ function adjustdh(x,y,andrender,removal) {
 	if ( y > 0 ) { above = fs[y-1]; } 
 
 	// Scanning down each row in the screen in order
-	for ( var r = y; r < 24; r++ ) { 
+	for ( var r = y; r < 25; r++ ) { 
 
 		// The original value of the fs array:
 		var fs_from = fs[r];
@@ -1841,7 +1841,7 @@ function adjustdh(x,y,andrender,removal) {
 // like the one above.
 function adjustdh_fullscreen(andrender) {
 	var above = 0;
-	for ( var r = 0; r < 24; r++ ) { 
+	for ( var r = 0; r < 25; r++ ) { 
 		var fs_from = fs[r];
 		var dhfound = 0;
 		for ( var c = 0; c < 40; c++ ) { 
@@ -2590,7 +2590,7 @@ function autorender(x,y,w,h) {
 
 	// If we've got to the end of the box, and still need to render the
 	// next row, it won't be handled unless we do it now.
-	if ( affectnext > 0 && y+h < 24 ) {
+	if ( affectnext > 0 && y+h < 25 ) {
 		render(nextfrom, y+h, nextto-nextfrom, 1);
 	}
 
@@ -2608,9 +2608,9 @@ function render(x,y,w,h) {
 	if ( x < 0 ) { x = 0; } 
 	if ( x > 39 ) { x = 39; } 
 	if ( y < 0 ) { y = 0; } 
-	if ( y > 23 ) { y = 23; }
+	if ( y > 24 ) { y = 24; }
 	if ( x + w > 40 ) { w = 40 - x; } 
-	if ( y + h > 40 ) { h = 24 - y; } 
+	if ( y + h > 40 ) { h = 25 - y; } 
 
 	// It's time to save the frame to the hash. This is inefficient - 
 	// we should do this only when there's been a change.
@@ -2894,7 +2894,7 @@ function render(x,y,w,h) {
 						// not reproduced in a teletext frame (they are
 						// used for page metadata)
 						if ( grid == 1 && 
-							(	( sx == 11 && !( r == 0 && c < 7 ) ) 
+							(	( sx == 11 && !( r == 0 && c < 7 ) && !( r == 24 ) ) 
 							||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 							ctx.fillStyle = cell_grid; } 
 
@@ -2929,7 +2929,7 @@ function render(x,y,w,h) {
 
 					// If the grid is being shown, set the pixel as above.
 					if ( grid == 1 && 
-						(	( sx == 11 && !( r == 0 && c < 7 ) ) 
+						(	( sx == 11 && !( r == 0 && c < 7 ) && !( r == 24 ) ) 
 						||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 						ctx.fillStyle = cell_grid; } 
 
@@ -3075,7 +3075,7 @@ function set_reveal(newreveal) {
 	reveal = newreveal;
 
 	// Now re-render the characters marked as concealed.
-	for ( var r = 0; r < 24; r++ ) { 
+	for ( var r = 0; r < 25; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
 			if ( sc[r][c] > 0 ) { 
 				autorender(c,r,1,1);
@@ -3170,7 +3170,7 @@ function add_font_char(code,l1,l2,l3,l4,l5,l6,l7,l8,l9) {
 function set_charset(charset) {
 	cset = charset;
 	init_font(cset);
-	render(0,0,40,24,0);
+	render(0,0,40,25,0);
 }
 
 // Given the number of a character set, init_font loads the
@@ -4092,7 +4092,7 @@ function padstring(char, width, string) {
 
 // Set up the screen and render it.
 init_state();
-render(0,0,40,24,0);
+render(0,0,40,25,0);
 
 // Set up listeners for events
 init_mouse();
