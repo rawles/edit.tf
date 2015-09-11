@@ -225,6 +225,8 @@ var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
 var statusmode = 0; // what is the statusbar showing? 
 		 // 0 means the usual information about the current cell.
 		 // 1 means the additional teletext metadata
+var statushidden = 0; // is the statusbar temporarily hidden with ESC-0?
+		 // 0 if no, 1 if yes.
 var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
 var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
@@ -637,6 +639,8 @@ function mouse_click(canvasx, canvasy, state) {
 // click_listener takes the mouse events along with the current state
 // and extracts the position of the click relative to the canvas.
 function click_listener(event, state) {
+
+	unhide_status_bar();
 
 	// Compute the position of the canvas.
     var offsetx = 0;
@@ -1136,8 +1140,14 @@ function draw_status_bar() {
 	if ( escape == 1 ) { ctx.fillStyle = "#993"; }
 		else { ctx.fillStyle = "#808080"; }
 
+	// If the bar has been hidden, just draw a black rectangle.
+	if ( statushidden != 0 ) { ctx.fillStyle = "#000000"; } 
+
 	// Draw the background to the bar and set up the font.
 	ctx.fillRect(0, (25*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
+
+	if ( statushidden != 0 ) { return; } 
+
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
 
@@ -1301,6 +1311,17 @@ function draw_status_bar_frame(ctx) {
 	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 532*pix_scale);
 }
 
+// If we have hidden the status bar, we only want to do so until something
+// else happens, to avoid the user from editing with no guidance. This 
+// function is called when there's a keyboard or mouse event to make sure
+// the status bar is back.
+function unhide_status_bar() { 
+	if ( statushidden != 0 ) { 
+		statushidden = 0;
+		draw_status_bar();
+	}
+}
+
 ////////////////////
 ///// KEYBOARD /////
 ////////////////////
@@ -1315,6 +1336,8 @@ function keydown(event) {
 	// Escape key toggles the escape mode and redraws the status bar.
 	if ( code == 27 ) { escape++; escape = escape % 2;
 		draw_status_bar(); return; } 
+
+	unhide_status_bar();
 
 	// The four cursor keys are handled by their own functions.
 	if ( code == 37 ) { cursor_left(); return; }
@@ -1353,6 +1376,8 @@ function keypress(event) {
 	// slash key is pressed.
 	if ( code == 39 ) { event.preventDefault(); }
 	if ( code == 47 ) { event.preventDefault(); }
+
+	unhide_status_bar();
 
 	// We will need to redraw the status bar if we've changed the escape
 	// state.
@@ -1449,7 +1474,8 @@ function keypress(event) {
 
 		// L = teletext metadata
 		if ( code == 76 || code == 108 ) {
-			matched = 1; statusmode = 1 - statusmode;
+			matched = 1;
+			statusmode = 1 - statusmode;
 		} 
         
 		// [ and ] = narrower/wider screen
@@ -1465,6 +1491,12 @@ function keypress(event) {
 		if ( code == 54 ) { matched = 1; set_charset(5); }   // [6] US-ASCII
 		if ( code == 55 ) { matched = 1; set_charset(6); }   // [7] Hebrew
 		if ( code == 56 ) { matched = 1; set_charset(7); }   // [8] Cyrillic
+
+		// We can hide the status bar with ESC-0:
+		if ( code == 48 ) {
+			matched = 1;
+			statushidden = 1 - statushidden;
+		}
 
 		// If this action is to place a character code, do that, move
 		// the cursor on, and record that we've made a match.
