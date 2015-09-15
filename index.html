@@ -268,7 +268,7 @@ var m_fastext_index = 0;
 // Initialises the state of the screen.
 function init_state() { 
 
-	init_canvas();
+	init_canvas(480, 540);
     
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
@@ -291,17 +291,22 @@ function init_state() {
 	load_from_hash();
 }
 
-function init_canvas() {
+function init_canvas(width, height) {
 	var c = document.getElementById("frame");
     
-    // set the 'logical' width and height, the code is designed for 480x520,
-    // scaled up to look better when zoomed in
-    c.width = 480*pix_scale;
-    c.height = 540*pix_scale;
+	// set the 'logical' width and height, the code is designed for 480x520,
+	// scaled up to look better when zoomed in
+	c.width = width*pix_scale;
+	c.height = height*pix_scale;
     
-    // set the width and hight to display on-screen, with the modified aspect ratio
-    c.style.width = (480*aspect_ratio)+'px';
-    c.style.height = 540+'px';    
+	// set the width and hight to display on-screen, with the modified aspect ratio
+	c.style.width = (width*aspect_ratio)+"px";
+	c.style.height = height+"px";    
+
+	// Clear the canvas with a background colour
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#000";
+	ctx.fillRect(0, 0, width*pix_scale, height*pix_scale);
 }
 
 // Resets an individual character at position (x,y) to default 
@@ -310,13 +315,6 @@ function clear_char(x,y) {
 	cc[y][x] = 32; fg[y][x] = 7; bg[y][x] = 0;
 	tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
 	hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
-}
-
-// Draws the cursor. Intended to appear behind the 
-// character cell, so should be drawn first.
-function plot_cursor(ctx) { 
-	ctx.fillStyle = "#666";
-	ctx.fillRect((12*curx*pix_scale),(20*cury*pix_scale),12*pix_scale,20*pix_scale);
 }
 
 // Sets the grid on or off and renders the whole 
@@ -1132,6 +1130,9 @@ function colour_name(col) {
 // The variable 'statusmode' indicates which of these is active.
 function draw_status_bar() {
 
+	// There is nothing to draw if the status bar has been hidden.
+	if ( statushidden != 0 ) { return; } 
+
 	var c = document.getElementById("frame");
 	var ctx = c.getContext("2d");
 
@@ -1139,13 +1140,8 @@ function draw_status_bar() {
 	if ( escape == 1 ) { ctx.fillStyle = "#993"; }
 		else { ctx.fillStyle = "#808080"; }
 
-	// If the bar has been hidden, just draw a black rectangle.
-	if ( statushidden != 0 ) { ctx.fillStyle = "#000000"; } 
-
 	// Draw the background to the bar and set up the font.
 	ctx.fillRect(0, (25*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
-
-	if ( statushidden != 0 ) { return; } 
 
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
@@ -1317,7 +1313,17 @@ function draw_status_bar_frame(ctx) {
 function unhide_status_bar() { 
 	if ( statushidden != 0 ) { 
 		statushidden = 0;
+		init_canvas(480, 540);
+		render(0,0,40,25,0);
 		draw_status_bar();
+	}
+}
+
+function hide_status_bar() { 
+	if ( statushidden == 0 ) { 
+		statushidden = 1;
+		init_canvas(480, 500);
+		render(0,0,40,25,0);
 	}
 }
 
@@ -1478,8 +1484,18 @@ function keypress(event) {
 		} 
         
 		// [ and ] = narrower/wider screen
-		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,25,0);}
-		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,25,0);}
+		if ( code == 91 ) {
+			matched = 1;
+			aspect_ratio = Math.max(aspect_ratio-0.1, 1);
+			init_canvas(480, 540);
+			render(0,0,40,25,0);
+		}
+		if ( code == 93 ) {
+			matched = 1;
+			aspect_ratio = Math.min(aspect_ratio+0.1, 1.5);
+			init_canvas(480, 540);
+			render(0,0,40,25,0);
+		}
 
 		// We can also switch between character sets here.
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
@@ -1494,7 +1510,7 @@ function keypress(event) {
 		// We can hide the status bar with ESC-0:
 		if ( code == 48 ) {
 			matched = 1;
-			statushidden = 1 - statushidden;
+			hide_status_bar();
 		}
 
 		// If this action is to place a character code, do that, move
@@ -2673,10 +2689,6 @@ function render(x,y,w,h) {
 	// Clear the rectangle.
 	cls(ctx,x,y,w,h);
 
-	// First plot the cursor.
-	if ( x <= curx && curx < x+w && y <= cury && cury < y+h ) {
-		plot_cursor(ctx); }
-
 	// Then, taking each cell, 
 	for ( var r = y; r < y+h; r++ ) { 
 		for ( var c = x; c < x+w; c++ ) { 
@@ -2717,7 +2729,9 @@ function render(x,y,w,h) {
 
 			// Is this the cell with a cursor in?
 			var cursor_cell = 0;
-			if ( r == cury && c == curx ) { cursor_cell = 1; }
+			if (	statushidden == 0  // No cursor when the status bar is hidden
+				&& r == cury
+				&& c == curx) { cursor_cell = 1; }
 
 			// This affects the way that it's rendered. We pass the 
 			// cursor_cell value to the colour() function to implement
