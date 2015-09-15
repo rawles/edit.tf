@@ -235,8 +235,10 @@ var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 		 // 0x10) control codes? 0 if not, 1 if so.
                  
-var pix_scale = 2;  // draw at a higher resolution than we display at, to
+var full_pix_scale = 2;
+		 // draw at a higher resolution than we display at, to
                  // look better zoomed in.
+var pix_scale = full_pix_scale;
 var aspect_ratio=1.2; // specifies how much to stretch the x direction.
 
 var active_export = 0;
@@ -1313,6 +1315,10 @@ function draw_status_bar_frame(ctx) {
 function unhide_status_bar() { 
 	if ( statushidden != 0 ) { 
 		statushidden = 0;
+
+		// Because this is likely to be used for editing, return
+		// to the full underlying resolution.
+		pix_scale = full_pix_scale;
 		init_canvas(480, 540);
 		render(0,0,40,25,0);
 		draw_status_bar();
@@ -1322,6 +1328,10 @@ function unhide_status_bar() {
 function hide_status_bar() { 
 	if ( statushidden == 0 ) { 
 		statushidden = 1;
+
+		// Because this is likely to be used for a screen shot,
+		// reduce the underlying resolution.
+		pix_scale = 1;
 		init_canvas(480, 500);
 		render(0,0,40,25,0);
 	}
