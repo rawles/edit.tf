@@ -131,6 +131,10 @@ div#b {
 <tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
 <td>switch char. sets</td><td>1-8</td></tr>
 
+<tr> <td onclick="fakepress('0')">0</td><td onclick="fakepress('0')">hide status bar</td><td></td><td></td></tr>
+
+<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td><td onclick="fakepress('l')">L</td></tr>
+
 <tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
 	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
 <tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
@@ -140,9 +144,6 @@ div#b {
 
 <tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
 <td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
-<td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td>
-<td onclick="fakepress('l')">L</td>
-</tr>
 
 <tr class="newsection"><td colspan="4">In graphics mode:</td>
 	</tr>
@@ -225,6 +226,8 @@ var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
 var statusmode = 0; // what is the statusbar showing? 
 		 // 0 means the usual information about the current cell.
 		 // 1 means the additional teletext metadata
+var statushidden = 0; // is the statusbar temporarily hidden with ESC-0?
+		 // 0 if no, 1 if yes.
 var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
 var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
@@ -232,8 +235,10 @@ var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 		 // 0x10) control codes? 0 if not, 1 if so.
                  
-var pix_scale = 2;  // draw at a higher resolution than we display at, to
+var full_pix_scale = 2;
+		 // draw at a higher resolution than we display at, to
                  // look better zoomed in.
+var pix_scale = full_pix_scale;
 var aspect_ratio=1.2; // specifies how much to stretch the x direction.
 
 var active_export = 0;
@@ -265,7 +270,7 @@ var m_fastext_index = 0;
 // Initialises the state of the screen.
 function init_state() { 
 
-	init_canvas();
+	init_canvas(480, 540);
     
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
@@ -288,17 +293,22 @@ function init_state() {
 	load_from_hash();
 }
 
-function init_canvas() {
+function init_canvas(width, height) {
 	var c = document.getElementById("frame");
     
-    // set the 'logical' width and height, the code is designed for 480x520,
-    // scaled up to look better when zoomed in
-    c.width = 480*pix_scale;
-    c.height = 540*pix_scale;
+	// set the 'logical' width and height, the code is designed for 480x520,
+	// scaled up to look better when zoomed in
+	c.width = width*pix_scale;
+	c.height = height*pix_scale;
     
-    // set the width and hight to display on-screen, with the modified aspect ratio
-    c.style.width = (480*aspect_ratio)+'px';
-    c.style.height = 540+'px';    
+	// set the width and hight to display on-screen, with the modified aspect ratio
+	c.style.width = (width*aspect_ratio)+"px";
+	c.style.height = height+"px";    
+
+	// Clear the canvas with a background colour
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "#000";
+	ctx.fillRect(0, 0, width*pix_scale, height*pix_scale);
 }
 
 // Resets an individual character at position (x,y) to default 
@@ -307,13 +317,6 @@ function clear_char(x,y) {
 	cc[y][x] = 32; fg[y][x] = 7; bg[y][x] = 0;
 	tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
 	hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
-}
-
-// Draws the cursor. Intended to appear behind the 
-// character cell, so should be drawn first.
-function plot_cursor(ctx) { 
-	ctx.fillStyle = "#666";
-	ctx.fillRect((12*curx*pix_scale),(20*cury*pix_scale),12*pix_scale,20*pix_scale);
 }
 
 // Sets the grid on or off and renders the whole 
@@ -1129,6 +1132,9 @@ function colour_name(col) {
 // The variable 'statusmode' indicates which of these is active.
 function draw_status_bar() {
 
+	// There is nothing to draw if the status bar has been hidden.
+	if ( statushidden != 0 ) { return; } 
+
 	var c = document.getElementById("frame");
 	var ctx = c.getContext("2d");
 
@@ -1138,6 +1144,7 @@ function draw_status_bar() {
 
 	// Draw the background to the bar and set up the font.
 	ctx.fillRect(0, (25*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
+
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
 
@@ -1301,6 +1308,35 @@ function draw_status_bar_frame(ctx) {
 	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 532*pix_scale);
 }
 
+// If we have hidden the status bar, we only want to do so until something
+// else happens, to avoid the user from editing with no guidance. This 
+// function is called when there's a keyboard event, to make sure the
+// status bar is back.
+function unhide_status_bar() { 
+	if ( statushidden != 0 ) { 
+		statushidden = 0;
+
+		// Because this is likely to be used for editing, return
+		// to the full underlying resolution.
+		pix_scale = full_pix_scale;
+		init_canvas(480, 540);
+		render(0,0,40,25,0);
+		draw_status_bar();
+	}
+}
+
+function hide_status_bar() { 
+	if ( statushidden == 0 ) { 
+		statushidden = 1;
+
+		// Because this is likely to be used for a screen shot,
+		// reduce the underlying resolution.
+		pix_scale = 1;
+		init_canvas(480, 500);
+		render(0,0,40,25,0);
+	}
+}
+
 ////////////////////
 ///// KEYBOARD /////
 ////////////////////
@@ -1315,6 +1351,8 @@ function keydown(event) {
 	// Escape key toggles the escape mode and redraws the status bar.
 	if ( code == 27 ) { escape++; escape = escape % 2;
 		draw_status_bar(); return; } 
+
+	unhide_status_bar();
 
 	// The four cursor keys are handled by their own functions.
 	if ( code == 37 ) { cursor_left(); return; }
@@ -1353,6 +1391,8 @@ function keypress(event) {
 	// slash key is pressed.
 	if ( code == 39 ) { event.preventDefault(); }
 	if ( code == 47 ) { event.preventDefault(); }
+
+	unhide_status_bar();
 
 	// We will need to redraw the status bar if we've changed the escape
 	// state.
@@ -1449,12 +1489,23 @@ function keypress(event) {
 
 		// L = teletext metadata
 		if ( code == 76 || code == 108 ) {
-			matched = 1; statusmode = 1 - statusmode;
+			matched = 1;
+			statusmode = 1 - statusmode;
 		} 
         
 		// [ and ] = narrower/wider screen
-		if ( code == 91 ) { matched = 1; aspect_ratio = Math.max(aspect_ratio-0.1, 1); init_canvas(); render(0,0,40,25,0);}
-		if ( code == 93 ) { matched = 1; aspect_ratio = Math.min(aspect_ratio+0.1, 1.5); init_canvas(); render(0,0,40,25,0);}
+		if ( code == 91 ) {
+			matched = 1;
+			aspect_ratio = Math.max(aspect_ratio-0.1, 1);
+			init_canvas(480, 540);
+			render(0,0,40,25,0);
+		}
+		if ( code == 93 ) {
+			matched = 1;
+			aspect_ratio = Math.min(aspect_ratio+0.1, 1.5);
+			init_canvas(480, 540);
+			render(0,0,40,25,0);
+		}
 
 		// We can also switch between character sets here.
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
@@ -1465,6 +1516,12 @@ function keypress(event) {
 		if ( code == 54 ) { matched = 1; set_charset(5); }   // [6] US-ASCII
 		if ( code == 55 ) { matched = 1; set_charset(6); }   // [7] Hebrew
 		if ( code == 56 ) { matched = 1; set_charset(7); }   // [8] Cyrillic
+
+		// We can hide the status bar with ESC-0:
+		if ( code == 48 ) {
+			matched = 1;
+			hide_status_bar();
+		}
 
 		// If this action is to place a character code, do that, move
 		// the cursor on, and record that we've made a match.
@@ -2642,10 +2699,6 @@ function render(x,y,w,h) {
 	// Clear the rectangle.
 	cls(ctx,x,y,w,h);
 
-	// First plot the cursor.
-	if ( x <= curx && curx < x+w && y <= cury && cury < y+h ) {
-		plot_cursor(ctx); }
-
 	// Then, taking each cell, 
 	for ( var r = y; r < y+h; r++ ) { 
 		for ( var c = x; c < x+w; c++ ) { 
@@ -2686,7 +2739,9 @@ function render(x,y,w,h) {
 
 			// Is this the cell with a cursor in?
 			var cursor_cell = 0;
-			if ( r == cury && c == curx ) { cursor_cell = 1; }
+			if (	statushidden == 0  // No cursor when the status bar is hidden
+				&& r == cury
+				&& c == curx) { cursor_cell = 1; }
 
 			// This affects the way that it's rendered. We pass the 
 			// cursor_cell value to the colour() function to implement
