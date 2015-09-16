@@ -2,12 +2,10 @@
 
 This is a teletext editor implemented in JavaScript, so that people now 
 need no more than a JavaScript-enabled browser in order to create their 
-own teletext frames. It was written for the 
-[teletext40](http://www.teletext40.com/100/1) project and you can try 
-the editor out at http://editor.teletext40.com/ - however, it also works 
-as a general-purpose editor, and is intended to be completely 
-independent of teletext40. It may also be used for editing BBC Micro 
-mode 7 screens, or preparing viewdata frames.
+own teletext frames. You can try the editor out at 
+http://rawl.es/teletext-editor or by opening the file `index.html` in 
+your browser. It may also be used for editing BBC Micro mode 7 screens, 
+or preparing viewdata frames.
 
 Most of the functionality of the editor is accessed through key 
 sequences beginning with the escape key. They are summarised in a table 
@@ -111,11 +109,15 @@ way, please comment on issue #3.
 
 The editor has been used for various events and systems:
 
+* The editor was originally written for the 
+  [teletext40](http://www.teletext40.com/100/1/) project. When viewing pages
+  on the web interface, the user has the option to then edit the page, so that
+  it can be submitted back to the site via email.
 * The editor was used by Dan Farrimond - @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
   at the Tate Britain art gallery in June 2015.
-  It was also used by Dan at *St. Helens Versus the Lizards* and continues to
-  be used at other teletext events.
+  It was also used by Dan at *St. Helens Versus the Lizards* and *Superbyte*
+  and continues to be used at other teletext events.
 * The editor was used by the [CCC Video Operation Center](http://c3voc.de/) -
   @voc - as part of their DVB-T system. It broadcasted a signal containing 
   teletext to televisions belonging to the participants of the
