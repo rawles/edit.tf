@@ -1700,27 +1700,18 @@ function cursor_nl() {
 
 // Tab inserts a new character.
 function cursor_tab() {
-	var old_curx = curx; var old_cury = cury;
-	var split = 1;
-
-	// We shift everything from where we are forward one cell, starting
-	// from the end.
-	for ( var c = 39; c > curx; c-- ) {
-		copy_char(c-1, cury, c, cury); 
-	}
-
-	// Update the attributes of the current cell by copying those of the
+	// Determine the attributes of the new cell by copying those of the
 	// previous cell, apart from the actual character code, which should be
 	// a space. The exception is where the previous cell is a set-after
 	// control code, in which case, its individual effect (specific to
 	// the code in question) needs to be copied.
 
-	// We first do this default behaviour, then, if needed, overwrite
-	// the attributes.
-
+	// Default settings:
 	var newbg = 0; var newfg = 0; var newtg = 0;
 	var newcs = 0; var newnd = 0; var newhg = 0;
 	var newsc = 0; var newsf = 0;
+
+	// Attributes from the previous cell:
 	if ( curx > 0  ) {
 		newfg = fg[cury][curx-1]; newbg = bg[cury][curx-1];
 		newtg = tg[cury][curx-1]; newcs = cs[cury][curx-1];
@@ -1730,30 +1721,41 @@ function cursor_tab() {
 
 	var prev_char = 32;
 	if ( curx > 0 ) { prev_char = cc[cury][curx-1]; }
-	if ( curx < 39 &&
-		( ( prev_char >= 1 && prev_char <= 7 )
+	if ( ( prev_char >= 1 && prev_char <= 7 )
 		|| ( blackfg != 0 && prev_char == 0 )
 		|| ( prev_char >= 17 && prev_char <= 23 )
-		|| ( blackfg != 0 && prev_char == 16 )  
-		) ) { 
-		newfg = fg[cury][curx+1];
-		newtg = tg[cury][curx+1];
-		newsc = sc[cury][curx+1];
+		|| ( blackfg != 0 && prev_char == 16 )  ) { 
+		newfg = fg[cury][curx];
+		newtg = tg[cury][curx];
+		newsc = sc[cury][curx];
 	}
-	if ( curx < 39 && prev_char == 8 ) { // flash
-		newsf = sf[cury][curx+1];
+	if ( prev_char == 8 ) { // flash
+		newsf = sf[cury][curx];
 	}
-	if ( curx < 39 && prev_char == 13 ) { // double
-		newnd = nd[cury][curx+1];
+	if ( prev_char == 13 ) { // double
+		newnd = nd[cury][curx];
 	}
-	if ( curx < 39 && prev_char == 31 ) { // release
-		newnd = hg[cury][curx+1];
+	if ( prev_char == 31 ) { // release
+		newhg = hg[cury][curx];
 	}
+
+	// We shift everything from where we are forward one cell,
+	// starting from the end.
+	for ( var c = 39; c > curx; c-- ) {
+		copy_char(c-1, cury, c, cury); 
+	}
+
 	fg[cury][curx] = newfg; bg[cury][curx] = newbg;
 	tg[cury][curx] = newtg; cs[cury][curx] = newcs;
 	nd[cury][curx] = newnd; cc[cury][curx] = 32;
 	hg[cury][curx] = newhg; sc[cury][curx] = newsc;
 	sf[cury][curx] = newsf;
+
+	// We begin by assuming that this insertion causes the 
+	// cursor to go to the next line (a 'split').
+	var split = 1;
+
+	var old_curx = curx; var old_cury = cury;
 
 	// Advance the cursor and render, as above, but this time, if
 	// there was no split, we do the whole rest of the line, including
@@ -1765,7 +1767,7 @@ function cursor_tab() {
 		autorender(old_curx, cury, 40-old_curx, 1);
 	}
 	if ( split == 1 ) {
-		render(old_curx, old_cury, 1, 1);
+		autorender(old_curx, old_cury, 1, 1);
 		render(curx, cury, 1, 1);
 	} 
 
