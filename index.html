@@ -610,6 +610,12 @@ var init_mouse = function() {
 // significant bit appearing first. This gives hash strings of 'only'
 // 1122 characters.
 
+// A direct way to load and render a hashstring.
+this.load_from = function(hashstring) { 
+	load_from_hashstring(hashstring);	
+	render(0, 0, 40, 25, 0);
+}
+
 // Loads data from the hash into the frame.
 var load_from_hash = function() {
 
@@ -620,6 +626,10 @@ var load_from_hash = function() {
 	// which is the hash symbol itself.
 	var hashstring = window.location.hash.substring(1);
 
+	load_from_hashstring(hashstring);
+}
+
+var load_from_hashstring = function(hashstring) {
 	// It's a good idea to have a bit of metadata here describing
 	// which character set we're using. If the colon is there, this
 	// metadata is assumed to be supplied.
@@ -897,14 +907,21 @@ var export_frame = function() {
 	var datauri_0 = "data:text/plain;base64,"+window.btoa(rawstring_0);
 	var datauri_1 = "data:text/plain;base64,"+window.btoa(rawstring_1);
 	var datauri_tti = "data:text/plain;base64,"+window.btoa(ttistring);
+	var hashstring = "";
+	if ( window.location.hash.length > 0 ) { 
+		hashstring = window.location.hash.substring(1);
+	}
+	var datauri_hs =
+		"data:text/plain;base64,"+window.btoa(hashstring);
 
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as:<br/>"
-		+ "<a href="+datauri_0+">raw (0x00-0x7f)</a>"
+		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a> or </br>"
+		+ "<a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>"
 		+ " or " 
-		+ "<a href="+datauri_1+">raw (0x20-0x9f)</a>"
+		+ "<a href=\""+datauri_1+"\">raw (0x20-0x9f)</a>"
 		+ "<br/>or " 
-		+ "<a href="+datauri_tti+">TTI (8-bit)</a>"
+		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a>"
 		+ "</div>";
 	active_export = 1;
 }
@@ -4187,13 +4204,10 @@ var page_keydown = function(event) {
 }
 
 function init_frames() { 
-	var ed1 = new Editor();
-	active_editor = ed1;
-	url_editor = ed1;
-	ed1.init_frame("frame1");
-
-	var ed2 = new Editor();
-	ed2.init_frame("frame2");
+	var editor = new Editor();
+	active_editor = editor;
+	url_editor = editor;
+	editor.init_frame("frame");
 }
 
 </script>
@@ -4353,8 +4367,7 @@ div#b {
 </table>
 </div> 
 <div id="b">
-<canvas id="frame1"></canvas>
-<canvas id="frame2"></canvas>
+<canvas id="frame"></canvas>
 </div></div>
 
 </body>
