@@ -9,11 +9,14 @@ or preparing viewdata frames.
 
 Most of the functionality of the editor is accessed through key 
 sequences beginning with the escape key. They are summarised in a table 
-to the left of the the editor. Pressing the escape key takes you into 
-command mode, in which the status bar is coloured yellow, and then 
-typing a (possibly shifted) letter will insert a control character or 
-perform some other function. The status bar can also be used to view 
-teletext metadata. The key sequence ESC-L toggles this.
+to the left of the the editor. Alternatively, the table can be viewed in 
+the editor by entering the key sequence ESC-?.
+
+Pressing the escape key takes you into command mode, in which the status 
+bar is coloured yellow, and then typing a (possibly shifted) letter will 
+insert a control character or perform some other function. The status 
+bar can also be used to view teletext metadata. The key sequence ESC-L 
+toggles this.
 
 Everything is supplied in a single HTML file. There are no external 
 dependencies. You can email the HTML file to friends so that they can 

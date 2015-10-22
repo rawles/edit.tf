@@ -19,6 +19,14 @@
 // section 4, provided you include this license notice and a URL
 // through which recipients can access the Corresponding Source.
 
+// Several editors can be on a single page. We need to keep track of
+// which editor receives keypresses, mouse events, and which reads
+// and writes to the URL.
+var activeeditor = null;
+
+// Editor is the main object, and encapsulates all the functionality
+// of a single editor canvas.
+function Editor() { // beginning of Editor
 
 ///////////////////////
 ///// GLOBAL DATA /////
@@ -112,7 +120,7 @@ var m_fastext_index = 0;
 		    // no link.
 
 // Initialises the state of the screen.
-function init_state() { 
+var init_state = function() { 
 
 	init_canvas();
     
@@ -137,7 +145,7 @@ function init_state() {
 	load_from_hash();
 }
 
-function init_canvas() {
+var init_canvas = function() {
 
 	// The dimensions depend on whether the status bar is shown
 	width = 480; height = 540;
@@ -163,7 +171,7 @@ function init_canvas() {
 
 // Resets an individual character at position (x,y) to default 
 // attributes, like you would find at the start of a line.
-function clear_char(x,y) {
+var clear_char = function(x,y) {
 	cc[y][x] = 32; fg[y][x] = 7; bg[y][x] = 0;
 	tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
 	hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
@@ -171,13 +179,13 @@ function clear_char(x,y) {
 
 // Sets the grid on or off and renders the whole 
 // frame again to show it.
-function show_grid(newgrid) {
+var show_grid = function(newgrid) {
 	grid = newgrid;
 	render(0, 0, 40, 25);
 }
 
 // Changes whether we allow black foreground.
-function set_blackfg(newblackfg) { 
+var set_blackfg = function(newblackfg) {
 	blackfg = newblackfg;
 
 	// We have to do a full redraw because the *meaning* of 
@@ -187,7 +195,7 @@ function set_blackfg(newblackfg) {
 
 // Enables or disables the display of control codes and
 // refreshes the affected cells.
-function show_codes(newcode) { 
+var show_codes = function(newcode) {
 	showcc = newcode;
 
 	// Update all cells which contain a control character
@@ -206,13 +214,13 @@ function show_codes(newcode) {
 // Clears those pixels corresponding to the cells described.
 // The cells' top-left corner is (x,y), and the area has width
 // w and height h.
-function cls(ctx,x,y,w,h) { 
+var cls = function(ctx,x,y,w,h) {
 	ctx.clearRect(x*12*pix_scale, y*20*pix_scale, w*12*pix_scale, h*20*pix_scale);
 }
 
 // Performs a fill character copy, including attributes.
 // Copies from cell (x1, y1) to (x2,y2).
-function copy_char(x1, y1, x2, y2) {
+var copy_char = function(x1,y1,x2,y2) {
 	cc[y2][x2] = cc[y1][x1]; fg[y2][x2] = fg[y1][x1];
 	bg[y2][x2] = bg[y1][x1]; tg[y2][x2] = tg[y1][x1];
 	cs[y2][x2] = cs[y1][x1]; nd[y2][x2] = nd[y1][x1];
@@ -221,7 +229,7 @@ function copy_char(x1, y1, x2, y2) {
 }
 
 // Deletes the row that the cursor is on.
-function delete_row(r) {
+var delete_row = function(r) {
 	invalidate_export();
 
 	// For each row, copy the data from the row below.
@@ -245,7 +253,7 @@ function delete_row(r) {
 }
 
 // Inserts an empty row at row r.
-function insert_row(r) { 
+var insert_row = function(r) {
 	invalidate_export();
 
 	// Working up from the bottom of the screen, copy the
@@ -267,7 +275,7 @@ function insert_row(r) {
 
 // Duplicates row r to the one below it, shifting all 
 // the rows below it down.
-function duplicate_row(r) { 
+var duplicate_row = function(r) {
 	invalidate_export();
 
 	// Working up from the bottom of the screen, copy the
@@ -284,7 +292,7 @@ function duplicate_row(r) {
 
 // Redraw the whole screen by deleting its contents and 
 // re-writing each character onto it.
-function redraw() { 
+var redraw = function() {
 	// Clear all attributes
 	for ( var y = 0; y < 25; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
@@ -308,14 +316,12 @@ function redraw() {
 
 	// Re-render the whole screen.
 	render(0,0,40,25);
-
-	draw_help_screen();
 }
 
 // Clear each character and reset the double height
 // row. If andrender is non-zero, also re-renders the
 // frame.
-function wipe(andrender) { 
+var wipe = function(andrender) {
 	invalidate_export();
 
 	for ( var r = 0; r < 25; r++ ) { 
@@ -366,7 +372,7 @@ var mouse_state = -1;
 // of the state, and if unset (-1) sets it to the right value.
 // 'Click' is a misnomer. If the mouse is dragged, that's considered a
 // series of clicks.
-function mouse_click(canvasx, canvasy, state) {
+var mouse_click = function(canvasx, canvasy, state) {
 
 	// First, locate the position in the character grid (x,y) of this click,
 	// and the position in the character cell (sx,sy) itself.
@@ -491,7 +497,7 @@ function mouse_click(canvasx, canvasy, state) {
 
 // click_listener takes the mouse events along with the current state
 // and extracts the position of the click relative to the canvas.
-function click_listener(event, state) {
+var click_listener = function(event, state) {
 
 	// Compute the position of the canvas.
     var offsetx = 0;
@@ -527,7 +533,7 @@ function click_listener(event, state) {
 }
 
 // Sets up the listeners for the mouse.
-function init_mouse() { 
+var init_mouse = function() {
 	var canvas = document.getElementById(canvasid);
 
 	// What happens when the mouse button is clicked ...
@@ -595,7 +601,7 @@ function init_mouse() {
 // 1122 characters.
 
 // Loads data from the hash into the frame.
-function load_from_hash() { 
+var load_from_hash = function() {
 	
 	// We fetch the hash's value and remove the first character
 	// which is the hash symbol itself.
@@ -751,7 +757,7 @@ function load_from_hash() {
 // save to. There are two whole left-over bits at the end of
 // the encoding. Yes, it's wasteful, but for now, we'll have to
 // let that go.
-function save_to_hash() { 
+var save_to_hash = function() {
 	if (mouse_button == 1) {
 		// optimisation: don't update hash while drawing
 		return;
@@ -801,7 +807,7 @@ function save_to_hash() {
 // converts the frame to raw format, and then edits the document to show a link
 // using the data URI scheme. The user can save this link to their own computer
 // without the server needing to store it.
-function export_frame() { 
+var export_frame = function() {
 	// We can't substitute characters for the base64 in the address bar
 	// becase the output must constain newlines and the addressbar uses
 	// seven bits for each character. Therefore we must export in a
@@ -889,7 +895,7 @@ function export_frame() {
 
 // When a page changes, invalidate_export is called to remove any export links
 // on the screen, since they no longer reflect the frame as shown.
-function invalidate_export() { 
+var invalidate_export = function() {
 	if ( active_export != 0 ) {
 		document.getElementById('export').innerHTML = "";
 		active_export = 0;
@@ -908,7 +914,7 @@ function invalidate_export() {
 // The colour numbers are described below. For each colour the
 // option to return a highlighted version (highlight == 1) is given.
 // this is for the highlighting that a cursor does, mostly.
-function colour(number, highlight) { 
+var colour = function(number, highlight) {
 
 	// 0: black
 	if ( number == 0 && highlight == 0 ) { return "#000000"; }
@@ -957,7 +963,7 @@ function colour(number, highlight) {
 	}
 
 // This simple helper function just gives a name to each colour.
-function colour_name(col) { 
+var colour_name = function(col) {
 	if ( col == 0 ) { return "black"; }
 	if ( col == 1 ) { return "red"; }
 	if ( col == 2 ) { return "green"; }
@@ -982,7 +988,7 @@ function colour_name(col) {
 // when attaching links and other metadata to the frame prior
 // to export.
 // The variable 'statusmode' indicates which of these is active.
-function draw_status_bar() {
+var draw_status_bar = function() {
 
 	// There is nothing to draw if the status bar has been hidden.
 	if ( statushidden != 0 ) { return; } 
@@ -1005,7 +1011,7 @@ function draw_status_bar() {
 	if ( statusmode == 1 ) { draw_status_bar_metadata(ctx); } 
 }
 
-function draw_status_bar_metadata(ctx) { 
+var draw_status_bar_metadata = function(ctx) {
 	var offset = 5*pix_scale;
 	var spacing = 43*pix_scale;
 
@@ -1098,7 +1104,7 @@ function draw_status_bar_metadata(ctx) {
 		532*pix_scale);
 }
 
-function draw_status_bar_frame(ctx) { 
+var draw_status_bar_frame = function(ctx) {
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
@@ -1165,7 +1171,7 @@ function draw_status_bar_frame(ctx) {
 // else happens, to avoid the user from editing with no guidance. This 
 // function is called when there's a keyboard event, to make sure the
 // status bar is back.
-function unhide_status_bar() { 
+var unhide_status_bar = function() {
 	if ( statushidden != 0 ) { 
 		statushidden = 0;
 
@@ -1178,7 +1184,7 @@ function unhide_status_bar() {
 	}
 }
 
-function hide_status_bar() { 
+var hide_status_bar = function() {
 	if ( statushidden == 0 ) { 
 		statushidden = 1;
 
@@ -1190,6 +1196,10 @@ function hide_status_bar() {
 	}
 }
 
+this.set_escape = function(newvalue) { 
+	escape = newvalue;
+}
+
 ////////////////////
 ///// KEYBOARD /////
 ////////////////////
@@ -1198,7 +1208,7 @@ function hide_status_bar() {
 // pressed) and others are keypress (a character is produced). I developed
 // this code with Firefox, so I also handle some of its quirks here. 
 
-function keydown(event) { 
+this.keydown = function(event) {
 	var code = ('which' in event) ? event.which : event.keyCode;
 
 	// Escape key toggles the escape mode and redraws the status bar.
@@ -1223,15 +1233,8 @@ function keydown(event) {
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
 	}
-    
-function fakepress(character) {
-	var event = new Object;
-	event["charCode"]=character.charCodeAt(0);
-	escape = 1;
-	keypress(event);
-}    
 
-function keypress(event) {
+this.keypress = function(event) {
 	var code = ( 'charCode' in event ) ? event.charCode : event.keyCode;
 
 	// Code 0 means there was simply no keypress.
@@ -1354,6 +1357,7 @@ function keypress(event) {
 			init_canvas();
 			render(0,0,40,25,0);
 		}
+
 		if ( code == 93 ) {
 			matched = 1;
 			aspect_ratio = Math.min(aspect_ratio+0.1, 1.5);
@@ -1485,7 +1489,7 @@ function keypress(event) {
 // them separately. If split == 1, it's necessary to call the render
 // function twice.
 
-function cursor_right() {
+var cursor_right = function() {
 	// The first cell that needs to be re-rendered is the original one. 
 	var old_curx = curx; var old_cury = cury;
 
@@ -1506,7 +1510,7 @@ function cursor_right() {
 }
 
 // The other functions work in a similar way.
-function cursor_left() { 
+var cursor_left = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1520,7 +1524,7 @@ function cursor_left() {
 	} 
 }
 
-function cursor_up() { 
+var cursor_up = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1533,7 +1537,7 @@ function cursor_up() {
 	} 
 }
 
-function cursor_down() { 
+var cursor_down = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1548,7 +1552,7 @@ function cursor_down() {
 
 // Newlines are considered to be just another kind of cursor
 // movement, but 
-function cursor_nl() { 
+var cursor_nl = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	cury++; curx = 0;
@@ -1559,7 +1563,7 @@ function cursor_nl() {
 
 
 // Tab inserts a new character.
-function cursor_tab() {
+var cursor_tab = function() {
 	// Determine the attributes of the new cell by copying those of the
 	// previous cell, apart from the actual character code, which should be
 	// a space. The exception is where the previous cell is a set-after
@@ -1639,7 +1643,7 @@ function cursor_tab() {
 // A bit like the opposite of tab, backspace deletes a character like
 // in most other editors. The pattern is the same, but we need to ensure
 // we're considering what we're deleting.
-function cursor_bs() {
+var cursor_bs = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1;
@@ -1703,7 +1707,7 @@ function cursor_bs() {
 // placeable() defines placeable codes, and is
 // called to test whether a code is handled by
 // place_code().
-function placeable(code) { 
+var placeable = function(code) {
 	if (   ( code >= 0  && code <= 7 ) 
 		|| ( code == 8 || code == 9 )
 		|| ( code == 12 || code == 13 )
@@ -1729,7 +1733,7 @@ function placeable(code) {
 // the affected cells are re-rendered. This code is also used for 
 // removal, so the final argument is 0 where the code has been placed,
 // and 1 where it has been removed.
-function adjustdh(x,y,andrender,removal) { 
+var adjustdh = function(x,y,andrender,removal) {
 
 	// We start by considering the state of the row above.
 	var above = 0;
@@ -1778,7 +1782,7 @@ function adjustdh(x,y,andrender,removal) {
 // We may also need to adjust the double heigh of the whole screen,
 // so this function is provided for convenience. It works a lot 
 // like the one above.
-function adjustdh_fullscreen(andrender) {
+var adjustdh_fullscreen = function(andrender) {
 	var above = 0;
 	for ( var r = 0; r < 25; r++ ) { 
 		var fs_from = fs[r];
@@ -1805,7 +1809,7 @@ function adjustdh_fullscreen(andrender) {
 // place_code() is called when the supplied code is to be set at 
 // position (x,y). If andrender is non-zero, it also renders the 
 // character.
-function place_code(x,y,code,andrender) {
+var place_code = function(x,y,code,andrender) {
 
 	// Quickly invalidate any export we have going
 	invalidate_export();
@@ -2160,7 +2164,7 @@ function place_code(x,y,code,andrender) {
 
 // Handles removal of a character code at (x,y), and, if andrender
 // is non-zero, renders the characters it affects.
-function check_for_remove_code(x,y,andrender) {
+var check_for_remove_code = function(x,y,code,andrender) {
 
 	var code = cc[y][x];
 
@@ -2463,7 +2467,7 @@ function check_for_remove_code(x,y,andrender) {
 
 // Renders the rectangle of cells with top-left corner at (x,y) with 
 // height h and width w, and its dependent cells.
-function autorender(x,y,w,h) {
+var autorender = function(x,y,w,h) {
 
 	// We keep track of whether we're also affecting the next line.
 	// Value is 1 if we are, or 0 if not.
@@ -2535,12 +2539,14 @@ function autorender(x,y,w,h) {
 
 }
 
+///
+
 // Renders a rectangle of character cells starting at (x,y) with width
 // w and height h onto the canvas.
 
 // Control codes in teletext can be "set-at" or "set-after", which affects
 // rendering a bit. Check out the place and remove functions for more.
-function render(x,y,w,h) {
+var render = function(x, y, w, h) {
 
 	// Sometimes things go wrong, so we trim the box to the size of the
 	// frame.
@@ -2899,7 +2905,7 @@ function render(x,y,w,h) {
 // would affect held graphics in following codes, and re-render
 // where needed (we don't need to specify the character itself in
 // the call).
-function gfx_change(x1,y1,x2,y2) {
+var gfx_change = function(x1, y1, x2, y2) {
 
 	// First we need to understand the state of attributes at the
 	// end of this span so we know how to handle the search past
@@ -3008,7 +3014,7 @@ function gfx_change(x1,y1,x2,y2) {
 
 // Sets a new state for revealing concealed characters, 0 for off and
 // 1 for on.
-function set_reveal(newreveal) { 
+this.set_reveal = function(newreveal) {
 	reveal = newreveal;
 
 	// Now re-render the characters marked as concealed.
@@ -3038,7 +3044,7 @@ function set_reveal(newreveal) {
 // bit pattern of each of five lines (each therefore an integer in the
 // range 0 to 31). add_font_char smooths this matrix into what actually
 // ends up in the font array, a nice smoothed version ready to render.
-function add_font_char(code,l1,l2,l3,l4,l5,l6,l7,l8,l9) {
+var add_font_char = function(code, l1, l2, l3, l4, l5, l6, l7, l8, l9) {
 
 	// The args are put into an array for easy access.
 	var d = [l1, l2, l3, l4, l5, l6, l7, l8, l9];
@@ -3104,7 +3110,7 @@ function add_font_char(code,l1,l2,l3,l4,l5,l6,l7,l8,l9) {
 }
 
 // Simply sets the character set, loads the font and renders the frame.
-function set_charset(charset) {
+var set_charset = function(charset) {
 	cset = charset;
 	init_font(cset);
 	render(0,0,40,25,0);
@@ -3119,7 +3125,7 @@ function set_charset(charset) {
 // SAA5050 and variants, namely:
 // 0: English   1: German     2: Swedish   3: Italian 
 // 4: Belgian   5: US-ASCII   6: Hebrew    7: Cyrillic
-function init_font(charset) {
+var init_font = function(charset) {
 	add_font_char(0,8,20,28,20,0,5,6,5,5);
 		// AK (K stands for black here)
 	add_font_char(1,8,20,28,20,0,6,5,6,5);
@@ -4018,7 +4024,7 @@ function init_font(charset) {
 // welcome. If you are a native speaker of another language and can help
 // please raise a bug.
 
-function draw_help_screen() {
+var draw_help_screen = function() {
 
 	var columns = [
 		[["", "Lowercase:"],           ["", "Uppercase:"]],
@@ -4088,24 +4094,20 @@ function draw_help_screen() {
 
 // Like the status bar, the help screen only appears until something else
 // happens.
-function show_help_screen() { 
+var show_help_screen = function() {
 	if ( helpscreenshown != 1 ) { 
 		helpscreenshown = 1;
 
-		// Because this is likely to be used for editing, return
-		// to the full underlying resolution.
-		pix_scale = full_pix_scale;
 		init_canvas();
 		draw_help_screen();
 		draw_status_bar();
 	}
 }
 
-function hide_help_screen() { 
+var hide_help_screen = function() {
 	if ( helpscreenshown == 1 ) { 
 		helpscreenshown = 0;
 
-		pix_scale = full_pix_scale;
 		init_canvas();
 		render(0,0,40,25,0);
 		draw_status_bar();
@@ -4120,7 +4122,7 @@ function hide_help_screen() {
 // Sometimes it's necessary to pad a string by prepending characters
 // to it, most commonly because we want to add leading zeroes to a 
 // displayed number. That's what this function does.
-function padstring(char, width, string) {
+var padstring = function(char, width, string) {
 	var output = string;
 	while ( output.length < width ) { output = char + output; }
 	return output;
@@ -4131,19 +4133,49 @@ function padstring(char, width, string) {
 ///// INITIALISATION /////
 //////////////////////////
 
-function init_frame(id) { 
+this.init_frame = function(id) {
 	canvasid = id;
-	console.log("init called");
 
 	// Set up the screen and render it.
 	init_state();
-	render(0,0,40,25,0);
+	render(0, 0, 40, 25, 0);
 
 	// Set up listeners for events
 	init_mouse();
-	document.onkeypress=keypress;
-	document.onkeydown=keydown;
+	document.onkeypress = page_keypress;
+	document.onkeydown = page_keydown;
 }
+
+} // end of Editor
+    
+// This function is called by clicking on some cells of the key sequences
+// table. It just sends am escape keypress and then the character in the
+// argument.
+var fakepress = function(character) {
+	if ( activeeditor == null ) { return; } 
+
+	activeeditor.set_escape(1);
+	event = new Object;
+	event["charCode"] = character.charCodeAt(0);
+	page_keypress(event);
+}    
+
+var page_keypress = function(event) {
+	if ( activeeditor == null ) { return; } 
+	activeeditor.keypress(event);
+}
+
+var page_keydown = function(event) { 
+	if ( activeeditor == null ) { return; } 
+	activeeditor.keydown(event);
+}
+
+function init_frames() { 
+	var ed = new Editor();
+	activeeditor = ed;
+	ed.init_frame("frame1");
+}
+
 </script>
 <title>teletext-editor</title>
 <style type="text/css">
@@ -4215,11 +4247,6 @@ div#b {
 	cursor: pointer;
 }
 </style>
-<script type="text/javascript">
-function init_frames() { 
-	init_frame("frame1");
-}
-</script>
 </head>
 <body onload="init_frames();">
 
