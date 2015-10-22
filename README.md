@@ -81,7 +81,8 @@ Associated scripts and other tools are licenced under the same terms.
 Bug reports, enhancement requests and pull requests are welcome. If you 
 would like to contribute but cannot program, documentation and tutorials 
 would also be very welcome. If you're interested in contributing in this 
-way, please comment on issue #3.
+way, please comment on issue #3 so that everybody can suggest ways for
+you to help.
 
 ## Hints, tips and caveats
 
@@ -101,7 +102,7 @@ way, please comment on issue #3.
   row. Instead, on a BBC Micro, the two rows need to have identical data.
   This means that effects like the top and bottom of double-height
   characters having different colours, or even different characters
-  entirely, may be achieved. This editor does not display such effects.
+  entirely, may be achieved. This editor does not yet display such effects.
 
 ## Related links
 
@@ -122,6 +123,11 @@ The editor has been used for various events and systems:
   @voc - as part of their DVB-T system. It broadcasted a signal containing 
   teletext to televisions belonging to the participants of the
   [Chaos Communication Camp 2015](https://events.ccc.de/camp/2015/wiki/Main_Page) in August 2015.
+* The editor was used to prepare the closing screens of BBC Micro demos
+  produced by the demo group [CRTC](http://crtc.tv/), including 
+  *Some Nasty Effects*. The offline nature of the editor proved useful, since
+  it meant the screen could be prepared while broken down for many hours
+  in Newbury Services on the M4, on the way to the Sundown 2015 party.
 
 ### Compatibility
 
@@ -132,7 +138,9 @@ The editor has been used for various events and systems:
 
 ### Test frames
 
-Frames to test the correct functionality of the editor appear below:
+Frames to test the correct functionality of the editor appear below. Feel 
+free to edit this README with your own test frames, especially if they expose
+nasty bugs or demonstrate common mistakes in implementing teletext software.
 
 * Rob of the
   [Teletext Preservation project](http://www.teletext.org.uk/) has contributed a
