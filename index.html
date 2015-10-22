@@ -20,13 +20,18 @@
 // through which recipients can access the Corresponding Source.
 
 // Several editors can be on a single page. We need to keep track of
-// which editor receives keypresses, mouse events, and which reads
-// and writes to the URL.
-var activeeditor = null;
+// which editor receives keypresses and mouse events.
+var active_editor = null;
+
+// We also need to allow at most one editor to read to and write from
+// the URL.
+var url_editor = null;
 
 // Editor is the main object, and encapsulates all the functionality
 // of a single editor canvas.
-function Editor() { // beginning of Editor
+function Editor() { // beginning of Editor, but we're not indenting.
+
+var editor_this = this;
 
 ///////////////////////
 ///// GLOBAL DATA /////
@@ -541,6 +546,11 @@ var init_mouse = function() {
 		mouse_button = 1;
         // what will the state be for this drag?
         mouse_state = click_listener(e, -1)
+	
+	// This click makes the editor associated with this 
+	// canvas the active editor.
+	active_editor = editor_this;
+
     }, false);
 
     // ... and when it's released ...
@@ -602,6 +612,9 @@ var init_mouse = function() {
 
 // Loads data from the hash into the frame.
 var load_from_hash = function() {
+
+	// Stop here if this isn't the editor reading from the hash.
+	if ( editor_this != url_editor ) { return; }
 	
 	// We fetch the hash's value and remove the first character
 	// which is the hash symbol itself.
@@ -758,12 +771,15 @@ var load_from_hash = function() {
 // the encoding. Yes, it's wasteful, but for now, we'll have to
 // let that go.
 var save_to_hash = function() {
+
+	// Stop here if this isn't the editor reading from the hash.
+	if ( editor_this != url_editor ) { return; }
+
+	var encoding = "";
 	if (mouse_button == 1) {
 		// optimisation: don't update hash while drawing
 		return;
 	}
-
-	var encoding = "";
 
 	// Construct the metadata as described above.
 	var metadata = cset;
@@ -4152,28 +4168,32 @@ this.init_frame = function(id) {
 // table. It just sends am escape keypress and then the character in the
 // argument.
 var fakepress = function(character) {
-	if ( activeeditor == null ) { return; } 
+	if ( active_editor == null ) { return; } 
 
-	activeeditor.set_escape(1);
+	active_editor.set_escape(1);
 	event = new Object;
 	event["charCode"] = character.charCodeAt(0);
 	page_keypress(event);
 }    
 
 var page_keypress = function(event) {
-	if ( activeeditor == null ) { return; } 
-	activeeditor.keypress(event);
+	if ( active_editor == null ) { return; } 
+	active_editor.keypress(event);
 }
 
 var page_keydown = function(event) { 
-	if ( activeeditor == null ) { return; } 
-	activeeditor.keydown(event);
+	if ( active_editor == null ) { return; } 
+	active_editor.keydown(event);
 }
 
 function init_frames() { 
-	var ed = new Editor();
-	activeeditor = ed;
-	ed.init_frame("frame1");
+	var ed1 = new Editor();
+	active_editor = ed1;
+	url_editor = ed1;
+	ed1.init_frame("frame1");
+
+	var ed2 = new Editor();
+	ed2.init_frame("frame2");
 }
 
 </script>
@@ -4334,6 +4354,7 @@ div#b {
 </div> 
 <div id="b">
 <canvas id="frame1"></canvas>
+<canvas id="frame2"></canvas>
 </div></div>
 
 </body>
