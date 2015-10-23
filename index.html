@@ -1,168 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>teletext-editor</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
-<style type="text/css">
-body { 
-	background-color: #222;
-}
-table#hints {
-	margin-left: auto;
-	margin-right: auto;
-	border-collapse: collapse;
-	border: 1px solid #353;
-}
-table#hints td, table#hints tr , table#hints th, div#export {
-	color: #9b9;
-	vertical-align: center; 
-	text-align: center;
-	font-family: sans-serif;
-	line-height: 1.1;
-	font-size: 12px;
-}
-div.exportbox {
-	margin-bottom: 1em;
-	background-color: #353;
-	padding: 3px;
-	border: 2px solid #9b9;
-}
-table#hints td, table#hints tr , table#hints th {
-	border: 1px solid #353;
-	-moz-user-select: -moz-none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;    
-}
-td a, div#export a {
-	color: inherit;
-}
-canvas {
-	background-color: #181818;
-	padding: 10px;
-	border-radius: 10px;
-	-moz-border-radius: 3px;
-	margin: 0 20px 0 20px;
-	cursor: crosshair;
-	position:relative;
-	z-index: 1;
-}
-tr.newsection {
-	background-color: #353;
-}
-div#a {
-	display: table;
-	position: fixed;
-	top: 0; left: 0;
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	border-collapse: collapse;
-}
-div#b {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-	padding: 0;
-	margin: 0;
-}
-[onclick] {
-	cursor: pointer;
-}
-</style>
-</head>
-<body>
-
-<div id="a"><div id="b">
-
-<div id="export">
-</div>
-<table id="hints">
-<tr class="newsection">
-<td colspan="4">First press escape then the following:</td>
-</tr>
-<tr>
-<th colspan="2">lowercase</th>
-<th colspan="2">uppercase</th>
-</tr>
-
-<tr><td onclick="fakepress('r')">r</td><td onclick="fakepress('r')">red text</td>
-	<td onclick="fakepress('R')">red graphics</td><td onclick="fakepress('R')">R</td></tr>
-<tr><td onclick="fakepress('g')">g</td><td onclick="fakepress('g')">green text</td>
-	<td onclick="fakepress('G')">green graphics</td><td onclick="fakepress('G')">G</td></tr>
-<tr><td onclick="fakepress('y')">y</td><td onclick="fakepress('y')">yellow text</td>
-	<td onclick="fakepress('Y')">yellow graphics</td><td onclick="fakepress('Y')">Y</td></tr>
-<tr><td onclick="fakepress('b')">b</td><td onclick="fakepress('b')">blue text</td>
-	<td onclick="fakepress('B')">blue graphics</td><td onclick="fakepress('B')">B</td></tr>
-<tr><td onclick="fakepress('m')">m</td><td onclick="fakepress('m')">magenta text</td>
-	<td onclick="fakepress('M')">magenta graphics</td><td onclick="fakepress('M')">M</td></tr>
-<tr><td onclick="fakepress('c')">c</td><td onclick="fakepress('c')">cyan text</td>
-	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
-<tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
-	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
-
-<tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
-	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
-<tr><td onclick="fakepress('f')">f</td><td onclick="fakepress('f')">steady</td>
-	<td onclick="fakepress('F')">flash</td><td onclick="fakepress('F')">F</td></tr>
-<tr><td onclick="fakepress('h')">h</td><td onclick="fakepress('h')">release graphics</td>
-	<td onclick="fakepress('H')">hold graphics</td><td onclick="fakepress('H')">H</td></tr>
-<tr><td onclick="fakepress('i')">i</td><td onclick="fakepress('i')">insert row</td>
-	<td onclick="fakepress('I')">delete row</td><td onclick="fakepress('I')">I</td></tr>
-<tr><td onclick="fakepress('n')">n</td><td onclick="fakepress('n')">black background</td>
-	<td onclick="fakepress('N')">new background</td><td onclick="fakepress('N')">N</td></tr>
-<tr><td onclick="fakepress('q')">q</td><td onclick="fakepress('q')">hide codes</td>
-	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
-<tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
-	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
-<tr><td onclick="fakepress('v')">v</td><td onclick="fakepress('v')">reveal off</td>
-	<td onclick="fakepress('V')">reveal on</td><td onclick="fakepress('V')">V</td></tr>
-<tr><td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">no grid</td>
-	<td onclick="fakepress('X')">grid</td><td onclick="fakepress('X')">X</td></tr>
-<tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
-	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
-<tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
-	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
-<tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
-    <td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
-
-<tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
-<td>switch char. sets</td><td>1-8</td></tr>
-
-<tr> <td onclick="fakepress('0')">0</td><td onclick="fakepress('0')">hide status bar</td><td></td><td></td></tr>
-
-<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td><td onclick="fakepress('l')">L</td></tr>
-
-<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
-	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
-<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
-	<td onclick="fakepress('k')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
-
-<tr class="newsection"><td colspan="4">No escape required for:</td></tr>
-
-<tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
-<td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
-
-<tr class="newsection"><td colspan="4">In graphics mode:</td>
-	</tr>
-
-<tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
-
-<tr class="newsection"><td colspan="4"><a href="https://github.com/rawles/teletext-editor">Bug reports and pull requests welcome</a>.</td></tr>
-
-<tr><td colspan="4">The frame's data is all in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
-
-</table>
-</div> 
-<div id="b">
-<canvas id="frame"></canvas>
-</div></div>
-
 <script type="text/javascript">
-
-
 // Copyright (C) 2015, Simon Rawles, Alan Davies and Tim Hutton.
 //
 // The JavaScript code in this page is free software: you can
@@ -179,6 +19,19 @@ div#b {
 // section 4, provided you include this license notice and a URL
 // through which recipients can access the Corresponding Source.
 
+// Several editors can be on a single page. We need to keep track of
+// which editor receives keypresses and mouse events.
+var active_editor = null;
+
+// We also need to allow at most one editor to read to and write from
+// the URL.
+var url_editor = null;
+
+// Editor is the main object, and encapsulates all the functionality
+// of a single editor canvas.
+function Editor() { // beginning of Editor, but we're not indenting.
+
+var editor_this = this;
 
 ///////////////////////
 ///// GLOBAL DATA /////
@@ -226,8 +79,10 @@ var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
 var statusmode = 0; // what is the statusbar showing? 
 		 // 0 means the usual information about the current cell.
 		 // 1 means the additional teletext metadata
-var statushidden = 0; // is the statusbar temporarily hidden with ESC-0?
+var statushidden = 1; // is the statusbar temporarily hidden with ESC-0?
 		 // 0 if no, 1 if yes.
+var helpscreenshown = 0; // is the help screen being shown? 
+		 // 0 if no, 1 if yes
 var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
 var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
@@ -244,6 +99,8 @@ var aspect_ratio=1.2; // specifies how much to stretch the x direction.
 var active_export = 0;
 		 // if non-zero, there are URLs for export on the screen
 		 // which should be invalidated on a change.
+var canvasid = "canvas";
+		 // The HTML id for the canvas.
 
 // Page metadata:
 var m_page = 0x100; // This page's number within the magazine.
@@ -268,9 +125,9 @@ var m_fastext_index = 0;
 		    // no link.
 
 // Initialises the state of the screen.
-function init_state() { 
+var init_state = function() { 
 
-	init_canvas(480, 540);
+	init_canvas();
     
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
@@ -293,8 +150,13 @@ function init_state() {
 	load_from_hash();
 }
 
-function init_canvas(width, height) {
-	var c = document.getElementById("frame");
+var init_canvas = function() {
+
+	// The dimensions depend on whether the status bar is shown
+	width = 480; height = 540;
+	if ( statushidden == 1 ) { height = 500; } 
+
+	var c = document.getElementById(canvasid);
     
 	// set the 'logical' width and height, the code is designed for 480x520,
 	// scaled up to look better when zoomed in
@@ -309,11 +171,12 @@ function init_canvas(width, height) {
 	var ctx = c.getContext("2d");
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, width*pix_scale, height*pix_scale);
+	ctx.textAlign = "left";
 }
 
 // Resets an individual character at position (x,y) to default 
 // attributes, like you would find at the start of a line.
-function clear_char(x,y) {
+var clear_char = function(x,y) {
 	cc[y][x] = 32; fg[y][x] = 7; bg[y][x] = 0;
 	tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
 	hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
@@ -321,13 +184,13 @@ function clear_char(x,y) {
 
 // Sets the grid on or off and renders the whole 
 // frame again to show it.
-function show_grid(newgrid) {
+var show_grid = function(newgrid) {
 	grid = newgrid;
 	render(0, 0, 40, 25);
 }
 
 // Changes whether we allow black foreground.
-function set_blackfg(newblackfg) { 
+var set_blackfg = function(newblackfg) {
 	blackfg = newblackfg;
 
 	// We have to do a full redraw because the *meaning* of 
@@ -337,7 +200,7 @@ function set_blackfg(newblackfg) {
 
 // Enables or disables the display of control codes and
 // refreshes the affected cells.
-function show_codes(newcode) { 
+var show_codes = function(newcode) {
 	showcc = newcode;
 
 	// Update all cells which contain a control character
@@ -356,13 +219,13 @@ function show_codes(newcode) {
 // Clears those pixels corresponding to the cells described.
 // The cells' top-left corner is (x,y), and the area has width
 // w and height h.
-function cls(ctx,x,y,w,h) { 
+var cls = function(ctx,x,y,w,h) {
 	ctx.clearRect(x*12*pix_scale, y*20*pix_scale, w*12*pix_scale, h*20*pix_scale);
 }
 
 // Performs a fill character copy, including attributes.
 // Copies from cell (x1, y1) to (x2,y2).
-function copy_char(x1, y1, x2, y2) {
+var copy_char = function(x1,y1,x2,y2) {
 	cc[y2][x2] = cc[y1][x1]; fg[y2][x2] = fg[y1][x1];
 	bg[y2][x2] = bg[y1][x1]; tg[y2][x2] = tg[y1][x1];
 	cs[y2][x2] = cs[y1][x1]; nd[y2][x2] = nd[y1][x1];
@@ -371,7 +234,7 @@ function copy_char(x1, y1, x2, y2) {
 }
 
 // Deletes the row that the cursor is on.
-function delete_row(r) {
+var delete_row = function(r) {
 	invalidate_export();
 
 	// For each row, copy the data from the row below.
@@ -395,7 +258,7 @@ function delete_row(r) {
 }
 
 // Inserts an empty row at row r.
-function insert_row(r) { 
+var insert_row = function(r) {
 	invalidate_export();
 
 	// Working up from the bottom of the screen, copy the
@@ -417,7 +280,7 @@ function insert_row(r) {
 
 // Duplicates row r to the one below it, shifting all 
 // the rows below it down.
-function duplicate_row(r) { 
+var duplicate_row = function(r) {
 	invalidate_export();
 
 	// Working up from the bottom of the screen, copy the
@@ -434,7 +297,7 @@ function duplicate_row(r) {
 
 // Redraw the whole screen by deleting its contents and 
 // re-writing each character onto it.
-function redraw() { 
+var redraw = function() {
 	// Clear all attributes
 	for ( var y = 0; y < 25; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
@@ -463,7 +326,7 @@ function redraw() {
 // Clear each character and reset the double height
 // row. If andrender is non-zero, also re-renders the
 // frame.
-function wipe(andrender) { 
+var wipe = function(andrender) {
 	invalidate_export();
 
 	for ( var r = 0; r < 25; r++ ) { 
@@ -514,7 +377,7 @@ var mouse_state = -1;
 // of the state, and if unset (-1) sets it to the right value.
 // 'Click' is a misnomer. If the mouse is dragged, that's considered a
 // series of clicks.
-function mouse_click(canvasx, canvasy, state) {
+var mouse_click = function(canvasx, canvasy, state) {
 
 	// First, locate the position in the character grid (x,y) of this click,
 	// and the position in the character cell (sx,sy) itself.
@@ -639,12 +502,12 @@ function mouse_click(canvasx, canvasy, state) {
 
 // click_listener takes the mouse events along with the current state
 // and extracts the position of the click relative to the canvas.
-function click_listener(event, state) {
+var click_listener = function(event, state) {
 
 	// Compute the position of the canvas.
     var offsetx = 0;
     var offsety = 0;
-    var frame_element = document.getElementById("frame");
+    var frame_element = document.getElementById(canvasid);
 
     // Step up through the frame's parents and accumulate their
     // contribution to the offset.
@@ -675,14 +538,19 @@ function click_listener(event, state) {
 }
 
 // Sets up the listeners for the mouse.
-function init_mouse() { 
-	var canvas = document.getElementById("frame");
+var init_mouse = function() {
+	var canvas = document.getElementById(canvasid);
 
 	// What happens when the mouse button is clicked ...
 	canvas.addEventListener("mousedown", function (e) {
 		mouse_button = 1;
         // what will the state be for this drag?
         mouse_state = click_listener(e, -1)
+	
+	// This click makes the editor associated with this 
+	// canvas the active editor.
+	active_editor = editor_this;
+
     }, false);
 
     // ... and when it's released ...
@@ -742,13 +610,26 @@ function init_mouse() {
 // significant bit appearing first. This gives hash strings of 'only'
 // 1122 characters.
 
+// A direct way to load and render a hashstring.
+this.load_from = function(hashstring) { 
+	load_from_hashstring(hashstring);	
+	render(0, 0, 40, 25, 0);
+}
+
 // Loads data from the hash into the frame.
-function load_from_hash() { 
+var load_from_hash = function() {
+
+	// Stop here if this isn't the editor reading from the hash.
+	if ( editor_this != url_editor ) { return; }
 	
 	// We fetch the hash's value and remove the first character
 	// which is the hash symbol itself.
 	var hashstring = window.location.hash.substring(1);
 
+	load_from_hashstring(hashstring);
+}
+
+var load_from_hashstring = function(hashstring) {
 	// It's a good idea to have a bit of metadata here describing
 	// which character set we're using. If the colon is there, this
 	// metadata is assumed to be supplied.
@@ -899,13 +780,16 @@ function load_from_hash() {
 // save to. There are two whole left-over bits at the end of
 // the encoding. Yes, it's wasteful, but for now, we'll have to
 // let that go.
-function save_to_hash() { 
+var save_to_hash = function() {
+
+	// Stop here if this isn't the editor reading from the hash.
+	if ( editor_this != url_editor ) { return; }
+
+	var encoding = "";
 	if (mouse_button == 1) {
 		// optimisation: don't update hash while drawing
 		return;
 	}
-
-	var encoding = "";
 
 	// Construct the metadata as described above.
 	var metadata = cset;
@@ -949,7 +833,7 @@ function save_to_hash() {
 // converts the frame to raw format, and then edits the document to show a link
 // using the data URI scheme. The user can save this link to their own computer
 // without the server needing to store it.
-function export_frame() { 
+var export_frame = function() {
 	// We can't substitute characters for the base64 in the address bar
 	// becase the output must constain newlines and the addressbar uses
 	// seven bits for each character. Therefore we must export in a
@@ -964,8 +848,6 @@ function export_frame() {
 		+ m_page.toString(16).toUpperCase()
 		+ padstring("0", 2, m_subpage.toString())
 		+ "\r\n";
-	// CT: cycle time
-	ttistring = ttistring + "CT,7,T\r\n";
 	// DE: description
 	ttistring = ttistring + "DE,teletext-editor\r\n";
 
@@ -1023,21 +905,28 @@ function export_frame() {
 	var datauri_0 = "data:text/plain;base64,"+window.btoa(rawstring_0);
 	var datauri_1 = "data:text/plain;base64,"+window.btoa(rawstring_1);
 	var datauri_tti = "data:text/plain;base64,"+window.btoa(ttistring);
+	var hashstring = "";
+	if ( window.location.hash.length > 0 ) { 
+		hashstring = window.location.hash.substring(1);
+	}
+	var datauri_hs =
+		"data:text/plain;base64,"+window.btoa(hashstring);
 
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as:<br/>"
-		+ "<a href="+datauri_0+">raw (0x00-0x7f)</a>"
+		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a> or </br>"
+		+ "<a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>"
 		+ " or " 
-		+ "<a href="+datauri_1+">raw (0x20-0x9f)</a>"
+		+ "<a href=\""+datauri_1+"\">raw (0x20-0x9f)</a>"
 		+ "<br/>or " 
-		+ "<a href="+datauri_tti+">TTI (8-bit)</a>"
+		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a>"
 		+ "</div>";
 	active_export = 1;
 }
 
 // When a page changes, invalidate_export is called to remove any export links
 // on the screen, since they no longer reflect the frame as shown.
-function invalidate_export() { 
+var invalidate_export = function() {
 	if ( active_export != 0 ) {
 		document.getElementById('export').innerHTML = "";
 		active_export = 0;
@@ -1056,7 +945,7 @@ function invalidate_export() {
 // The colour numbers are described below. For each colour the
 // option to return a highlighted version (highlight == 1) is given.
 // this is for the highlighting that a cursor does, mostly.
-function colour(number, highlight) { 
+var colour = function(number, highlight) {
 
 	// 0: black
 	if ( number == 0 && highlight == 0 ) { return "#000000"; }
@@ -1105,7 +994,7 @@ function colour(number, highlight) {
 	}
 
 // This simple helper function just gives a name to each colour.
-function colour_name(col) { 
+var colour_name = function(col) {
 	if ( col == 0 ) { return "black"; }
 	if ( col == 1 ) { return "red"; }
 	if ( col == 2 ) { return "green"; }
@@ -1130,12 +1019,12 @@ function colour_name(col) {
 // when attaching links and other metadata to the frame prior
 // to export.
 // The variable 'statusmode' indicates which of these is active.
-function draw_status_bar() {
+var draw_status_bar = function() {
 
 	// There is nothing to draw if the status bar has been hidden.
 	if ( statushidden != 0 ) { return; } 
 
-	var c = document.getElementById("frame");
+	var c = document.getElementById(canvasid);
 	var ctx = c.getContext("2d");
 
 	// If we're in escape mode, colour the status bar to make it clear.
@@ -1147,12 +1036,13 @@ function draw_status_bar() {
 
 	ctx.font = (13*pix_scale)+"px Arial";
 	ctx.fillStyle = "#000";
+	ctx.textAlign = "left";
 
 	if ( statusmode == 0 ) { draw_status_bar_frame(ctx); }
 	if ( statusmode == 1 ) { draw_status_bar_metadata(ctx); } 
 }
 
-function draw_status_bar_metadata(ctx) { 
+var draw_status_bar_metadata = function(ctx) {
 	var offset = 5*pix_scale;
 	var spacing = 43*pix_scale;
 
@@ -1245,7 +1135,7 @@ function draw_status_bar_metadata(ctx) {
 		532*pix_scale);
 }
 
-function draw_status_bar_frame(ctx) { 
+var draw_status_bar_frame = function(ctx) {
 	// Values are spaced out by specifying multipliers of spacing units
 	// and offset by the offset value below. This way we can stretch
 	// the positioning a bit.
@@ -1312,29 +1202,33 @@ function draw_status_bar_frame(ctx) {
 // else happens, to avoid the user from editing with no guidance. This 
 // function is called when there's a keyboard event, to make sure the
 // status bar is back.
-function unhide_status_bar() { 
+var unhide_status_bar = function() {
 	if ( statushidden != 0 ) { 
 		statushidden = 0;
 
 		// Because this is likely to be used for editing, return
 		// to the full underlying resolution.
 		pix_scale = full_pix_scale;
-		init_canvas(480, 540);
+		init_canvas();
 		render(0,0,40,25,0);
 		draw_status_bar();
 	}
 }
 
-function hide_status_bar() { 
+var hide_status_bar = function() {
 	if ( statushidden == 0 ) { 
 		statushidden = 1;
 
 		// Because this is likely to be used for a screen shot,
 		// reduce the underlying resolution.
 		pix_scale = 1;
-		init_canvas(480, 500);
+		init_canvas();
 		render(0,0,40,25,0);
 	}
+}
+
+this.set_escape = function(newvalue) { 
+	escape = newvalue;
 }
 
 ////////////////////
@@ -1345,7 +1239,7 @@ function hide_status_bar() {
 // pressed) and others are keypress (a character is produced). I developed
 // this code with Firefox, so I also handle some of its quirks here. 
 
-function keydown(event) { 
+this.keydown = function(event) {
 	var code = ('which' in event) ? event.which : event.keyCode;
 
 	// Escape key toggles the escape mode and redraws the status bar.
@@ -1353,6 +1247,7 @@ function keydown(event) {
 		draw_status_bar(); return; } 
 
 	unhide_status_bar();
+	hide_help_screen();
 
 	// The four cursor keys are handled by their own functions.
 	if ( code == 37 ) { cursor_left(); return; }
@@ -1369,15 +1264,8 @@ function keydown(event) {
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
 	}
-    
-function fakepress(character) {
-	var event = new Object;
-	event["charCode"]=character.charCodeAt(0);
-	escape = 1;
-	keypress(event);
-}    
 
-function keypress(event) {
+this.keypress = function(event) {
 	var code = ( 'charCode' in event ) ? event.charCode : event.keyCode;
 
 	// Code 0 means there was simply no keypress.
@@ -1497,13 +1385,14 @@ function keypress(event) {
 		if ( code == 91 ) {
 			matched = 1;
 			aspect_ratio = Math.max(aspect_ratio-0.1, 1);
-			init_canvas(480, 540);
+			init_canvas();
 			render(0,0,40,25,0);
 		}
+
 		if ( code == 93 ) {
 			matched = 1;
 			aspect_ratio = Math.min(aspect_ratio+0.1, 1.5);
-			init_canvas(480, 540);
+			init_canvas();
 			render(0,0,40,25,0);
 		}
 
@@ -1521,6 +1410,12 @@ function keypress(event) {
 		if ( code == 48 ) {
 			matched = 1;
 			hide_status_bar();
+		}
+
+		// We can show the help screen wth ESC-?:
+		if ( code == 63 ) { 
+			matched = 1;
+			show_help_screen();
 		}
 
 		// If this action is to place a character code, do that, move
@@ -1625,7 +1520,7 @@ function keypress(event) {
 // them separately. If split == 1, it's necessary to call the render
 // function twice.
 
-function cursor_right() {
+var cursor_right = function() {
 	// The first cell that needs to be re-rendered is the original one. 
 	var old_curx = curx; var old_cury = cury;
 
@@ -1646,7 +1541,7 @@ function cursor_right() {
 }
 
 // The other functions work in a similar way.
-function cursor_left() { 
+var cursor_left = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1660,7 +1555,7 @@ function cursor_left() {
 	} 
 }
 
-function cursor_up() { 
+var cursor_up = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1673,7 +1568,7 @@ function cursor_up() {
 	} 
 }
 
-function cursor_down() { 
+var cursor_down = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1; // is it necessary to call render() twice?
@@ -1688,7 +1583,7 @@ function cursor_down() {
 
 // Newlines are considered to be just another kind of cursor
 // movement, but 
-function cursor_nl() { 
+var cursor_nl = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	cury++; curx = 0;
@@ -1699,7 +1594,7 @@ function cursor_nl() {
 
 
 // Tab inserts a new character.
-function cursor_tab() {
+var cursor_tab = function() {
 	// Determine the attributes of the new cell by copying those of the
 	// previous cell, apart from the actual character code, which should be
 	// a space. The exception is where the previous cell is a set-after
@@ -1779,7 +1674,7 @@ function cursor_tab() {
 // A bit like the opposite of tab, backspace deletes a character like
 // in most other editors. The pattern is the same, but we need to ensure
 // we're considering what we're deleting.
-function cursor_bs() {
+var cursor_bs = function() {
 	var old_curx = curx;
 	var old_cury = cury;
 	var split = 1;
@@ -1843,7 +1738,7 @@ function cursor_bs() {
 // placeable() defines placeable codes, and is
 // called to test whether a code is handled by
 // place_code().
-function placeable(code) { 
+var placeable = function(code) {
 	if (   ( code >= 0  && code <= 7 ) 
 		|| ( code == 8 || code == 9 )
 		|| ( code == 12 || code == 13 )
@@ -1869,7 +1764,7 @@ function placeable(code) {
 // the affected cells are re-rendered. This code is also used for 
 // removal, so the final argument is 0 where the code has been placed,
 // and 1 where it has been removed.
-function adjustdh(x,y,andrender,removal) { 
+var adjustdh = function(x,y,andrender,removal) {
 
 	// We start by considering the state of the row above.
 	var above = 0;
@@ -1918,7 +1813,7 @@ function adjustdh(x,y,andrender,removal) {
 // We may also need to adjust the double heigh of the whole screen,
 // so this function is provided for convenience. It works a lot 
 // like the one above.
-function adjustdh_fullscreen(andrender) {
+var adjustdh_fullscreen = function(andrender) {
 	var above = 0;
 	for ( var r = 0; r < 25; r++ ) { 
 		var fs_from = fs[r];
@@ -1945,7 +1840,7 @@ function adjustdh_fullscreen(andrender) {
 // place_code() is called when the supplied code is to be set at 
 // position (x,y). If andrender is non-zero, it also renders the 
 // character.
-function place_code(x,y,code,andrender) {
+var place_code = function(x,y,code,andrender) {
 
 	// Quickly invalidate any export we have going
 	invalidate_export();
@@ -2300,7 +2195,7 @@ function place_code(x,y,code,andrender) {
 
 // Handles removal of a character code at (x,y), and, if andrender
 // is non-zero, renders the characters it affects.
-function check_for_remove_code(x,y,andrender) {
+var check_for_remove_code = function(x,y,code,andrender) {
 
 	var code = cc[y][x];
 
@@ -2603,7 +2498,7 @@ function check_for_remove_code(x,y,andrender) {
 
 // Renders the rectangle of cells with top-left corner at (x,y) with 
 // height h and width w, and its dependent cells.
-function autorender(x,y,w,h) {
+var autorender = function(x,y,w,h) {
 
 	// We keep track of whether we're also affecting the next line.
 	// Value is 1 if we are, or 0 if not.
@@ -2675,12 +2570,14 @@ function autorender(x,y,w,h) {
 
 }
 
+///
+
 // Renders a rectangle of character cells starting at (x,y) with width
 // w and height h onto the canvas.
 
 // Control codes in teletext can be "set-at" or "set-after", which affects
 // rendering a bit. Check out the place and remove functions for more.
-function render(x,y,w,h) {
+var render = function(x, y, w, h) {
 
 	// Sometimes things go wrong, so we trim the box to the size of the
 	// frame.
@@ -2695,7 +2592,7 @@ function render(x,y,w,h) {
 	// we should do this only when there's been a change.
 	save_to_hash();
 
-	var c = document.getElementById("frame");
+	var c = document.getElementById(canvasid);
 	var ctx = c.getContext("2d");
 
 	// Clear the rectangle.
@@ -3039,7 +2936,7 @@ function render(x,y,w,h) {
 // would affect held graphics in following codes, and re-render
 // where needed (we don't need to specify the character itself in
 // the call).
-function gfx_change(x1,y1,x2,y2) {
+var gfx_change = function(x1, y1, x2, y2) {
 
 	// First we need to understand the state of attributes at the
 	// end of this span so we know how to handle the search past
@@ -3148,7 +3045,7 @@ function gfx_change(x1,y1,x2,y2) {
 
 // Sets a new state for revealing concealed characters, 0 for off and
 // 1 for on.
-function set_reveal(newreveal) { 
+this.set_reveal = function(newreveal) {
 	reveal = newreveal;
 
 	// Now re-render the characters marked as concealed.
@@ -3178,7 +3075,7 @@ function set_reveal(newreveal) {
 // bit pattern of each of five lines (each therefore an integer in the
 // range 0 to 31). add_font_char smooths this matrix into what actually
 // ends up in the font array, a nice smoothed version ready to render.
-function add_font_char(code,l1,l2,l3,l4,l5,l6,l7,l8,l9) {
+var add_font_char = function(code, l1, l2, l3, l4, l5, l6, l7, l8, l9) {
 
 	// The args are put into an array for easy access.
 	var d = [l1, l2, l3, l4, l5, l6, l7, l8, l9];
@@ -3244,7 +3141,7 @@ function add_font_char(code,l1,l2,l3,l4,l5,l6,l7,l8,l9) {
 }
 
 // Simply sets the character set, loads the font and renders the frame.
-function set_charset(charset) {
+var set_charset = function(charset) {
 	cset = charset;
 	init_font(cset);
 	render(0,0,40,25,0);
@@ -3259,7 +3156,7 @@ function set_charset(charset) {
 // SAA5050 and variants, namely:
 // 0: English   1: German     2: Swedish   3: Italian 
 // 4: Belgian   5: US-ASCII   6: Hebrew    7: Cyrillic
-function init_font(charset) {
+var init_font = function(charset) {
 	add_font_char(0,8,20,28,20,0,5,6,5,5);
 		// AK (K stands for black here)
 	add_font_char(1,8,20,28,20,0,6,5,6,5);
@@ -4149,6 +4046,106 @@ function init_font(charset) {
 }
 
 
+///////////////////////
+///// HELP SCREEN /////
+///////////////////////
+
+// Displays a help screen instead of the current frame, in case the
+// editor isn't being shown with a table of hints. Translations are very
+// welcome. If you are a native speaker of another language and can help
+// please raise a bug.
+
+var draw_help_screen = function() {
+
+	var columns = [
+		[["", "Lowercase:"],           ["", "Uppercase:"]],
+		[["r", "red text"],            ["R", "red graphics"]],
+		[["g", "green text"],          ["G", "green graphics"]],
+		[["y", "yellow text"],         ["Y", "yellow graphics"]],
+		[["b", "blue text"],           ["B", "blue graphics"]],
+		[["m", "magenta text"],        ["M", "magenta graphics"]],
+		[["c", "cyan text"],           ["C", "cyan graphics"]],
+		[["w", "white text"],          ["W", "white graphics"]],
+		[["d", "normal height"],       ["D", "double height"]],
+		[["f", "steady"],              ["F", "flash"]],
+		[["h", "release graphics"],    ["H", "hold graphics"]],
+		[["i", "insert row"],          ["I", "delete row"]],
+		[["n", "black background"],    ["N", "new background"]],
+		[["q", "hide codes"],          ["Q", "show codes"]],
+		[["s", "contiguous graphics"], ["S", "separated graphics"]],
+		[["v", "reveal off"],          ["V", "reveal on"]],
+		[["x", "no grid"],             ["X", "grid"]],
+		[["z", "redraw screen"],       ["Z", "clear screen"]],
+		[["[", "narrower screen"],     ["]", "wider screen"]],
+		[["O", "conceal"],             ["J", "insert block character"]],
+		[["U", "duplicate row"],       ["1-8", "switch character sets"]],
+		[["0", "hide status bar"],     ["?", "this screen"]],
+		[["E", "export frame"],        ["L", "toggle metadata"]],
+		[["a", "ignore black fg"],     ["A", "allow black fg"]], 
+		[["k", "black text"],          ["K", "black graphics"]]
+	];
+	var footnotes = [
+		"TAB inserts a space. Backspace deletes a character. (No escape required).",
+		"In graphics mode, QWASZXRCF and the keypad twiddle subpixels.",
+		"Licenced under GPL v3.0, https://github.com/rawles/teletext-editor"
+	];
+
+	var c = document.getElementById(canvasid);
+	var ctx = c.getContext("2d");
+
+	ctx.font = (13*pix_scale)+"px Arial";
+	ctx.fillStyle = "#ccc";
+
+	ctx.textAlign = "center";
+	ctx.fillText("First press escape then the following:",
+		240*pix_scale, 16*1*pix_scale);
+
+	for ( var i = 0; i < columns.length; i++ ) { 
+		ctx.fillStyle = "#fff";
+		ctx.textAlign = "right";
+		ctx.fillText(columns[i][0][0], 90*pix_scale,
+			(16*(3+i))*pix_scale);
+		ctx.fillText(columns[i][1][0], 290*pix_scale,
+			(16*(3+i))*pix_scale);
+		ctx.fillStyle = "#ccc";
+		ctx.textAlign = "left";
+		ctx.fillText(columns[i][0][1], 100*pix_scale,
+			(16*(3+i))*pix_scale);
+		ctx.fillText(columns[i][1][1], 300*pix_scale,
+			(16*(3+i))*pix_scale);
+	}
+
+	ctx.fillStyle = "#ccc";
+	ctx.textAlign = "center";
+	for ( var i = 0; i < 3; i++ ) { 
+		ctx.fillText(footnotes[i], 240*pix_scale,
+			(16*(29+i))*pix_scale);
+	}
+}
+
+// Like the status bar, the help screen only appears until something else
+// happens.
+var show_help_screen = function() {
+	if ( helpscreenshown != 1 ) { 
+		helpscreenshown = 1;
+
+		init_canvas();
+		draw_help_screen();
+		draw_status_bar();
+	}
+}
+
+var hide_help_screen = function() {
+	if ( helpscreenshown == 1 ) { 
+		helpscreenshown = 0;
+
+		init_canvas();
+		render(0,0,40,25,0);
+		draw_status_bar();
+	}
+}
+
+
 ////////////////////////////
 ///// HELPER FUNCTIONS /////
 ////////////////////////////
@@ -4156,26 +4153,220 @@ function init_font(charset) {
 // Sometimes it's necessary to pad a string by prepending characters
 // to it, most commonly because we want to add leading zeroes to a 
 // displayed number. That's what this function does.
-function padstring(char, width, string) {
+var padstring = function(char, width, string) {
 	var output = string;
 	while ( output.length < width ) { output = char + output; }
 	return output;
 }
 
 
-///////////////////
-///// STARTUP /////
-///////////////////
+//////////////////////////
+///// INITIALISATION /////
+//////////////////////////
 
-// Set up the screen and render it.
-init_state();
-render(0,0,40,25,0);
+this.init_frame = function(id) {
+	canvasid = id;
 
-// Set up listeners for events
-init_mouse();
-document.onkeypress=keypress;
-document.onkeydown=keydown;
+	// Set up the screen and render it.
+	init_state();
+	render(0, 0, 40, 25, 0);
+
+	// Set up listeners for events
+	init_mouse();
+	document.onkeypress = page_keypress;
+	document.onkeydown = page_keydown;
+}
+
+} // end of Editor
+    
+// This function is called by clicking on some cells of the key sequences
+// table. It just sends am escape keypress and then the character in the
+// argument.
+var fakepress = function(character) {
+	if ( active_editor == null ) { return; } 
+
+	active_editor.set_escape(1);
+	event = new Object;
+	event["charCode"] = character.charCodeAt(0);
+	page_keypress(event);
+}    
+
+var page_keypress = function(event) {
+	if ( active_editor == null ) { return; } 
+	active_editor.keypress(event);
+}
+
+var page_keydown = function(event) { 
+	if ( active_editor == null ) { return; } 
+	active_editor.keydown(event);
+}
+
+function init_frames() { 
+	var editor = new Editor();
+	active_editor = editor;
+	url_editor = editor;
+	editor.init_frame("frame");
+}
 
 </script>
+<title>teletext-editor</title>
+<style type="text/css">
+body { 
+	background-color: #222;
+}
+table#hints {
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	border: 1px solid #353;
+}
+table#hints td, table#hints tr, table#hints th, div#export {
+	color: #9b9;
+	vertical-align: center; 
+	text-align: center;
+	font-family: sans-serif;
+	line-height: 1.1;
+	font-size: 12px;
+}
+div.exportbox {
+	margin-bottom: 1em;
+	background-color: #353;
+	padding: 3px;
+	border: 2px solid #9b9;
+}
+table#hints td, table#hints tr , table#hints th {
+	border: 1px solid #353;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;    
+}
+td a, div#export a {
+	color: inherit;
+}
+canvas {
+	background-color: #000;
+	padding: 5px;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	margin: 0;
+	cursor: crosshair;
+	position:relative;
+	z-index: 1;
+}
+tr.newsection {
+	background-color: #353;
+}
+div#a {
+	display: table;
+	position: fixed;
+	top: 0; left: 0;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+}
+div#b {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+[onclick] {
+	cursor: pointer;
+}
+</style>
+</head>
+<body onload="init_frames();">
+
+<div id="a"><div id="b">
+
+<div id="export">
+</div>
+<table id="hints">
+<tr class="newsection">
+<td colspan="4">First press escape then the following:</td>
+</tr>
+<tr>
+<th colspan="2">lowercase</th>
+<th colspan="2">uppercase</th>
+</tr>
+
+<tr><td onclick="fakepress('r')">r</td><td onclick="fakepress('r')">red text</td>
+	<td onclick="fakepress('R')">red graphics</td><td onclick="fakepress('R')">R</td></tr>
+<tr><td onclick="fakepress('g')">g</td><td onclick="fakepress('g')">green text</td>
+	<td onclick="fakepress('G')">green graphics</td><td onclick="fakepress('G')">G</td></tr>
+<tr><td onclick="fakepress('y')">y</td><td onclick="fakepress('y')">yellow text</td>
+	<td onclick="fakepress('Y')">yellow graphics</td><td onclick="fakepress('Y')">Y</td></tr>
+<tr><td onclick="fakepress('b')">b</td><td onclick="fakepress('b')">blue text</td>
+	<td onclick="fakepress('B')">blue graphics</td><td onclick="fakepress('B')">B</td></tr>
+<tr><td onclick="fakepress('m')">m</td><td onclick="fakepress('m')">magenta text</td>
+	<td onclick="fakepress('M')">magenta graphics</td><td onclick="fakepress('M')">M</td></tr>
+<tr><td onclick="fakepress('c')">c</td><td onclick="fakepress('c')">cyan text</td>
+	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
+<tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
+	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
+
+<tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
+	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
+<tr><td onclick="fakepress('f')">f</td><td onclick="fakepress('f')">steady</td>
+	<td onclick="fakepress('F')">flash</td><td onclick="fakepress('F')">F</td></tr>
+<tr><td onclick="fakepress('h')">h</td><td onclick="fakepress('h')">release graphics</td>
+	<td onclick="fakepress('H')">hold graphics</td><td onclick="fakepress('H')">H</td></tr>
+<tr><td onclick="fakepress('i')">i</td><td onclick="fakepress('i')">insert row</td>
+	<td onclick="fakepress('I')">delete row</td><td onclick="fakepress('I')">I</td></tr>
+<tr><td onclick="fakepress('n')">n</td><td onclick="fakepress('n')">black background</td>
+	<td onclick="fakepress('N')">new background</td><td onclick="fakepress('N')">N</td></tr>
+<tr><td onclick="fakepress('q')">q</td><td onclick="fakepress('q')">hide codes</td>
+	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
+<tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
+	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
+<tr><td onclick="fakepress('v')">v</td><td onclick="fakepress('v')">reveal off</td>
+	<td onclick="fakepress('V')">reveal on</td><td onclick="fakepress('V')">V</td></tr>
+<tr><td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">no grid</td>
+	<td onclick="fakepress('X')">grid</td><td onclick="fakepress('X')">X</td></tr>
+<tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
+	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
+<tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
+	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
+<tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
+    <td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
+
+<tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
+<td>switch char. sets</td><td>1-8</td></tr>
+
+<tr> <td onclick="fakepress('0')">0</td><td onclick="fakepress('0')">hide status bar</td>
+	<td onclick="fakepress('?')">help screen</td><td onclick="fakepress('?')">?</td></tr>
+
+<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('l')">toggle metadata</td><td onclick="fakepress('l')">L</td></tr>
+
+<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
+	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
+<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
+	<td onclick="fakepress('k')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
+
+<tr class="newsection"><td colspan="4">No escape required for:</td></tr>
+
+<tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
+<td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
+
+<tr class="newsection"><td colspan="4">In graphics mode:</td>
+	</tr>
+
+<tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
+
+<tr class="newsection"><td colspan="4"><a href="https://github.com/rawles/teletext-editor">Bug reports and pull requests welcome</a>.</td></tr>
+
+<tr><td colspan="4">The frame's data is all in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
+
+</table>
+</div> 
+<div id="b">
+<canvas id="frame"></canvas>
+</div></div>
+
 </body>
 </html>
