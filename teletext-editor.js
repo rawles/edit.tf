@@ -606,7 +606,7 @@ var init_mouse = function() {
 // 1122 characters.
 
 // A direct way to load and render a hashstring.
-this.load_from = function(hashstring) { 
+this.load = function(hashstring) { 
 	load_from_hashstring(hashstring);	
 	render(0, 0, 40, 25, 0);
 }
