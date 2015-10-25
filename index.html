@@ -22,7 +22,14 @@ function init_frames() {
 
 	// You can also give the editor an encoded URL hash string to 
 	// display/edit.
-	// editor.load("0:EXAMPLE");
+	if ( editor.is_all_spaces() ) { 
+
+		// This is a welcome screen I made. It appears only 
+		// when there would otherwise be a blank screen. Feel
+		// free to replace it with your own creations for
+		// people to see when they load up the editor!
+		editor.load("0:KIGCBgkYIGCRggYJGCBgkYIGCRggYJGCBgkYIGCRggYJGCAo5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOSnvd7_e93v973e_3vd7_e93v973e_3vd7_e93v973e_3vd7CHUBdA4WHixdYsLF1hZYsWLFixYsWLFixYsWLDSxYsyIECAodQF9RT-eOf8_Pnz58-fPnz58-fPnz58-fPm7___545q__yh1AX1FP5441Ohz6BAgQIECBAgQIECBAgQIEBZqU_njmr__KHUBbUU_njjU6GPoECCvl2Y9-3Kg6b0CBAgQF2pT-eOav_8odQF9RT-eONToY-gQIECBAgQIECBAgQIECBAWalP545q__yh0aW1FP5441Ohz_TLsy9Mvjoty5NPTfyQIEBdqU_njmr__QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAodQFtRT-eONToc-gQIECBAgQIECBAgQIECBAXalP545q__yh00W1IEBYygUrFixYsWLFh4usLF1iwsXWLFiZAU_njmr__Kf____258-fPnz58-fPnz58-fPnz58-fPnz58-fPnz8___8odQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQICh0l8BUOWXnzDxacNA_BdN6Dtpy90GFBoy7OCDnj5Zcu5AgKHQSBBz0b--ndnQYdmxBh7YdOzDi2ZUGPft24d2TmuQIECAodLfA0HZsQZuWHblQZMPTCg080Gncg6aMqCrSmLkFTegQICh0MgQc8PbKg87-vJB338taxBi379e3Dy1oOmjKg4Yc-VcgKHSXwFC65-aBMg4ddmxByy8euXn05oOm90H0dOnDm6Xr0CAodBIA-fT00dcS7Hv2r-WHvsy81_TLsy9Mvjoty5NPTfyQICh0t8DUOWXnzDxacNBaDdN6DHsy4eSDpo080Gblh25UCZAgKHUCANiy59O5Bj5ZcPTTuzoPO_ryQb--5cuXIECBAgQIECAp3e93_d73f93vd_3e93_d73f93vd_3e93_d73f93vd_3e9ymZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmKIESBEoRIEShEgRKESBEoRIEShEgRKESBEoRIEShEgRKESA");
+	}
 }
 </script>
 <title>teletext-editor</title>

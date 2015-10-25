@@ -4154,6 +4154,17 @@ var padstring = function(char, width, string) {
 	return output;
 }
 
+// Test whether the editor screen is all spaces.
+this.is_all_spaces = function() { 
+	for (var r = 0; r <= 24; r++) {
+		for (var c = 0; c < 40; c++) {
+			if ( cc[r][c] !== 32 ) { 
+				return false; 
+			}
+		}
+	}
+	return true;
+}
 
 //////////////////////////
 ///// INITIALISATION /////
