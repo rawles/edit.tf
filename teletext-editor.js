@@ -89,7 +89,10 @@ var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
                  // look better zoomed in.
 var pix_scale = full_pix_scale;
-var aspect_ratio=1.2; // specifies how much to stretch the x direction.
+var aspect_ratio = 1.2;
+		 // specifies how much to stretch the x direction.
+var pix_size = 1;
+		 // If all the pixels are 1:1, 
 
 var active_export = 0;
 		 // if non-zero, there are URLs for export on the screen
@@ -159,8 +162,8 @@ var init_canvas = function() {
 	c.height = height*pix_scale;
     
 	// set the width and hight to display on-screen, with the modified aspect ratio
-	c.style.width = (width*aspect_ratio)+"px";
-	c.style.height = height+"px";    
+	c.style.width = (pix_size*width*aspect_ratio)+"px";
+	c.style.height = (pix_size*height)+"px";    
 
 	// Clear the canvas with a background colour
 	var ctx = c.getContext("2d");
@@ -3053,6 +3056,10 @@ this.set_reveal = function(newreveal) {
 	}
 }
 
+// Sets the scale for the editor, and re-renders it.
+this.set_size = function(newsize) { 
+	pix_size = newsize;
+}
 
 ////////////////
 ///// FONT /////

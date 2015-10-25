@@ -79,7 +79,8 @@ The editor has been packaged so that you can use it external web pages,
 where it can be used as a teletext frame viewer and/or as an editor for
 those frames.
 
-The minimal HTML to do this is as follows:
+Some HTML source to do this, as well as to set some other options,
+follows.
 
     <!DOCTYPE html>
     <html>
@@ -91,7 +92,6 @@ The minimal HTML to do this is as follows:
     
     <!-- Set up an editor -->
     <script type="text/javascript">
-    
     function init_frames() {
     
         // Create a new editor:
@@ -102,9 +102,17 @@ The minimal HTML to do this is as follows:
     
         // Also make it the editor which reads from and writes to the URL:
         url_editor = editor;
+
+        // Set the relative size of the editor. We might like it to be rendered
+        // at half size (full size is 480x540). This can be omitted.
+        editor.set_size(0.5);
     
         // Initialise the editor, placing it in the canvas with HTML ID 'frame'.
         editor.init_frame("frame");
+
+        // Set the editor to display the frame with reveal enabled. Possible
+        // values are 0 (off) and 1 (on).
+        editor.set_reveal(1);
     
         // You can also give the editor an encoded URL hash string to 
         // display/edit. Here's a welcome screen I made.
