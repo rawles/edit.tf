@@ -73,6 +73,61 @@ supporting encodings of length 1120, describing the first 24 lines. (In
 this case, there are no left-over bits!). `url2raw.pl` supports both 
 frame lengths.
 
+## Using the editor in your own pages
+
+The editor has been packaged so that you can use it external web pages,
+where it can be used as a teletext frame viewer and/or as an editor for
+those frames.
+
+The minimal HTML to do this is as follows:
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    
+    <!-- Read in the editor source -->
+    <script type="text/javascript" src="http://rawles.github.io/teletext-editor/teletext-editor.js"></script>
+    
+    <!-- Set up an editor -->
+    <script type="text/javascript">
+    
+    function init_frames() {
+    
+        // Create a new editor:
+        var editor = new Editor();
+    
+        // Make it the active editor so it receives keypresses:
+        active_editor = editor;
+    
+        // Also make it the editor which reads from and writes to the URL:
+        url_editor = editor;
+    
+        // Initialise the editor, placing it in the canvas with HTML ID 'frame'.
+        editor.init_frame("frame");
+    
+        // You can also give the editor an encoded URL hash string to 
+        // display/edit. Here's a welcome screen I made.
+        editor.load("0:KIGCBgkYIGCRggYJGCBgkYIGCRggYJGCBgkYIGCRggYJGCAo5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOSnvd7_e93v973e_3vd7_e93v973e_3vd7_e93v973e_3vd7CHUBdA4WHixdYsLF1hZYsWLFixYsWLFixYsWGlixZkQIECAodQF9RT-eOf8_Pnz58-fPnz58-fPnz58-fN3___zxzV___yh1AX1FP5441Ohz6BAgQIECBAgQIECBAgQICzUp_PHNX___KHUBbUU_njjU6GPoEFfLsx79uVB03ukCBAgLtSn88c1f__8odQF9RT-eONToY-gQIECBAgQIECBAgQIECAs1KfzxzV___yh0aW1FP5441Ohz_TLsy9Mvjoty5NPTfyQIC7Up_PHNX___QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAodQFtRT-eONToc-gQIECBAgQIECBAgQIECAu1KfzxzV___yh00W1IEBYygUrFixYsWLDxdYWLrFhYusWLEyAp_PHNX___Kf____258-fPnz58-fPnz58-fPnz58-fPnz58-fPn5____8odQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQICh0l8BUOWXnzDxacNA_BdN6Dtpy90GFBoy7OCDnj5Zcu5AgKHQSBBz0b--ndnQYdmxBh7YdOzDi2ZUGPft24d2TmuQIECAodLfA0HZsQZuWHblQZMPTCg080Gncg6aMqCrSmLkFTegQICh0MgQc8PbKg87-vJB338taxBi379e3Dy1oOmjKg4Yc-VcgKHSXwFC65-aBMg4ddmxByy8euXn05oOm90H0dOnDm6Xr0CAodBIA-fT00dcS7Hv2r-WHvsy81_TLsy9Mvjoty5NPTfyQICh0t8DUOWXnzDxacNBTkSY1RbaDdN6DHsy4eSDpo080CBAgKHUCANm5YduVBh3ZEGLLn07kGPllw9NO7Og87-vJBv77kKAp3e93_d73f93vd_3e93_d73f93vd_3e93_d73f93vd_3e9ymZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmKIESBEoRIEShEgRKESBEoRIEShEgRKESBEoRIEShEgRKESA");
+        }
+    }
+    </script>
+    <title>teletext-editor</title>
+    </head>
+    
+    <!-- The editor canvas is set up by a call to the function above. -->
+    <body onload="init_frames();">
+    
+    <!-- A canvas is defined with the appropriate name. -->
+    <canvas id="frame"></canvas>
+    
+    </body>
+    </html>
+
+When this page is loaded, an editor frame should appear, populated with
+the encoded page. When you edit it, the URL will reflect the changing
+contents of the frame.
+
 ## The editor is licenced under GPLv3.
 
 The source code is commented throughout and licenced under the GNU 
