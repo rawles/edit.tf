@@ -18,9 +18,11 @@ insert a control character or perform some other function. The status
 bar can also be used to view teletext metadata. The key sequence ESC-L 
 toggles this.
 
-Everything is supplied in a single HTML file. There are no external 
-dependencies. You can email the HTML file to friends so that they can 
-edit frames on their computer.
+Everything you need to run the editor is in two files. `teletext-editor.js`
+is the JavaScript program which allows the editor on `index.html` to be
+displayed. There are no other dependencies, so you can email both files to
+friends, and, provided they put them both in the same directory, they can
+just open `index.html` to edit frames offline on their computer.
 
 ## All frame data is kept in the URL.
 
