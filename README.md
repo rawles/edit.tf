@@ -152,6 +152,11 @@ would also be very welcome. If you're interested in contributing in this
 way, please comment on issue #3 so that everybody can suggest ways for
 you to help.
 
+Another very useful way to help is to read
+[the issues for which opinions are currently sought](https://github.com/rawles/teletext-editor/labels/opinions%20sought) and contribute to the discussion. The
+more opinions we have on how we can develop the editor, the more likely we're
+going to make it into a useful tool for everyone.
+
 ## Hints, tips and caveats
 
 * The editor allows you to edit the whole frame, but if you are preparing
