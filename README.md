@@ -3,8 +3,8 @@
 This is a teletext editor implemented in JavaScript, so that people now 
 need no more than a JavaScript-enabled browser in order to create their 
 own teletext frames. You can try the editor out at 
-http://rawl.es/teletext-editor or by opening the file `index.html` in 
-your browser. It may also be used for editing BBC Micro mode 7 screens, 
+http://rawles.github.io/teletext-editor/ or by opening the file `index.html`
+in your browser. It may also be used for editing BBC Micro mode 7 screens, 
 or preparing viewdata frames.
 
 Most of the functionality of the editor is accessed through key 
@@ -182,7 +182,8 @@ The editor has been used for various events and systems:
   [teletext40](http://www.teletext40.com/100/1/) project. When viewing pages
   on the web interface, the user has the option to then edit the page, so that
   it can be submitted back to the site via email.
-* The editor was used by Dan Farrimond - @illarterate - and Carl Attrill at a
+* The editor was used by [Dan Farrimond](http://portfolio.illarterate.co.uk/)
+  - @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
   at the Tate Britain art gallery in June 2015.
   It was also used by Dan at *St. Helens Versus the Lizards* and *Superbyte*
@@ -193,9 +194,11 @@ The editor has been used for various events and systems:
   [Chaos Communication Camp 2015](https://events.ccc.de/camp/2015/wiki/Main_Page) in August 2015.
 * The editor was used to prepare the closing screens of BBC Micro demos
   produced by the demo group [CRTC](http://crtc.tv/), including 
-  *Some Nasty Effects*. The offline nature of the editor proved useful, since
-  it meant the screen could be prepared while broken down for many hours
-  in Newbury Services on the M4, on the way to the Sundown 2015 party.
+  *[Some Nasty Effects](http://www.pouet.net/prod.php?which=66197)*.
+  The offline nature of the editor proved useful, since
+  it meant the screen could be prepared while broken down for many hours at
+  [Chieveley services on the M4](http://motorwayservicesonline.co.uk/Chieveley),
+  on the way to the [Sundown](http://sundowndemoparty.net/) 2015 party.
 
 ### Compatibility
 
@@ -212,5 +215,5 @@ nasty bugs or demonstrate common mistakes in implementing teletext software.
 
 * Rob of the
   [Teletext Preservation project](http://www.teletext.org.uk/) has contributed a
-  [test frame](http://rawl.es/teletext-editor/#0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAa8WrVq3Jl2ZemVB00aeaDnww48qFAgQIECBAgQIECBAgQIBpH__Qf_6D-vXoP3__9Qf__9AgQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaRQL_69Ag__PiD_9-fEH___QIECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkUCD-gQIP_z4g2fPj9Ag-IECBAgQIECBAgQIECBAgQIECAaS________________________6BAgQIECBAgQIECBAgQIBpH_____________________-gQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaR____-vFmTEESfOi_______oECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkf_____________________6BAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAg)
+  [test frame](http://rawles.github.io/teletext-editor/#0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAa8WrVq3Jl2ZemVB00aeaDnww48qFAgQIECBAgQIECBAgQIBpH__Qf_6D-vXoP3__9Qf__9AgQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaRQL_69Ag__PiD_9-fEH___QIECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkUCD-gQIP_z4g2fPj9Ag-IECBAgQIECBAgQIECBAgQIECAaS________________________6BAgQIECBAgQIECBAgQIBpH_____________________-gQIECBAgQIECBAgQIECBAgGkv_______________________-gQIECBAgQIECBAgQIECAaR____-vFmTEESfOi_______oECBAgQIECBAgQIECBAgQIBpL________________________oECBAgQIECBAgQIECBAgGkf_____________________6BAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAg)
   for proper double-height handling.
