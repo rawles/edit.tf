@@ -1352,8 +1352,8 @@ this.keypress = function(event) {
 		if ( code == 104 ) { placed_code = 31; }
 
 		// V = enable and disable reveal 
-		if ( code == 86 ) { matched = 1; set_reveal(1); }
-		if ( code == 118 ) { matched = 1; set_reveal(0); }
+		if ( code == 86 ) { matched = 1; set_reveal_state(1); }
+		if ( code == 118 ) { matched = 1; set_reveal_state(0); }
 
 		// O = insert a conceal character
 		if ( code == 79 || code == 111 ) { placed_code = 24; }
@@ -3044,6 +3044,10 @@ var gfx_change = function(x1, y1, x2, y2) {
 // Sets a new state for revealing concealed characters, 0 for off and
 // 1 for on.
 this.set_reveal = function(newreveal) {
+	set_reveal_state(newreveal);
+}
+
+var set_reveal_state = function(newreveal) { 
 	reveal = newreveal;
 
 	// Now re-render the characters marked as concealed.
