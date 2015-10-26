@@ -182,8 +182,8 @@ The editor has been used for various events and systems:
   [teletext40](http://www.teletext40.com/100/1/) project. When viewing pages
   on the web interface, the user has the option to then edit the page, so that
   it can be submitted back to the site via email.
-* The editor was used by [Dan Farrimond](http://portfolio.illarterate.co.uk/)
-  - @illarterate - and Carl Attrill at a
+* The editor was used by [Dan Farrimond](http://portfolio.illarterate.co.uk/) -
+  @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
   at the Tate Britain art gallery in June 2015.
   It was also used by Dan at *St. Helens Versus the Lizards* and *Superbyte*
