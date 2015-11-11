@@ -521,14 +521,11 @@ var click_listener = function(event, state) {
     var x = event.pageX - offsetx;
     var y = event.pageY - offsety;
 
-    // This doesn't appear to allow for padding, so we allow for that
-    // and clip the result to the canvas coordinates.
-    x -= 10;
-    y -= 10;
+    // We clip the result to the canvas coordinates.
     if ( x < 0 ) { x = 0; } 
     if ( x >= 12*40*aspect_ratio ) { x = 12*40*aspect_ratio - 1; } 
     if ( y < 0 ) { y = 0; } 
-    if ( y >= 20*25 ) { x = 20*25 - 1; } 
+    if ( y >= 20*25 ) { y = 20*25 - 1; } 
 
     // mouse_click will assign a new state which we can store in the
     // global variable mouse_state
