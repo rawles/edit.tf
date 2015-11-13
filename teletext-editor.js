@@ -1288,9 +1288,10 @@ this.keypress = function(event) {
 		var matched = 0; var placed_code = -1;
 
 		// I want to reserve the following keys for future features
-		// that I expect to be used a lot: [P]age [T]ransmit 
-		// Te[L]etext metadata
-		// Currently free: [9] [0]...
+		// that I expect to be used a lot: [P]age and [L]oad.
+		// [S] is used for separated graphics, but [T]ransmit might
+		// work with an API. Maybe Separa*T*ed and Con*T*iguous, or
+		// *T*iled might work as a mnemonic.
 
 		// First, the colours...
 		if ( blackfg != 0 && code == 107 ) { placed_code = 0; }  // blac[k]
@@ -1370,8 +1371,8 @@ this.keypress = function(event) {
 		// E = export frame
 		if ( code == 69 || code == 101 ) { matched = 1; export_frame(); }
 
-		// L = teletext metadata
-		if ( code == 76 || code == 108 ) {
+		// 9 = teletext metadata
+		if ( code == 57 ) {
 			matched = 1;
 			statusmode = 1 - statusmode;
 		} 

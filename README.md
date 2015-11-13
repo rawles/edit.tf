@@ -16,7 +16,7 @@ the editor by entering the key sequence ESC-?.
 Pressing the escape key takes you into command mode, in which the status 
 bar is coloured yellow, and then typing a (possibly shifted) letter will 
 insert a control character or perform some other function. The status 
-bar can also be used to view teletext metadata. The key sequence ESC-L 
+bar can also be used to view teletext metadata. The key sequence ESC-9 
 toggles this.
 
 Everything you need to run the editor is in two files. `teletext-editor.js`
@@ -56,7 +56,7 @@ range 0x00 to 0x1f. One raw format leaves them untouched, the other sets
 the high bit so they appear as characters in the range 0x80 to 0x9f when 
 exported. The other format is 8-bit TTI, designed for use with wxTED, by 
 @peterkvt80 - Peter Kwan. This includes metadata which can be viewed 
-with ESC-L but which unfortunately cannot yet be edited.
+with ESC-9 but which unfortunately cannot yet be edited.
 
 Alternatively, a script, `url2raw.pl`, in the `tools/` directory, is 
 provided to assist with conversion on the command line. Supply an editor 
