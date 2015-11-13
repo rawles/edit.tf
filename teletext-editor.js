@@ -1147,26 +1147,24 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 516*pix_scale);
 
 	// position
-	ctx.fillText(curx+","+cury, offset+spacing, 516*pix_scale);
+	ctx.fillText(curx+","+cury, offset+(0.8*spacing), 516*pix_scale);
 
 	// foreground and background colour
 	ctx.fillText(
 		colour_name(fg[cury][curx])
 		+" "+(tg[cury][curx]==0?"text":"graphics")
 		+" on "+colour_name(bg[cury][curx]),
-		offset+(2*spacing), 516*pix_scale);
+		offset+(1.6*spacing), 516*pix_scale);
 
 	// normal or double height?
 	var heighttext = "normal height";
 	if ( nd[cury][curx] == 1 ) { heighttext = "double height"; } 
 	if ( nd[cury][curx] == 2 ) { heighttext = "height reset"; } 
-	ctx.fillText(heighttext, offset+(6.25*spacing), 516*pix_scale);
+	ctx.fillText(heighttext, offset+(6.0*spacing), 516*pix_scale);
 
-	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.25*spacing), 516*pix_scale);
-
-	// aspect ratio
-	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10*spacing, 516*pix_scale);
+	// In the spare space, a hint for getting more help, in case
+	// the editor is shown on a page without the key sequences table.
+	ctx.fillText("Press ESC-? for help", offset+(8.1*spacing), 516*pix_scale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -1185,16 +1183,22 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 532*pix_scale);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"graphics released":"graphics held", offset+(3.25*spacing), 532*pix_scale);
+	ctx.fillText(hg[cury][curx]==0?"released":"held", offset+(3*spacing), 532*pix_scale);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(6*spacing), 532*pix_scale);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(4.5*spacing), 532*pix_scale);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(7.25*spacing), 532*pix_scale);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(5.75*spacing), 532*pix_scale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black foregrnd":"black foreground", offset+(8.5*spacing), 532*pix_scale);
+	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(7*spacing), 532*pix_scale);
+
+	// contiguous or separated?
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.75*spacing), 532*pix_scale);
+
+	// aspect ratio
+	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10.35*spacing, 532*pix_scale);
 }
 
 // If we have hidden the status bar, we only want to do so until something
