@@ -205,6 +205,7 @@ The editor has been used for various events and systems:
   it meant the screen could be prepared while broken down for many hours at
   [Chieveley services on the M4](http://motorwayservicesonline.co.uk/Chieveley),
   on the way to the [Sundown](http://sundowndemoparty.net/) 2015 party.
+* The editor is used to display [recovered teletext frames](http://www.uniquecodeanddata.co.uk/teletext76/) produced by [Jason Robertson](https://twitter.com/grim_fandango). You can also clean up frames with the editor and send them back to Jason!
 
 ### Compatibility
 

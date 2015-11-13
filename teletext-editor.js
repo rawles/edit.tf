@@ -377,6 +377,10 @@ var mouse_state = -1;
 // series of clicks.
 var mouse_click = function(canvasx, canvasy, state) {
 
+	// Before processing the click, hide the help screen if it's being
+	// displayed.
+	hide_help_screen();
+
 	// First, locate the position in the character grid (x,y) of this click,
 	// and the position in the character cell (sx,sy) itself.
 	var x = Math.floor( canvasx / (12*aspect_ratio) );
