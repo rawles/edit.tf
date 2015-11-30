@@ -1311,7 +1311,7 @@ this.keypress = function(event) {
 		if ( code == 99 )  { placed_code = 6; }  // [c]yan
 		if ( code == 119 ) { placed_code = 7; }  // [w]hite
 
-		if ( blackfg != 0 && code == 82 )  { placed_code = 16; } // Blac[K]
+		if ( blackfg != 0 && code == 75 )  { placed_code = 16; } // Blac[K]
 		if ( code == 82 )  { placed_code = 17; } // [R]ed
 		if ( code == 71 )  { placed_code = 18; } // [G]reen
 		if ( code == 89 )  { placed_code = 19; } // [Y]ellow
