@@ -207,6 +207,13 @@ The editor has been used for various events and systems:
   on the way to the [Sundown](http://sundowndemoparty.net/) 2015 party.
 * The editor is used to display [recovered teletext frames](http://www.uniquecodeanddata.co.uk/teletext76/) produced by [Jason Robertson](https://twitter.com/grim_fandango). You can also clean up frames with the editor and send them back to Jason!
 
+The editor has starred in the following YouTube videos:
+
+* Carl made a very nice [video tutorial for the editor](https://www.youtube.com/watch?v=S5WNmw9AHWQ).
+* YouTube user *BGelais* [introduced the editor](https://www.youtube.com/watch?v=SamOoijfBjQ&t=9m19s)
+  and some of its functions, using it alongside the wxTED editor. He's also behind the
+  teletext-themed animation *[Le Télétexte Malicieux](https://www.youtube.com/watch?v=HBeDH3mlzNg)*.
+
 ### Compatibility
 
 * The Windows-based teletext editor [wxTED](http://teastop.co.uk/teletext/wxted/) by Peter Kwan - @peterkvt80 - has 
