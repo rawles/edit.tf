@@ -210,7 +210,7 @@ The editor has been used for various events and systems:
 The editor has starred in the following YouTube videos:
 
 * Carl made a very nice [video tutorial for the editor](https://www.youtube.com/watch?v=S5WNmw9AHWQ).
-* YouTube user *BGelais* [introduced the editor](https://www.youtube.com/watch?v=SamOoijfBjQ&t=9m19s)
+* Bruno St-Gelais [introduced the editor](https://www.youtube.com/watch?v=SamOoijfBjQ&t=9m19s)
   and some of its functions, using it alongside the wxTED editor. He's also behind the
   teletext-themed animation *[Le Télétexte Malicieux](https://www.youtube.com/watch?v=HBeDH3mlzNg)*.
 
