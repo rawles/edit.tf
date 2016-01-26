@@ -206,6 +206,9 @@ The editor has been used for various events and systems:
   [Chieveley services on the M4](http://motorwayservicesonline.co.uk/Chieveley),
   on the way to the [Sundown](http://sundowndemoparty.net/) 2015 party.
 * The editor is used to display [recovered teletext frames](http://www.uniquecodeanddata.co.uk/teletext76/) produced by [Jason Robertson](https://twitter.com/grim_fandango). You can also clean up frames with the editor and send them back to Jason!
+* [Adam Dawes](http://www.adamdawes.com/) adapted this code to make 
+  [a cool browser interface](http://www.uniquecodeanddata.co.uk/teletext76/bbc2-19830129/) for Jason's recovered frames, which enables you to select pages by 
+  page number and step through subpages.
 
 The editor has starred in the following YouTube videos:
 
