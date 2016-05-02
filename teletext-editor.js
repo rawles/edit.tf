@@ -901,9 +901,30 @@ var export_frame = function() {
 		+","+ m_fastext_index.toString(16)
 		+"\r\n";
 
+        // We provide an experimental EP1 format. This probably isn't
+        // compliant with any specification. Particularly, the values at
+        // positions 1 to 5 mean nothing to me. They are probably metadata.
+        // Perhaps if the specification were freely available, I could
+        // figure out how to export properly. Thanks for Peter Kwan for
+        // helping me with this. --rawles
+        var ep1string = String.fromCharCode(254);
+        ep1string = ep1string + String.fromCharCode(1);
+        ep1string = ep1string + String.fromCharCode(9);
+        ep1string = ep1string + String.fromCharCode(0);
+        ep1string = ep1string + String.fromCharCode(0);
+        ep1string = ep1string + String.fromCharCode(0);
+        for ( var r=0; r<25; r++ ) {
+		for ( var c=0; c<40; c++ ) {
+                        ep1string = ep1string + String.fromCharCode(cc[r][c]);
+                }
+        }
+        ep1string = ep1string + String.fromCharCode(0);
+        ep1string = ep1string + String.fromCharCode(0);
+
 	var datauri_0 = "data:text/plain;base64,"+window.btoa(rawstring_0);
 	var datauri_1 = "data:text/plain;base64,"+window.btoa(rawstring_1);
 	var datauri_tti = "data:text/plain;base64,"+window.btoa(ttistring);
+	var datauri_ep1 = "data:text/plain;base64,"+window.btoa(ep1string);
 	var hashstring = "";
 	if ( window.location.hash.length > 0 ) { 
 		hashstring = window.location.hash.substring(1);
@@ -912,13 +933,14 @@ var export_frame = function() {
 		"data:text/plain;base64,"+window.btoa(hashstring);
 
 	document.getElementById('export').innerHTML =
-		"<div class=\"exportbox\">Export as:<br/>"
-		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a> or </br>"
-		+ "<a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>"
+		"<div class=\"exportbox\">Export as: "
+		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a></br>"
+		+ " or <a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>"
 		+ " or " 
 		+ "<a href=\""+datauri_1+"\">raw (0x20-0x9f)</a>"
 		+ "<br/>or " 
-		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a>"
+		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a> or "
+        	+ "<a href=\""+datauri_ep1+"\">EP1 (experimental)</a>"
 		+ "</div>";
 	active_export = 1;
 }
