@@ -1,4 +1,4 @@
-# teletext-editor
+# The edit.tf teletext editor
 
 This is a teletext editor implemented in JavaScript, so that people now 
 need no more than a JavaScript-enabled browser in order to create their 
