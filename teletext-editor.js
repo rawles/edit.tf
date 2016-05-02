@@ -1302,10 +1302,10 @@ this.keypress = function(event) {
 	// so return since we've already handled ESC in keydown
 	if ( code == 27 ) { return; }
 
-	// Stop Firefox bringing up a search box when the apostrophe or 
-	// slash key is pressed.
-	if ( code == 39 ) { event.preventDefault(); }
-	if ( code == 47 ) { event.preventDefault(); }
+	// Stop Firefox interpreting this keypress as a shortcut for the
+	// app. Non-Latin keyboards sometimes send Latin character keypresses
+	// if a meta key is pressed.
+	if ( code >= 32 && code < 128 ) { event.preventDefault(); } 
 
 	unhide_status_bar();
 
