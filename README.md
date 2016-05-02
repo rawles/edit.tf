@@ -185,9 +185,10 @@ going to make it into a useful tool for everyone.
 The editor has been used for various events and systems:
 
 * The editor was originally written for the 
-  [teletext40](http://www.teletext40.com/100/1/) project. When viewing pages
-  on the web interface, the user has the option to then edit the page, so that
-  it can be submitted back to the site via email.
+  teletext40 project, a teletext revival project from September 2014 to
+  April 2016. When viewing pages
+  on the web interface, the user had the option to then edit the page, so that
+  it could be submitted back to the site via email.
 * The editor was used by [Dan Farrimond](http://portfolio.illarterate.co.uk/) -
   @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
