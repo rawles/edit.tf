@@ -1296,6 +1296,8 @@ this.keypress = function(event) {
 	// Code 0 means there was simply no keypress.
 	if ( code == 0 ) { return; }
 
+	code = keymap(code);
+
 	// On Internet Explorer, ESC key triggers keypress too,
 	// so return since we've already handled ESC in keydown
 	if ( code == 27 ) { return; }
@@ -4079,6 +4081,56 @@ var init_font = function(charset) {
 		// block
 }
 
+
+//////////////////
+///// KEYMAP /////
+//////////////////
+
+// This is just a simple way of handling keypresses from other locales.
+// If the incoming keypress code belongs to one of the variant characters
+// associated with the character set we're using, we convert it to its
+// correct teletext character set code.
+
+var keymap = function(keypress) { 
+
+	// English: pound sign
+	if ( cset == 0 && keypress == 163 ) { return 0x23; }
+
+	// English: hash
+	if ( cset == 0 && keypress == 35 ) { return 0x5f; } 
+
+	// English: long dash (underscore)
+	if ( cset == 0 && keypress == 95 ) { return 0x60; } 
+
+	// German: capital A with umlaut
+	if ( cset == 1 && keypress == 196 ) { return 0x5b; } 
+
+	// German: lowercase a with umlaut
+	if ( cset == 1 && keypress == 228 ) { return 0x7b; } 
+
+	// German: capital O with umlaut
+	if ( cset == 1 && keypress == 214 ) { return 0x5c; } 
+
+	// German: lowercase o with umlaut
+	if ( cset == 1 && keypress == 246 ) { return 0x7c; } 
+
+	// German: capital U with umlaut
+	if ( cset == 1 && keypress == 220 ) { return 0x5d; } 
+
+	// German: lowercase u with umlaut
+	if ( cset == 1 && keypress == 252 ) { return 0x7d; } 
+
+	// German: Eszett
+	if ( cset == 1 && keypress == 223 ) { return 0x7e; } 
+
+	// German: section sign
+	if ( cset == 1 && keypress == 167 ) { return 0x40; } 
+
+	// German: degree symbol
+	if ( cset == 1 && keypress == 176 ) { return 0x60; } 
+
+	return keypress;
+}
 
 ///////////////////////
 ///// HELP SCREEN /////
