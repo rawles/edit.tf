@@ -1451,7 +1451,7 @@ this.keypress = function(event) {
 		if ( placed_code > -1 ) {
 			check_for_remove_code(curx,cury,1);
 			place_code(curx, cury, placed_code, 1); 
-			cursor_right();
+			advance_cursor();
 			matched = 1;
 		} 
 
@@ -1475,7 +1475,7 @@ this.keypress = function(event) {
 					render(curx, cury+1, 1, 1); }
 
 				// Move the cursor right (and render that)
-				cursor_right();
+				advance_cursor();
 			}
 		} else { // If we're in graphics mode...
 
@@ -1526,7 +1526,7 @@ this.keypress = function(event) {
 				gfx_change(curx, cury, curx, cury);
 
 				// Move the cursor right.
-				cursor_right();
+				advance_cursor();
 			}
 		}
 	}
@@ -1548,6 +1548,13 @@ this.keypress = function(event) {
 // them separately. If split == 1, it's necessary to call the render
 // function twice.
 
+var advance_cursor = function() { 
+	// We might be in Hebrew mode. If so, advancing means to go 
+	// left. Otherwise, it means to go right.
+	if ( cset == 6 ) { cursor_left_for_hebrew(); return; } 
+	cursor_right();
+}
+
 var cursor_right = function() {
 	// The first cell that needs to be re-rendered is the original one. 
 	var old_curx = curx; var old_cury = cury;
@@ -1562,6 +1569,22 @@ var cursor_right = function() {
 
 	// Render, depending on whether it's a split or not.
 	if ( split == 0 ) { render(curx-1, cury, 2, 1, 1); }
+	if ( split == 1 ) { 
+		render(old_curx, old_cury, 1, 1);
+		render(curx, cury, 1, 1);
+	} 
+}
+
+// If we're using the editor in Hebrew mode, we need to move the cursor 
+// left.
+var cursor_left_for_hebrew = function() {
+	var old_curx = curx;
+	var old_cury = cury;
+	var split = 1;
+	curx--;
+	if ( curx < 0 ) { cury++; curx = 39; } else { split = 0; } 
+	if ( cury > 24 ) { cury = 0; } 
+	if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
 	if ( split == 1 ) { 
 		render(old_curx, old_cury, 1, 1);
 		render(curx, cury, 1, 1);
@@ -4093,14 +4116,22 @@ var init_font = function(charset) {
 
 var keymap = function(keypress) { 
 
+	//console.log("[key] " + keypress);
+
+	// The Hebrew character set (6) is identical to the English (0)
+	// one outside of the range 0x60..0x7b.
+
 	// English: pound sign
 	if ( cset == 0 && keypress == 163 ) { return 0x23; }
+	if ( cset == 6 && keypress == 163 ) { return 0x23; }
 
 	// English: hash
 	if ( cset == 0 && keypress == 35 ) { return 0x5f; } 
+	if ( cset == 6 && keypress == 35 ) { return 0x5f; } 
 
 	// English: long dash (underscore)
 	if ( cset == 0 && keypress == 95 ) { return 0x60; } 
+	if ( cset == 6 && keypress == 95 ) { return 0x60; } 
 
 	// German: capital A with umlaut
 	if ( cset == 1 && keypress == 196 ) { return 0x5b; } 
@@ -4128,6 +4159,22 @@ var keymap = function(keypress) {
 
 	// German: degree symbol
 	if ( cset == 1 && keypress == 176 ) { return 0x60; } 
+
+	// The Hebrew alphabet.
+	if ( cset == 6 && keypress >= 1488 && keypress <= 1514) {
+		return 0x60 + ( keypress - 1488 );
+		} 
+
+	// There is no modern keyboard equivalent for the Israeli old
+	// shekel symbol, which fell out of general use in when the
+	// Israeli new shekel was introduced on 1 January 1986. The
+	// Israeli new shekel symbol is not in the teletext character
+	// set. When the new shekel symbol is entered, the old one 
+	// will come out in the editor.
+	if ( cset == 6 && keypress == 8362 ) { 
+		return 0x7b;
+		}
+	
 
 	return keypress;
 }
