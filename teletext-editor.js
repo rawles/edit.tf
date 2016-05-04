@@ -848,7 +848,7 @@ var export_frame = function() {
 		+ padstring("0", 2, m_subpage.toString())
 		+ "\r\n";
 	// DE: description
-	ttistring = ttistring + "DE,teletext-editor\r\n";
+	ttistring = ttistring + "DE,edit-tf\r\n";
 
 	// We construct the TTI page status (PS) value by copying over
 	// the values of the control bits.
@@ -4173,7 +4173,7 @@ var draw_help_screen = function() {
 	var footnotes = [
 		"TAB inserts a space. Backspace deletes a character. (No escape required).",
 		"In graphics mode, QWASZXRCF and the keypad twiddle subpixels.",
-		"Licenced under GPL v3.0, https://github.com/rawles/teletext-editor"
+		"Licenced under GPL v3.0, https://github.com/rawles/edit-tf"
 	];
 
 	var c = document.getElementById(canvasid);
