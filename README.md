@@ -117,11 +117,11 @@ follows.
     
         // You can also give the editor an encoded URL hash string to 
         // display/edit. Here's the teletext engineering testcard!
-        editor.load("0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAueH8yZosePmAg06Dizo8mdFi0pM6OgJHBh7mVHER5QeHYMi54fzJmix4-YCDToOLOjyZ0WLSkzo6AkcGHuZUcRHlB4dgy_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2DQoaPcyJkqAKgRqAKdBVMvPogoYc-VAgODDxLmWMEwBcwBYNSho9zImSoAqBGoAp0FUy8-iChhz5UCA4MPEuZYwTAFzAFg1AgAKAAgAnkB5AXWEyZYsSJEipUiRKFCiBAUAAQAEABAAWDf9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YOAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBg5_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2LACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAYsf3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_39iyAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgGLP9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YtAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBi1_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2Lavo09MoOzl2bN_cND84dwKPyy5dwWbhz5d3TCBpZcgSFs65S5pCiRk0iVMnLKFKpWSWLVy8ywYsmZVo1bNyLhy6dlHj18_QIEKJGgSJUydAoUqlaBYtXL0DBiyZoGjVs3QOHLp2gePXz9BAgwoaCJFjR0EiTKloJk2dPQUKNKmgqVa1dBYs2raC5dvX0GDDixoMmXNnQaNOrWg2bd29Bw48uaDp17d0Hjz69oPn39_KYMOLGRyZc2cro06tZLZt3bzXDjy5lunXt3J-PPr2X-ff38GYh792PLh2CI2zDz0A1QsXC3-BNPplw5PJiPv3ZRQp-WvfwUXdn07suXlp3Z0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECA");
+        editor.load("0:KJGCBgkYIGCRggYJGCBgkYIGCRggYJGCBgkYIGCRggYJGCAo5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOXDlw5cOSnvd7_e93v973e_3vd7_e93v973e_3vd7_e93v973e_3vd7CHUBdA4WHixdYsLF1hZYsWLFixYsWLFixYsWGlixZkQIECAodQF9RT-eOf8_Pnz58-fPnz58-fPnz58-fN3___zxzV___yh1AW1FP5441Ohz6BAgQIECBAgQIECBAgQICzUp_PHNX___KHRpfUU_njjU6HPxUERBJNVEBZQgD1DMZAgLNSn88c1f__9AgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQICh1AW1FP5441Ohj6BAgQIECBAgQIECBAgQIC7Up_PHNX___KHUBbUU_njjU6GP9MuzL0y-OiDLk09N_JAgLNSn88c1f__8odQFtRT-eONToc-gQIECBAgQIECBAgQIECAu1KfzxzV___yh00W1IEBYygUrFixYsWLDxdYWLrFhYusWLEyAp_PHNX___Kf____258-fPnz58-fPnz58-fPnz58-fPnz58-fPn5____8odQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQICh0koBUOWXnzDxacNA_BdN6Dtpy90GFBoy7OCDnj5Zcu5cgKHSygNB2bEGblh25UGTD0woNPNBp3IOmjKgq0pi5BU3oECAodDIEHPD2yoPO_ryQd9_LWsQYt-_Xtw8taDpoyoOGHPlXICh0koBQuufmgw7siDh12bEHLLx65efTmg75dmPftyoMPR0gKHQSBBo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCAodLKA1Dll58w8WnDQU5EmNUW2g3Tegx7MuHkg6aNPNAgQICh0MgQZuWHblQYd2RBiy59O5Bj5ZcPTTuzoPO_ryQb--5CgKHUCBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAp3e93_d73f93vd_3e93_d73f93vd_3e93_d73f93vd_3e9ymZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmTZk2ZNmKIEShEgRKESBEoRIEShEgRKESBEoRIEShEgRKESBEoRIESg");
 
     }
     </script>
-    <title>teletext-editor</title>
+    <title>edit-tf</title>
     </head>
     
     <!-- The editor canvas is set up by a call to the function above. -->
@@ -154,7 +154,7 @@ way, please comment on issue #3 so that everybody can suggest ways for
 you to help.
 
 Another very useful way to help is to read
-[the issues for which opinions are currently sought](https://github.com/rawles/teletext-editor/labels/opinions%20sought) and contribute to the discussion. The
+[the issues for which opinions are currently sought](https://github.com/rawles/edit-tf/labels/opinions%20sought) and contribute to the discussion. The
 more opinions we have on how we can develop the editor, the more likely we're
 going to make it into a useful tool for everyone.
 
@@ -185,9 +185,10 @@ going to make it into a useful tool for everyone.
 The editor has been used for various events and systems:
 
 * The editor was originally written for the 
-  [teletext40](http://www.teletext40.com/100/1/) project. When viewing pages
-  on the web interface, the user has the option to then edit the page, so that
-  it can be submitted back to the site via email.
+  teletext40 project, a teletext revival project from September 2014 to
+  April 2016. When viewing pages
+  on the web interface, the user had the option to then edit the page, so that
+  it could be submitted back to the site via email.
 * The editor was used by [Dan Farrimond](http://portfolio.illarterate.co.uk/) -
   @illarterate - and Carl Attrill at a
   workshop called *[Block Party](http://www.tate.org.uk/whats-on/tate-britain/performance-and-music/late-tate-june-2015)* 
