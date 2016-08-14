@@ -4133,17 +4133,24 @@ var keymap = function(keypress) {
 	if ( cset == 0 && keypress == 95 ) { return 0x60; } 
 	if ( cset == 6 && keypress == 95 ) { return 0x60; } 
 
+  // The Swedish character set (2) is identical to the German (1)
+	// for A and O with umlauts.
+
 	// German: capital A with umlaut
-	if ( cset == 1 && keypress == 196 ) { return 0x5b; } 
+	if ( cset == 1 && keypress == 196 ) { return 0x5b; }
+	if ( cset == 2 && keypress == 196 ) { return 0x5b; }
 
 	// German: lowercase a with umlaut
-	if ( cset == 1 && keypress == 228 ) { return 0x7b; } 
+	if ( cset == 1 && keypress == 228 ) { return 0x7b; }
+  if ( cset == 2 && keypress == 228 ) { return 0x7b; }
 
 	// German: capital O with umlaut
-	if ( cset == 1 && keypress == 214 ) { return 0x5c; } 
+	if ( cset == 1 && keypress == 214 ) { return 0x5c; }
+	if ( cset == 2 && keypress == 214 ) { return 0x5c; }
 
 	// German: lowercase o with umlaut
-	if ( cset == 1 && keypress == 246 ) { return 0x7c; } 
+	if ( cset == 1 && keypress == 246 ) { return 0x7c; }
+  if ( cset == 2 && keypress == 246 ) { return 0x7c; }
 
 	// German: capital U with umlaut
 	if ( cset == 1 && keypress == 220 ) { return 0x5d; } 
@@ -4159,6 +4166,18 @@ var keymap = function(keypress) {
 
 	// German: degree symbol
 	if ( cset == 1 && keypress == 176 ) { return 0x60; } 
+
+  // Swedish: capital A with ring
+	if ( cset == 2 && keypress == 197 ) { return 0x5d; }
+
+	// Swedish: lowercase a with ring
+	if ( cset == 2 && keypress == 229 ) { return 0x7d; }
+
+  // Swedish: capital U with umlaut (if entered on German keyboard)
+  if ( cset == 2 && keypress == 220 ) { return 0x5e; }
+
+  // Swedish: lowercase u with umlaut (if entered on German keyboard)
+  if ( cset == 2 && keypress == 220 ) { return 0x7e; }
 
 	// The Hebrew alphabet.
 	if ( cset == 6 && keypress >= 1488 && keypress <= 1514) {
