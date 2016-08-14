@@ -71,7 +71,8 @@ var curx = 0;	 // the column at which the cursor is currently.
 var cury = 0;	 // the row at which the cursor is currently.
 
 var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
-var statusmode = 0; // what is the statusbar showing? 
+var dead_key = 0; // dead key pressed previously. 0 if not, otherwise char code
+var statusmode = 0; // what is the statusbar showing?
 		 // 0 means the usual information about the current cell.
 		 // 1 means the additional teletext metadata
 var statushidden = 1; // is the statusbar temporarily hidden with ESC-0?
@@ -1288,6 +1289,11 @@ this.keydown = function(event) {
 	// with preventDefault().
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
+
+  // Handle dead keys for input of diacritical marks
+  if ( code == 221) { dead_key = code; }
+  if ( code == 187) { dead_key = code; }
+
 	}
 
 this.keypress = function(event) {
@@ -1296,7 +1302,10 @@ this.keypress = function(event) {
 	// Code 0 means there was simply no keypress.
 	if ( code == 0 ) { return; }
 
-	code = keymap(code);
+	code = keymap(code, dead_key);
+
+  // If dead key was set it has been used by now
+  dead_key = 0
 
 	// On Internet Explorer, ESC key triggers keypress too,
 	// so return since we've already handled ESC in keydown
@@ -4114,7 +4123,7 @@ var init_font = function(charset) {
 // associated with the character set we're using, we convert it to its
 // correct teletext character set code.
 
-var keymap = function(keypress) { 
+var keymap = function(keypress, dead_key) {
 
 	//console.log("[key] " + keypress);
 
@@ -4178,6 +4187,19 @@ var keymap = function(keypress) {
 
   // Swedish: lowercase u with umlaut (if entered on German keyboard)
   if ( cset == 2 && keypress == 220 ) { return 0x7e; }
+
+  // Swedish keyboards has no assigned keys for ü and é
+  // Swedish: capital U with umlaut
+	if ( cset == 2 && keypress == 85 && dead_key == 221 ) { return 0x5e; }
+
+	// Swedish: lowercase u with umlaut
+	if ( cset == 2 && keypress == 117 && dead_key == 221 ) { return 0x7e; }
+
+  // Swedish: capital E with accent
+  if ( cset == 2 && keypress == 69 && dead_key == 187 ) { return 0x40; }
+
+  // Swedish: lowercase e with accent
+  if ( cset == 2 && keypress == 101 && dead_key == 187 ) { return 0x60; }
 
 	// The Hebrew alphabet.
 	if ( cset == 6 && keypress >= 1488 && keypress <= 1514) {
