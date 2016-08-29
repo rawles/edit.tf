@@ -2739,11 +2739,12 @@ var render = function(x, y, w, h) {
 					}
 
 					// These unsupported character codes appear as spaces
-					// too.
-					if ( ecc == 10 || ecc == 11
-						|| ecc == 27 ) { ecc = spacecc; } 
+					// too, but only if in text mode. In graphics mode, these
+					// might be substituted by the held graphics character.
+					else if ( etg == 0 && ( ecc == 10 || ecc == 11 || ecc == 14
+						|| ecc == 15 || ecc == 27 ) ) { ecc = spacecc; } 
 
-					// If held graphics is on, the code appears as a space.
+					// If held graphics is off, the code appears as a space.
 					else if ( ehg == 0 ) { ecc = spacecc; }
 
 					else {
@@ -2832,7 +2833,7 @@ var render = function(x, y, w, h) {
 				}
 
 			} else {
-				// This is not a character code. It's a regular character.
+				// This is not a control code. It's a regular character.
 
 				// If this concealed text, and we're not in reveal mode,
 				// we handle it depending on whether we're showing control
