@@ -424,6 +424,19 @@ var mouse_click = function(canvasx, canvasy, state) {
 
 	// Can we even edit the character here? If not just return the state
 	// unchanged.
+
+	// If this is a text character, let's reposition the cursor there (bug
+	// #20) and return.
+	if ( tg[ey][ex] == 0 ) {
+		old_curx = curx
+		old_cury = cury
+		cury = ey
+		curx = ex
+		render(old_curx, old_cury, 1, 1);
+		render(curx, cury, 1, 1);
+		return state;
+		}
+
 	if ( ! ( tg[ey][ex] == 1 && 
 		( ( cc[ey][ex] >= 32 && cc[ey][ex] < 64 )
 		|| ( cc[ey][ex] >= 96 && cc[ey][ex] < 128 ) ) ) ) { return state; }
