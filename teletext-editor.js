@@ -2741,7 +2741,7 @@ var render = function(x, y, w, h) {
 					// These unsupported character codes appear as spaces
 					// too, but only if in text mode. In graphics mode, these
 					// might be substituted by the held graphics character.
-					else if ( etg == 0 && ( ecc == 10 || ecc == 11 || ecc == 14
+					if ( etg == 0 && ( ecc == 10 || ecc == 11 || ecc == 14
 						|| ecc == 15 || ecc == 27 ) ) { ecc = spacecc; } 
 
 					// If held graphics is off, the code appears as a space.
