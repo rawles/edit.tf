@@ -1,5 +1,5 @@
 // Copyright (C) 2015, Simon Rawles, Alan Davies, Tim Hutton, Steve
-// Horsley and David Hall.
+// Horsley, ZXGuesser, and David Hall.
 //
 // The JavaScript code in this page is free software: you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -4366,14 +4366,17 @@ this.init_frame = function(id) {
 } // end of Editor
     
 // This function is called by clicking on some cells of the key sequences
-// table. It just sends am escape keypress and then the character in the
+// table. It just sends an escape keypress and then the character in the
 // argument.
 var fakepress = function(character) {
 	if ( active_editor == null ) { return; } 
 
 	active_editor.set_escape(1);
-	event = new Object;
-	event["charCode"] = character.charCodeAt(0);
+	// The following fix (#44) was contributed by ZXGuesser.
+	// event = new Object;
+	// event["charCode"] = character.charCodeAt(0);
+	event = new KeyboardEvent("keydown",
+		{charCode : character.charCodeAt(0)});
 	page_keypress(event);
 }    
 
