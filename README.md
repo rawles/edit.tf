@@ -211,12 +211,13 @@ The editor has been used for various events and systems:
   [a cool browser interface](http://www.uniquecodeanddata.co.uk/teletext76/bbc2-19830129/) for Jason's recovered frames, which enables you to select pages by 
   page number and step through subpages.
 
-The editor has starred in the following YouTube videos:
+The editor has starred in the following videos:
 
 * Carl made a very nice [video tutorial for the editor](https://www.youtube.com/watch?v=S5WNmw9AHWQ).
 * Bruno St-Gelais [introduced the editor](https://www.youtube.com/watch?v=SamOoijfBjQ&t=9m19s)
   and some of its functions, using it alongside the wxTED editor. He's also behind the
   teletext-themed animation *[Le Télétexte Malicieux](https://www.youtube.com/watch?v=HBeDH3mlzNg)*.
+* Steve Horsley has captured some nice videos [showing how he builds up frames](http://www.horsenburger.com/videos) of his teletext art.
 
 ## Compatibility
 
