@@ -1,4 +1,5 @@
-// Copyright (C) 2015, Simon Rawles, Alan Davies and Tim Hutton.
+// Copyright (C) 2015, Simon Rawles, Alan Davies, Tim Hutton, Steve
+// Horsley and David Hall.
 //
 // The JavaScript code in this page is free software: you can
 // redistribute it and/or modify it under the terms of the GNU
