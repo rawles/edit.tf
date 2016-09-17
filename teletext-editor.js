@@ -402,6 +402,22 @@ var mouse_click = function(canvasx, canvasy, state) {
 	var sx = canvasx - ( 12 * x * aspect_ratio);
 	var sy = canvasy - ( 20 * y );
 
+	// Just check that we're not in rectangle selection mode. If we are, we
+	// just want to reposition the opposite end of the rectangle, re-render
+	// and return.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) { 
+		old_curx = curx
+		old_cury = cury
+		cury = y
+		curx = x
+		var x1 = Math.min(old_curx, curx, curx_opposite);
+		var y1 = Math.min(old_cury, cury, cury_opposite);
+		var x2 = Math.max(old_curx, curx, curx_opposite);
+		var y2 = Math.max(old_cury, cury, cury_opposite);
+		render(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+		return state;
+	}
+
 	// Double height, of course, complicates things. If we are in double
 	// height mode, flipping a bit would need to be done on maybe the 
 	// cell (x,y) and maybe the cell above. The actual character we're 
@@ -447,7 +463,7 @@ var mouse_click = function(canvasx, canvasy, state) {
 		render(old_curx, old_cury, 1, 1);
 		render(curx, cury, 1, 1);
 		return state;
-		}
+	}
 
 	if ( ! ( tg[ey][ex] == 1 && 
 		( ( cc[ey][ex] >= 32 && cc[ey][ex] < 64 )
