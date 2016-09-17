@@ -197,6 +197,9 @@ var show_grid = function(newgrid) {
 	grid = newgrid;
 	render(0, 0, 40, 25);
 }
+var toggle_grid = function() { 
+	show_grid(1 - grid);
+}
 
 // Changes whether we allow black foreground.
 var set_blackfg = function(newblackfg) {
@@ -1420,9 +1423,8 @@ this.keypress = function(event) {
 		// the next keypress, ie to just write it to the screen.
 		if ( code == 74 || code == 106 ) { code = 127; }
 
-		// X = enable and disable the grid
-		if ( code == 88 ) { matched = 1; show_grid(1); }
-		if ( code == 120 ) { matched = 1; show_grid(0); }
+		// X = toggle the grid
+		if ( code == 88 ) { matched = 1; toggle_grid(); }
 
 		// I = insert and delete a row
 		if ( code == 73 ) { matched = 1; delete_row(cury); }
@@ -1443,9 +1445,8 @@ this.keypress = function(event) {
 		if ( code == 72 ) { placed_code = 30; }
 		if ( code == 104 ) { placed_code = 31; }
 
-		// V = enable and disable reveal 
-		if ( code == 86 ) { matched = 1; set_reveal_state(1); }
-		if ( code == 118 ) { matched = 1; set_reveal_state(0); }
+		// V = toggle reveal 
+		if ( code == 86 ) { matched = 1; toggle_reveal_state(); }
 
 		// O = insert a conceal character
 		if ( code == 79 || code == 111 ) { placed_code = 24; }
@@ -3287,6 +3288,9 @@ var set_reveal_state = function(newreveal) {
 			}
 		}
 	}
+}
+var toggle_reveal_state = function() { 
+	set_reveal_state(1 - reveal);
 }
 
 // Sets the scale for the editor, and re-renders it.
