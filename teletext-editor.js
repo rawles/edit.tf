@@ -4499,13 +4499,14 @@ var draw_help_screen = function() {
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
 		[["[", "narrower screen"],     ["]", "wider screen"]],
-		[["O", "conceal"],             ["J", "toggle reveal"]],
+		[["O", "conceal"],             ["V", "toggle reveal"]],
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
 		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
-		[["x", "cut block"],           ["v", "paste block"]]
+		[["x", "copy block"],          ["v", "paste block"]]
 	];
 	var footnotes = [
+		"To select a block, use the cursor keys in escape mode.",
 		"TAB inserts a space. Backspace deletes a character. (No escape required).",
 		"In graphics mode, QWASZXRCF and the keypad twiddle subpixels.",
 		"Licenced under GPL v3.0, https://github.com/rawles/edit-tf"
@@ -4538,9 +4539,9 @@ var draw_help_screen = function() {
 
 	ctx.fillStyle = "#ccc";
 	ctx.textAlign = "center";
-	for ( var i = 0; i < 3; i++ ) { 
+	for ( var i = 0; i < 4; i++ ) { 
 		ctx.fillText(footnotes[i], 240*pix_scale,
-			(16*(29+i))*pix_scale);
+			(16*(28+i))*pix_scale);
 	}
 }
 
