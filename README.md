@@ -177,6 +177,11 @@ going to make it into a useful tool for everyone.
   This means that effects like the top and bottom of double-height
   characters having different colours, or even different characters
   entirely, may be achieved. This editor does not yet display such effects.
+* The editor has a cut and paste function. Firstly, you must define the 
+  rectangle you want to cut. After pressing ESC, the arrow keys can be 
+  used to define the rectangle. During this process, the editor stays in
+  escape mode. Lowercase x cuts the rectangle, which can be pasted with 
+  ESC-v.
 
 ## Related links
 
