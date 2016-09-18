@@ -80,6 +80,10 @@ var cury = 0;	 // the row at which the cursor is currently.
 var curx_opposite = -1;
 var cury_opposite = -1;
 
+var clipboard = []; // clipboard[y][x] is the clipped character at row y, col x
+var clipboard_size_x = 0;
+var clipboard_size_y = 0;
+
 var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
 var dead_key = 0; // dead key pressed previously. 0 if not, otherwise char code
 var statusmode = 0; // what is the statusbar showing?
@@ -143,7 +147,7 @@ var init_state = function() {
 		cc[r] = []; fg[r] = []; bg[r] = [];
 		tg[r] = []; cs[r] = []; nd[r] = [];
 		hg[r] = []; sc[r] = []; sf[r] = [];
-		fs[r] = 0; 
+		fs[r] = 0; clipboard[r] = [];
 		for (var c = 0; c < 40; c++) {
 			clear_char(c,r);
 		}
@@ -1525,10 +1529,56 @@ this.keypress = function(event) {
 			show_help_screen();
 		}
 
+		if ( code == 118 ) { // [v] to paste
+			matched = 1;
+
+			if ( clipboard_size_x != -1 && clipboard_size_y != -1 ) { 
+				// We need to clip the size of the rectangle to avoid writing
+				// off the edge of the screen.
+
+				var x_max = curx + clipboard_size_x; if ( x_max > 40 ) { x_max = 40; } 
+				var y_max = cury + clipboard_size_y; if ( y_max > 25 ) { y_max = 25; } 
+
+				for ( var y = cury; y < y_max; y++ ) { 
+					for ( var x = curx; x < x_max; x++ ) { 
+						console.log("put: "+x+","+y+" <- "+ clipboard[y-cury][x-curx]);
+						put_char(x, y, clipboard[y-cury][x-curx]);
+					}
+					// hint that this span may have had graphics changed.
+					gfx_change(x1, y, x2, y);
+				}
+			}
+			// Normally we'd render as we wrote each character. This isn't a good
+			// idea since we'll end up re-rendering the cell lots. Instead we put
+			// the characters, still updating the control codes, and render at the
+			// end. We just render to the end of each line.
+			autorender(curx, cury, 40-curx, clipboard_size_y);
+		}
+
+		if ( code == 120 ) { // [x] to cut
+			matched = 1;
+			var x1 = Math.min(curx_opposite, curx);
+			var x2 = Math.max(curx_opposite, curx);
+			var y1 = Math.min(cury_opposite, cury);
+			var y2 = Math.max(cury_opposite, cury);
+			for (var y = y1; y <= y2; y++ ) { 
+				for (var x = x1; x <= x2; x++ ) {
+					clipboard[y-y1][x-x1] = cc[y][x];
+					put_char(x, y, 32);
+				}
+				// hint that this span may have had graphics changed.
+				gfx_change(x1, y, x2, y);
+			}
+			clipboard_size_x = x2 - x1 + 1;
+			clipboard_size_y = y2 - y1 + 1;
+			disappear_cursor_rectangle();
+			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+		}
+
 		// If this action is to place a character code, do that, move
 		// the cursor on, and record that we've made a match.
 		if ( placed_code > -1 ) {
-			check_for_remove_code(curx,cury,1);
+			check_for_remove_code(curx, cury, 1);
 			place_code(curx, cury, placed_code, 1); 
 			advance_cursor();
 			matched = 1;
@@ -1548,7 +1598,7 @@ this.keypress = function(event) {
 			if ( code >= 32 && code <= 127 ) { // and this is a simple text character...
 
 				// Just overwrite it, and rerender
-				check_for_remove_code(curx,cury,1);
+				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
 
 				// The cursor move handles the rendering of this insertion, so
@@ -1620,6 +1670,16 @@ this.keypress = function(event) {
 		if ( escape == 0 ) { 
 			disappear_cursor_rectangle();
 		}
+	}
+}
+
+
+var put_char = function(c, r, code) {
+	check_for_remove_code(c, r, 0);
+	if ( placeable(code) == 1 ) { 
+		place_code(c, r, code, 0);
+	} else {
+		cc[r][c] = code;
 	}
 }
 
@@ -2422,7 +2482,8 @@ var place_code = function(x,y,code,andrender) {
 
 // Handles removal of a character code at (x,y), and, if andrender
 // is non-zero, renders the characters it affects.
-var check_for_remove_code = function(x,y,code,andrender) {
+
+var check_for_remove_code = function(x, y, andrender) {
 
 	var code = cc[y][x];
 
