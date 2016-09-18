@@ -4427,6 +4427,8 @@ var draw_help_screen = function() {
 		[["m", "magenta text"],        ["M", "magenta graphics"]],
 		[["c", "cyan text"],           ["C", "cyan graphics"]],
 		[["w", "white text"],          ["W", "white graphics"]],
+		[["a", "ignore black fg"],     ["A", "allow black fg"]], 
+		[["k", "black text"],          ["K", "black graphics"]],
 		[["d", "normal height"],       ["D", "double height"]],
 		[["f", "steady"],              ["F", "flash"]],
 		[["h", "release graphics"],    ["H", "hold graphics"]],
@@ -4434,16 +4436,13 @@ var draw_help_screen = function() {
 		[["n", "black background"],    ["N", "new background"]],
 		[["q", "hide codes"],          ["Q", "show codes"]],
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
-		[["v", "reveal off"],          ["V", "reveal on"]],
-		[["x", "no grid"],             ["X", "grid"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
 		[["[", "narrower screen"],     ["]", "wider screen"]],
-		[["O", "conceal"],             ["J", "insert block character"]],
-		[["U", "duplicate row"],       ["1-8", "switch character sets"]],
-		[["0", "hide status bar"],     ["?", "this screen"]],
-		[["E", "export frame"],        ["L", "toggle metadata"]],
-		[["a", "ignore black fg"],     ["A", "allow black fg"]], 
-		[["k", "black text"],          ["K", "black graphics"]]
+		[["O", "conceal"],             ["J", "toggle reveal"]],
+		[["U", "duplicate row"],       ["X", "toggle grid"]],
+		[["E", "export frame"],        ["J", "insert block character"]],
+		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
+		[["x", "cut block"],           ["v", "paste block"]]
 	];
 	var footnotes = [
 		"TAB inserts a space. Backspace deletes a character. (No escape required).",
