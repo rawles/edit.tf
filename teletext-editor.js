@@ -71,6 +71,19 @@ var font = [];	 // font[c][y] = integer describing the bit pattern for
 var curx = 0;	 // the column at which the cursor is currently.
 var cury = 0;	 // the row at which the cursor is currently.
 
+// When doing cut and paste we display a rectangle which represents the area
+// which is going to be cut. Usually this is set to -1 in both coordinates to
+// show no area is active. Actually, when *either* is set to -1 we assume that
+// rectangle selection is not active.
+// When the escape key is pressed, they are set.
+
+var curx_opposite = -1;
+var cury_opposite = -1;
+
+var clipboard = []; // clipboard[y][x] is the clipped character at row y, col x
+var clipboard_size_x = 0;
+var clipboard_size_y = 0;
+
 var escape = 0;	 // has escape been pressed? 0 if no, 1 if yes.
 var dead_key = 0; // dead key pressed previously. 0 if not, otherwise char code
 var statusmode = 0; // what is the statusbar showing?
@@ -134,7 +147,7 @@ var init_state = function() {
 		cc[r] = []; fg[r] = []; bg[r] = [];
 		tg[r] = []; cs[r] = []; nd[r] = [];
 		hg[r] = []; sc[r] = []; sf[r] = [];
-		fs[r] = 0; 
+		fs[r] = 0; clipboard[r] = [];
 		for (var c = 0; c < 40; c++) {
 			clear_char(c,r);
 		}
@@ -187,6 +200,9 @@ var clear_char = function(x,y) {
 var show_grid = function(newgrid) {
 	grid = newgrid;
 	render(0, 0, 40, 25);
+}
+var toggle_grid = function() { 
+	show_grid(1 - grid);
 }
 
 // Changes whether we allow black foreground.
@@ -390,6 +406,22 @@ var mouse_click = function(canvasx, canvasy, state) {
 	var sx = canvasx - ( 12 * x * aspect_ratio);
 	var sy = canvasy - ( 20 * y );
 
+	// Just check that we're not in rectangle selection mode. If we are, we
+	// just want to reposition the opposite end of the rectangle, re-render
+	// and return.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) { 
+		old_curx = curx
+		old_cury = cury
+		cury = y
+		curx = x
+		var x1 = Math.min(old_curx, curx, curx_opposite);
+		var y1 = Math.min(old_cury, cury, cury_opposite);
+		var x2 = Math.max(old_curx, curx, curx_opposite);
+		var y2 = Math.max(old_cury, cury, cury_opposite);
+		render(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+		return state;
+	}
+
 	// Double height, of course, complicates things. If we are in double
 	// height mode, flipping a bit would need to be done on maybe the 
 	// cell (x,y) and maybe the cell above. The actual character we're 
@@ -435,7 +467,7 @@ var mouse_click = function(canvasx, canvasy, state) {
 		render(old_curx, old_cury, 1, 1);
 		render(curx, cury, 1, 1);
 		return state;
-		}
+	}
 
 	if ( ! ( tg[ey][ex] == 1 && 
 		( ( cc[ey][ex] >= 32 && cc[ey][ex] < 64 )
@@ -979,51 +1011,61 @@ var invalidate_export = function() {
 // The colours for the frame, and some related colours like for
 // cursors and control codes, are decided by this function.
 // The colour numbers are described below. For each colour the
-// option to return a highlighted version (highlight == 1) is given.
+// option to return a highlighted version (highlight > 0 ) is given.
 // this is for the highlighting that a cursor does, mostly.
 var colour = function(number, highlight) {
 
 	// 0: black
 	if ( number == 0 && highlight == 0 ) { return "#000000"; }
-	if ( number == 0 && highlight == 1 ) { return "#585858"; }
+	if ( number == 0 && highlight == 1 ) { return "#2c2c2c"; }
+	if ( number == 0 && highlight == 2 ) { return "#585858"; }
 
 	// 1: red
 	if ( number == 1 && highlight == 0 ) { return "#ff0000"; }
-	if ( number == 1 && highlight == 1 ) { return "#bb0000"; }
+	if ( number == 1 && highlight == 1 ) { return "#dd0000"; }
+	if ( number == 1 && highlight == 2 ) { return "#bb0000"; }
 
 	// 2: green
 	if ( number == 2 && highlight == 0 ) { return "#00ff00"; }
-	if ( number == 2 && highlight == 1 ) { return "#00bb00"; }
+	if ( number == 2 && highlight == 1 ) { return "#00dd00"; }
+	if ( number == 2 && highlight == 2 ) { return "#00bb00"; }
 
 	// 3: yellow
 	if ( number == 3 && highlight == 0 ) { return "#ffff00"; }
-	if ( number == 3 && highlight == 1 ) { return "#bbbb00"; }
+	if ( number == 3 && highlight == 1 ) { return "#dddd00"; }
+	if ( number == 3 && highlight == 2 ) { return "#bbbb00"; }
 
 	// 4: blue
 	if ( number == 4 && highlight == 0 ) { return "#0000ff"; }
-	if ( number == 4 && highlight == 1 ) { return "#0000bb"; }
+	if ( number == 4 && highlight == 1 ) { return "#0000dd"; }
+	if ( number == 4 && highlight == 2 ) { return "#0000bb"; }
 
 	// 5: magenta
 	if ( number == 5 && highlight == 0 ) { return "#ff00ff"; }
-	if ( number == 5 && highlight == 1 ) { return "#bb00bb"; }
+	if ( number == 5 && highlight == 1 ) { return "#dd00dd"; }
+	if ( number == 5 && highlight == 2 ) { return "#bb00bb"; }
 
 	// 6: cyan
 	if ( number == 6 && highlight == 0 ) { return "#00ffff"; }
-	if ( number == 6 && highlight == 1 ) { return "#00bbbb"; }
+	if ( number == 6 && highlight == 1 ) { return "#00dddd"; }
+	if ( number == 6 && highlight == 2 ) { return "#00bbbb"; }
 
 	// 7: white
 	if ( number == 7 && highlight == 0 ) { return "#ffffff"; }
-	if ( number == 7 && highlight == 1 ) { return "#bbbbbb"; }
+	if ( number == 7 && highlight == 1 ) { return "#dddddd"; }
+	if ( number == 7 && highlight == 2 ) { return "#bbbbbb"; }
 
 	// 8 is a special colour number for control characters
 	if ( number == 8 && highlight == 0 ) { return "#888888"; }
-	if ( number == 8 && highlight == 1 ) { return "#333333"; }
+	if ( number == 8 && highlight == 1 ) { return "#5c5c5c"; }
+	if ( number == 8 && highlight == 2 ) { return "#333333"; }
 
 	// 9 is for control characters copied from the line
 	// above in the case of double height, so we can see
 	// the relationship.
 	if ( number == 9 && highlight == 0 ) { return "#555555"; }
-	if ( number == 9 && highlight == 1 ) { return "#222222"; }
+	if ( number == 9 && highlight == 1 ) { return "#3b3b3b"; }
+	if ( number == 9 && highlight == 2 ) { return "#222222"; }
 
 	// For all other values just return white!
 	return "#fff";
@@ -1183,25 +1225,30 @@ var draw_status_bar_frame = function(ctx) {
 	// character code
 	ctx.fillText("0x" + cc[cury][curx].toString(16), offset, 516*pix_scale);
 
-	// position
-	ctx.fillText(curx+","+cury, offset+(0.8*spacing), 516*pix_scale);
+	// cursor position, or the corners of the cursor rectangle
+	if ( curx_opposite == -1 || cury_opposite == -1 ) { 
+		ctx.fillText(curx+","+cury, offset+(0.8*spacing), 516*pix_scale);
+		} else { 
+		//ctx.fillText(curx+";"+cury, offset+(0.8*spacing), 516*pix_scale);
+		ctx.fillText(curx+","+cury+" "+curx_opposite+","+cury_opposite, offset+(0.8*spacing), 516*pix_scale);
+		}
 
 	// foreground and background colour
 	ctx.fillText(
 		colour_name(fg[cury][curx])
 		+" "+(tg[cury][curx]==0?"text":"graphics")
 		+" on "+colour_name(bg[cury][curx]),
-		offset+(1.6*spacing), 516*pix_scale);
+		offset+(2.5*spacing), 516*pix_scale);
 
 	// normal or double height?
 	var heighttext = "normal height";
 	if ( nd[cury][curx] == 1 ) { heighttext = "double height"; } 
 	if ( nd[cury][curx] == 2 ) { heighttext = "height reset"; } 
-	ctx.fillText(heighttext, offset+(6.0*spacing), 516*pix_scale);
+	ctx.fillText(heighttext, offset+(6.9*spacing), 516*pix_scale);
 
 	// In the spare space, a hint for getting more help, in case
 	// the editor is shown on a page without the key sequences table.
-	ctx.fillText("Press ESC-? for help", offset+(8.1*spacing), 516*pix_scale);
+	ctx.fillText("ESC-? for help", offset+(9.0*spacing), 516*pix_scale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -1268,6 +1315,11 @@ var hide_status_bar = function() {
 }
 
 this.set_escape = function(newvalue) { 
+	if ( newvalue == 0 && escape == 1 ) { disappear_cursor_rectangle(); } 
+	if ( newvalue == 1 && escape == 0 ) {
+		curx_opposite = curx;
+		cury_opposite = cury;
+	} 
 	escape = newvalue;
 }
 
@@ -1283,8 +1335,19 @@ this.keydown = function(event) {
 	var code = ('which' in event) ? event.which : event.keyCode;
 
 	// Escape key toggles the escape mode and redraws the status bar.
-	if ( code == 27 ) { escape++; escape = escape % 2;
-		draw_status_bar(); return; } 
+	if ( code == 27 ) {
+		escape++;
+		escape = escape % 2;
+		if ( escape == 0 ) { 
+			disappear_cursor_rectangle();
+		}
+		if ( escape == 1 ) { 
+			curx_opposite = curx;
+			cury_opposite = cury;
+		}
+		draw_status_bar();
+		return;
+	} 
 
 	unhide_status_bar();
 	hide_help_screen();
@@ -1304,11 +1367,10 @@ this.keydown = function(event) {
 	if ( code == 8 ) { event.preventDefault(); cursor_bs(); return; } 
 	if ( code == 9 ) { event.preventDefault(); cursor_tab(); return; } 
 
-  // Handle dead keys for input of diacritical marks
-  if ( code == 221) { dead_key = code; }
-  if ( code == 187) { dead_key = code; }
-
-	}
+	// Handle dead keys for input of diacritical marks
+	if ( code == 221) { dead_key = code; }
+	if ( code == 187) { dead_key = code; }
+}
 
 this.keypress = function(event) {
 	var code = ( 'charCode' in event ) ? event.charCode : event.keyCode;
@@ -1318,8 +1380,8 @@ this.keypress = function(event) {
 
 	code = keymap(code, dead_key);
 
-  // If dead key was set it has been used by now
-  dead_key = 0
+	// If dead key was set it has been used by now
+	dead_key = 0
 
 	// On Internet Explorer, ESC key triggers keypress too,
 	// so return since we've already handled ESC in keydown
@@ -1381,9 +1443,8 @@ this.keypress = function(event) {
 		// the next keypress, ie to just write it to the screen.
 		if ( code == 74 || code == 106 ) { code = 127; }
 
-		// X = enable and disable the grid
-		if ( code == 88 ) { matched = 1; show_grid(1); }
-		if ( code == 120 ) { matched = 1; show_grid(0); }
+		// X = toggle the grid
+		if ( code == 88 ) { matched = 1; toggle_grid(); }
 
 		// I = insert and delete a row
 		if ( code == 73 ) { matched = 1; delete_row(cury); }
@@ -1404,9 +1465,8 @@ this.keypress = function(event) {
 		if ( code == 72 ) { placed_code = 30; }
 		if ( code == 104 ) { placed_code = 31; }
 
-		// V = enable and disable reveal 
-		if ( code == 86 ) { matched = 1; set_reveal_state(1); }
-		if ( code == 118 ) { matched = 1; set_reveal_state(0); }
+		// V = toggle reveal 
+		if ( code == 86 ) { matched = 1; toggle_reveal_state(); }
 
 		// O = insert a conceal character
 		if ( code == 79 || code == 111 ) { placed_code = 24; }
@@ -1469,10 +1529,56 @@ this.keypress = function(event) {
 			show_help_screen();
 		}
 
+		if ( code == 118 ) { // [v] to paste
+			matched = 1;
+
+			if ( clipboard_size_x != -1 && clipboard_size_y != -1 ) { 
+				// We need to clip the size of the rectangle to avoid writing
+				// off the edge of the screen.
+
+				var x_max = curx + clipboard_size_x; if ( x_max > 40 ) { x_max = 40; } 
+				var y_max = cury + clipboard_size_y; if ( y_max > 25 ) { y_max = 25; } 
+
+				for ( var y = cury; y < y_max; y++ ) { 
+					for ( var x = curx; x < x_max; x++ ) { 
+						console.log("put: "+x+","+y+" <- "+ clipboard[y-cury][x-curx]);
+						put_char(x, y, clipboard[y-cury][x-curx]);
+					}
+					// hint that this span may have had graphics changed.
+					gfx_change(x1, y, x2, y);
+				}
+			}
+			// Normally we'd render as we wrote each character. This isn't a good
+			// idea since we'll end up re-rendering the cell lots. Instead we put
+			// the characters, still updating the control codes, and render at the
+			// end. We just render to the end of each line.
+			autorender(curx, cury, 40-curx, clipboard_size_y);
+		}
+
+		if ( code == 120 ) { // [x] to cut
+			matched = 1;
+			var x1 = Math.min(curx_opposite, curx);
+			var x2 = Math.max(curx_opposite, curx);
+			var y1 = Math.min(cury_opposite, cury);
+			var y2 = Math.max(cury_opposite, cury);
+			for (var y = y1; y <= y2; y++ ) { 
+				for (var x = x1; x <= x2; x++ ) {
+					clipboard[y-y1][x-x1] = cc[y][x];
+					put_char(x, y, 32);
+				}
+				// hint that this span may have had graphics changed.
+				gfx_change(x1, y, x2, y);
+			}
+			clipboard_size_x = x2 - x1 + 1;
+			clipboard_size_y = y2 - y1 + 1;
+			disappear_cursor_rectangle();
+			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+		}
+
 		// If this action is to place a character code, do that, move
 		// the cursor on, and record that we've made a match.
 		if ( placed_code > -1 ) {
-			check_for_remove_code(curx,cury,1);
+			check_for_remove_code(curx, cury, 1);
 			place_code(curx, cury, placed_code, 1); 
 			advance_cursor();
 			matched = 1;
@@ -1480,8 +1586,11 @@ this.keypress = function(event) {
 
 		// If we didn't make a match, we need to interpret this as a regular
 		// keypress, dropping out of escape mode.
-		if ( matched == 0 ) { escape = 0; } 
-		}
+		if ( matched == 0 ) {
+			escape = 0;
+			disappear_cursor_rectangle();
+		} 
+	}
 
 	if ( escape == 0 ) { // if we're not in escape mode...
 		invalidate_export();
@@ -1489,7 +1598,7 @@ this.keypress = function(event) {
 			if ( code >= 32 && code <= 127 ) { // and this is a simple text character...
 
 				// Just overwrite it, and rerender
-				check_for_remove_code(curx,cury,1);
+				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
 
 				// The cursor move handles the rendering of this insertion, so
@@ -1556,8 +1665,24 @@ this.keypress = function(event) {
 
 	// Finally, turn off escape and redraw the status bar to reflect that.
 	escape = 0;
-	if ( old_esc != escape ) { draw_status_bar(); }
+	if ( old_esc != escape ) {
+		draw_status_bar();
+		if ( escape == 0 ) { 
+			disappear_cursor_rectangle();
+		}
+	}
 }
+
+
+var put_char = function(c, r, code) {
+	check_for_remove_code(c, r, 0);
+	if ( placeable(code) == 1 ) { 
+		place_code(c, r, code, 0);
+	} else {
+		cc[r][c] = code;
+	}
+}
+
 
 //////////////////
 ///// CURSOR /////
@@ -1579,80 +1704,150 @@ var advance_cursor = function() {
 }
 
 var cursor_right = function() {
+	if ( ( curx_opposite != -1 && cury_opposite != -1 ) && curx == 39 ) { return; } 
 	// The first cell that needs to be re-rendered is the original one. 
 	var old_curx = curx; var old_cury = cury;
 
-	// Is this a 'split render'?
-	var split = 1;
+	if ( curx_opposite == -1 || cury_opposite == -1 ) {
+		// Is this a 'split render'?
+		var split = 1;
 
-	// Move the cursor and wrap it if needed.
-	curx++;
-	if ( curx > 39 ) { cury++; curx = 0; } else { split = 0; } 
-	if ( cury > 24 ) { cury = 0; } 
+		// Move the cursor and wrap it if needed.
+		curx++;
+		if ( curx > 39 ) { cury++; curx = 0; } else { split = 0; } 
+		if ( cury > 24 ) { cury = 0; } 
 
-	// Render, depending on whether it's a split or not.
-	if ( split == 0 ) { render(curx-1, cury, 2, 1, 1); }
-	if ( split == 1 ) { 
-		render(old_curx, old_cury, 1, 1);
-		render(curx, cury, 1, 1);
-	} 
+		// Render, depending on whether it's a split or not.
+		if ( split == 0 ) { render(curx-1, cury, 2, 1, 1); }
+		if ( split == 1 ) { 
+			render(old_curx, old_cury, 1, 1);
+			render(curx, cury, 1, 1);
+		} 
+	}
+
+	// The above is probably not needed when we render the
+	// following.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) {
+		curx++;
+		var x_to_render = old_curx;
+		if ( curx > curx_opposite ) { x_to_render = curx; } 
+		render(curx-1, cury, 2, 1, 1);
+		render(x_to_render, Math.min(cury, cury_opposite),
+			1, Math.abs(cury - cury_opposite) + 1);
+	}
 }
 
 // If we're using the editor in Hebrew mode, we need to move the cursor 
 // left.
 var cursor_left_for_hebrew = function() {
-	var old_curx = curx;
-	var old_cury = cury;
-	var split = 1;
-	curx--;
-	if ( curx < 0 ) { cury++; curx = 39; } else { split = 0; } 
-	if ( cury > 24 ) { cury = 0; } 
-	if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
-	if ( split == 1 ) { 
-		render(old_curx, old_cury, 1, 1);
-		render(curx, cury, 1, 1);
-	} 
+	if ( ( curx_opposite != -1 && cury_opposite != -1 ) && curx == 0 ) { return; } 
+	var old_curx = curx; var old_cury = cury;
+
+	if ( curx_opposite == -1 || cury_opposite == -1 ) {
+		var split = 1;
+		curx--;
+		if ( curx < 0 ) { cury++; curx = 39; } else { split = 0; } 
+		if ( cury > 24 ) { cury = 0; } 
+		if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
+		if ( split == 1 ) { 
+			render(old_curx, old_cury, 1, 1);
+			render(curx, cury, 1, 1);
+		} 
+	}
+
+	// The above is probably not needed when we render the
+	// following.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) {
+		curx--;
+		var x_to_render = old_curx;
+		if ( curx < curx_opposite ) { x_to_render = curx; } 
+		render(curx, cury, 2, 1, 1);
+		render(x_to_render, Math.min(cury, cury_opposite),
+		1, Math.abs(cury - cury_opposite) + 1);
+	}
 }
 
 // The other functions work in a similar way.
 var cursor_left = function() {
-	var old_curx = curx;
-	var old_cury = cury;
-	var split = 1; // is it necessary to call render() twice?
-	curx--;
-	if ( curx < 0 ) { cury--; curx = 39; } else { split = 0; } 
-	if ( cury < 0 ) { cury = 24; } 
-	if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
-	if ( split == 1 ) {
-		render(old_curx, old_cury, 1, 1);
-		render(curx, cury, 1, 1);
-	} 
+	if ( ( curx_opposite != -1 && cury_opposite != -1 ) && curx == 0 ) { return; } 
+	var old_curx = curx; var old_cury = cury;
+
+	if ( curx_opposite == -1 || cury_opposite == -1 ) {
+		var split = 1; // is it necessary to call render() twice?
+		curx--;
+		if ( curx < 0 ) { cury--; curx = 39; } else { split = 0; } 
+		if ( cury < 0 ) { cury = 24; } 
+		if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
+		if ( split == 1 ) {
+			render(old_curx, old_cury, 1, 1);
+			render(curx, cury, 1, 1);
+		} 
+	}
+
+	// The above is probably not needed when we render the
+	// following.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) {
+		curx--;
+		var x_to_render = old_curx;
+		if ( curx < curx_opposite ) { x_to_render = curx; } 
+		render(curx, cury, 2, 1, 1);
+		render(x_to_render, Math.min(cury, cury_opposite),
+			1, Math.abs(cury - cury_opposite) + 1);
+	}
 }
 
 var cursor_up = function() {
-	var old_curx = curx;
-	var old_cury = cury;
-	var split = 1; // is it necessary to call render() twice?
-	cury--;
-	if ( cury < 0 ) { cury = 24; } else { split = 0; } 
-	if ( split == 0 ) { render(curx, cury, 1, 2, 1); }
-	if ( split == 1 ) {
-		render(old_curx, old_cury, 1, 1);
-		render(curx, cury, 1, 1);
-	} 
+	if ( ( curx_opposite != -1 && cury_opposite != -1 ) && cury == 0 ) { return; } 
+	var old_curx = curx; var old_cury = cury;
+
+	if ( curx_opposite == -1 || cury_opposite == -1 ) {
+		var split = 1; // is it necessary to call render() twice?
+		cury--;
+		if ( cury < 0 ) { cury = 24; } else { split = 0; } 
+		if ( split == 0 ) { render(curx, cury, 1, 2, 1); }
+		if ( split == 1 ) {
+			render(old_curx, old_cury, 1, 1);
+			render(curx, cury, 1, 1);
+		} 
+	}
+
+	// The above is probably not needed when we render the
+	// following.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) {
+		cury--;
+		var y_to_render = old_cury;
+		if ( cury < cury_opposite ) { y_to_render = cury; } 
+		render(curx, cury, 1, 2, 1);
+		render(Math.min(curx, curx_opposite), y_to_render,
+			Math.abs(curx - curx_opposite) + 1, 1);
+	}
 }
 
 var cursor_down = function() {
-	var old_curx = curx;
-	var old_cury = cury;
-	var split = 1; // is it necessary to call render() twice?
-	cury++;
-	if ( cury > 24 ) { cury = 0; } else { split = 0; } 
-	if ( split == 0 ) { render(curx, cury-1, 1, 2, 1); }
-	if ( split == 1 ) {
-		render(old_curx, old_cury, 1, 1);
-		render(curx, cury, 1, 1);
-	} 
+	if ( ( curx_opposite != -1 && cury_opposite != -1 ) && cury == 24 ) { return; } 
+	var old_curx = curx; var old_cury = cury;
+
+	if ( curx_opposite == -1 || cury_opposite == -1 ) {
+		var split = 1; // is it necessary to call render() twice?
+		cury++;
+		if ( cury > 24 ) { cury = 0; } else { split = 0; } 
+		if ( split == 0 ) { render(curx, cury-1, 1, 2, 1); }
+		if ( split == 1 ) {
+			render(old_curx, old_cury, 1, 1);
+			render(curx, cury, 1, 1);
+		} 
+	}
+
+	// The above is probably not needed when we render the
+	// following.
+	if ( curx_opposite != -1 && cury_opposite != -1 ) {
+		cury++;
+		var y_to_render = old_cury;
+		if ( cury > cury_opposite ) { y_to_render = cury; } 
+		render(curx, cury-1, 1, 2, 1);
+		render(Math.min(curx, curx_opposite), y_to_render,
+			Math.abs(curx - curx_opposite) + 1, 1);
+	}
 }
 
 // Newlines are considered to be just another kind of cursor
@@ -1779,6 +1974,24 @@ var cursor_bs = function() {
 	// later on. (e.g. bs over graphics part)
 	gfx_change(curx,cury,curx,cury);
 
+}
+
+// Rendering the 'cursor rectangle', used for cut and paste, is assisted
+// by the following functions.
+var disappear_cursor_rectangle = function() { 
+	if ( curx_opposite != -1 && cury_opposite != -1 ) { 
+		// We need to remove the rectangle by re-rendering
+		// its area.
+		var x1 = curx_opposite;
+		var y1 = cury_opposite;
+		curx_opposite = -1;
+		cury_opposite = -1;
+		var x2 = curx;
+		var y2 = cury;
+		if ( x1 > x2 ) { var t = x1; x1 = x2; x2 = t; }
+		if ( y1 > y2 ) { var t = y1; y1 = y2; y2 = t; }
+		render(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+	}
 }
 
 
@@ -2269,7 +2482,8 @@ var place_code = function(x,y,code,andrender) {
 
 // Handles removal of a character code at (x,y), and, if andrender
 // is non-zero, renders the characters it affects.
-var check_for_remove_code = function(x,y,code,andrender) {
+
+var check_for_remove_code = function(x, y, andrender) {
 
 	var code = cc[y][x];
 
@@ -2712,9 +2926,25 @@ var render = function(x, y, w, h) {
 
 			// Is this the cell with a cursor in?
 			var cursor_cell = 0;
-			if (	statushidden == 0  // No cursor when the status bar is hidden
-				&& r == cury
-				&& c == curx) { cursor_cell = 1; }
+
+			if ( statushidden == 0 ) { // No cursor when the status bar is hidden
+				if ( curx_opposite == -1 || cury_opposite == -1 ) { 
+					// This is just a normal cursor.
+					if ( r == cury && c == curx ) { cursor_cell = 1; } 
+					} else {
+					// We are in cut and paste mode and the 'cursor' is
+					// a rectangle. The 'opposite' could be lower or 
+					// higher, left or right.
+					if (
+						( ( r >= cury_opposite && r <= cury ) ||
+						( r <= cury_opposite && r >= cury ) )
+					&&	( ( c >= curx_opposite && c <= curx ) ||
+						( c <= curx_opposite && c >= curx ) ) ) { 
+						cursor_cell = 1;
+						}
+					}
+				if ( r == cury && c == curx) { cursor_cell = 2; }
+				}
 
 			// This affects the way that it's rendered. We pass the 
 			// cursor_cell value to the colour() function to implement
@@ -3135,6 +3365,9 @@ var set_reveal_state = function(newreveal) {
 			}
 		}
 	}
+}
+var toggle_reveal_state = function() { 
+	set_reveal_state(1 - reveal);
 }
 
 // Sets the scale for the editor, and re-renders it.
@@ -4255,6 +4488,8 @@ var draw_help_screen = function() {
 		[["m", "magenta text"],        ["M", "magenta graphics"]],
 		[["c", "cyan text"],           ["C", "cyan graphics"]],
 		[["w", "white text"],          ["W", "white graphics"]],
+		[["a", "ignore black fg"],     ["A", "allow black fg"]], 
+		[["k", "black text"],          ["K", "black graphics"]],
 		[["d", "normal height"],       ["D", "double height"]],
 		[["f", "steady"],              ["F", "flash"]],
 		[["h", "release graphics"],    ["H", "hold graphics"]],
@@ -4262,18 +4497,16 @@ var draw_help_screen = function() {
 		[["n", "black background"],    ["N", "new background"]],
 		[["q", "hide codes"],          ["Q", "show codes"]],
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
-		[["v", "reveal off"],          ["V", "reveal on"]],
-		[["x", "no grid"],             ["X", "grid"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
 		[["[", "narrower screen"],     ["]", "wider screen"]],
-		[["O", "conceal"],             ["J", "insert block character"]],
-		[["U", "duplicate row"],       ["1-8", "switch character sets"]],
-		[["0", "hide status bar"],     ["?", "this screen"]],
-		[["E", "export frame"],        ["L", "toggle metadata"]],
-		[["a", "ignore black fg"],     ["A", "allow black fg"]], 
-		[["k", "black text"],          ["K", "black graphics"]]
+		[["O", "conceal"],             ["V", "toggle reveal"]],
+		[["U", "duplicate row"],       ["X", "toggle grid"]],
+		[["E", "export frame"],        ["J", "insert block character"]],
+		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
+		[["x", "copy block"],          ["v", "paste block"]]
 	];
 	var footnotes = [
+		"To select a block, use the cursor keys in escape mode.",
 		"TAB inserts a space. Backspace deletes a character. (No escape required).",
 		"In graphics mode, QWASZXRCF and the keypad twiddle subpixels.",
 		"Licenced under GPL v3.0, https://github.com/rawles/edit-tf"
@@ -4306,9 +4539,9 @@ var draw_help_screen = function() {
 
 	ctx.fillStyle = "#ccc";
 	ctx.textAlign = "center";
-	for ( var i = 0; i < 3; i++ ) { 
+	for ( var i = 0; i < 4; i++ ) { 
 		ctx.fillText(footnotes[i], 240*pix_scale,
-			(16*(29+i))*pix_scale);
+			(16*(28+i))*pix_scale);
 	}
 }
 
@@ -4359,6 +4592,7 @@ this.is_all_spaces = function() {
 	}
 	return true;
 }
+
 
 //////////////////////////
 ///// INITIALISATION /////

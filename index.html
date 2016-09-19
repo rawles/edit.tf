@@ -137,6 +137,10 @@ div#b {
 	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
 <tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
 	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
+<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
+	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
+<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
+	<td onclick="fakepress('K')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
 
 <tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
 	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
@@ -152,29 +156,25 @@ div#b {
 	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
 <tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
 	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
-<tr><td onclick="fakepress('v')">v</td><td onclick="fakepress('v')">reveal off</td>
-	<td onclick="fakepress('V')">reveal on</td><td onclick="fakepress('V')">V</td></tr>
-<tr><td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">no grid</td>
-	<td onclick="fakepress('X')">grid</td><td onclick="fakepress('X')">X</td></tr>
 <tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
 	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
 <tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
 	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
 <tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
-    <td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
+	<td onclick="fakepress('V')">toggle reveal</td><td onclick="fakepress('V')">V</td></tr>
+<tr><td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
+	<td onclick="fakepress('X')">toggle grid</td><td onclick="fakepress('X')">X</td></tr></tr>
+<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td>
+	<td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
+<tr><td>1-8</td><td>switch char. sets</td>
+	<td onclick="fakepress('0')">hide status bar</td><td onclick="fakepress('0')">0</td></tr>
 
-<tr> <td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
-<td>switch char. sets</td><td>1-8</td></tr>
+<tr class="newsection"><td colspan="4">Escape then &uarr;&larr;&rarr;&darr; to select then ...</td></tr>
 
-<tr> <td onclick="fakepress('0')">0</td><td onclick="fakepress('0')">hide status bar</td>
-	<td onclick="fakepress('?')">help screen</td><td onclick="fakepress('?')">?</td></tr>
-
-<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td><td onclick="fakepress('9')">toggle metadata</td><td onclick="fakepress('9')">9</td></tr>
-
-<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
-	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
-<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
-	<td onclick="fakepress('K')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
+<tr>
+<td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">... cut selection</td>
+<td onclick="fakepress('v')">... paste</td><td onclick="fakepress('v')">v</td>
+</tr>
 
 <tr class="newsection"><td colspan="4">No escape required for:</td></tr>
 
