@@ -99,6 +99,8 @@ var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
 var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 		 // 0x10) control codes? 0 if not, 1 if so.
+var tracing = 0; // Are we in tracing mode? 0 if no, 1 if yes
+var tracing_url = ""; // The last image URL used for this.
                  
 var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
@@ -107,7 +109,7 @@ var pix_scale = full_pix_scale;
 var aspect_ratio = 1.2;
 		 // specifies how much to stretch the x direction.
 var pix_size = 1;
-		 // If all the pixels are 1:1, 
+		 // If all the pixels are 1:1
 
 var active_export = 0;
 		 // if non-zero, there are URLs for export on the screen
@@ -1573,6 +1575,31 @@ this.keypress = function(event) {
 			clipboard_size_y = y2 - y1 + 1;
 			disappear_cursor_rectangle();
 			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+		}
+
+		if ( code == 61 ) { // [=] to 'trace-me-do'
+			matched = 1;
+			invert_tracing = 0;
+			var cfdiv = document.querySelector("div#canvasframe");
+			var cf = document.querySelector("canvas#frame");
+			if ( tracing == 0 ) {
+				var pattern = new RegExp("^(https?:\/\/)?");
+				tracing_url = prompt("URL of image to use for tracing:", tracing_url);
+				if ( pattern.test(tracing_url) ) { 
+					cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat center top";
+					cfdiv.style.backgroundSize = "contain";
+					cfdiv.style.backgroundOrigin = "content-box";
+					cf.style.opacity = 0.5;
+					invert_tracing = 1;
+				}
+			}
+			if ( tracing == 1 ) { 
+				cfdiv.style.background = "";	
+				cfdiv.style.backgroundSize = "";
+				cf.style.opacity = "";
+				invert_tracing = 1;
+			}
+			if ( invert_tracing == 1 ) { tracing = 1 - tracing; }
 		}
 
 		// If this action is to place a character code, do that, move
