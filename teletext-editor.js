@@ -99,8 +99,17 @@ var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
 var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 		 // 0x10) control codes? 0 if not, 1 if so.
-var tracing = 0; // Are we in tracing mode? 0 if no, 1 if yes
-var tracing_url = ""; // The last image URL used for this.
+
+var trace = 0; // Are we in tracing mode? 0 if no, 1 if yes
+var trace_url = ""; // The last image URL used for this.
+
+// We hold the trace rectangle in global state so that we can handle 
+// changes in aspect ratio.
+var trace_position_x = 0;
+var trace_position_y = 0;
+var trace_size_x = 0;
+var trace_size_y = 0;
+var trace_whole_area = 0; // Does the trace image fill the whole area?
                  
 var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
@@ -165,6 +174,7 @@ var init_state = function() {
 	load_from_hash();
 }
 
+// init_canvas() is called also when the aspect ratio is adjusted.
 var init_canvas = function() {
 
 	// The dimensions depend on whether the status bar is shown
@@ -187,6 +197,30 @@ var init_canvas = function() {
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, width*pix_scale, height*pix_scale);
 	ctx.textAlign = "left";
+
+	// Initialise the background trace image
+	init_trace();
+}
+
+var init_trace = function() {
+	var cfdiv = document.querySelector("div#canvasframe");
+	var cf = document.querySelector("canvas#frame");
+	if ( trace == 0 ) { 
+		cfdiv.style.background = "";	
+		cfdiv.style.backgroundSize = "";
+		cf.style.opacity = "";
+	}
+	if ( trace == 1 ) { 
+		if ( trace_whole_area == 1 ) { // We are tracing the whole area
+			cfdiv.style.background = "url(\"" + trace_url + "\") no-repeat center top";
+		} else { // We are tracing a sub-rectangle
+			cfdiv.style.background = "url(\"" + trace_url + "\") no-repeat "
+				+ ( trace_position_x * aspect_ratio) + "px " + trace_position_y + "px";
+		}
+		cfdiv.style.backgroundSize = ( trace_size_x * aspect_ratio ) + "px " + trace_size_y + "px";
+		cfdiv.style.backgroundOrigin = "content-box";
+		cf.style.opacity = 0.5;
+	}
 }
 
 // Resets an individual character at position (x,y) to default 
@@ -1579,45 +1613,37 @@ this.keypress = function(event) {
 
 		if ( code == 61 ) { // [=] to 'trace-me-do'
 			matched = 1;
-			invert_tracing = 0;
-			var cfdiv = document.querySelector("div#canvasframe");
-			var cf = document.querySelector("canvas#frame");
-			if ( tracing == 0 ) {
+			invert_trace = 0;
+			if ( trace == 0 ) {
 				var pattern1 = new RegExp("^https?:\/\/");
 				var pattern2 = new RegExp("^file:\/\/");
-				tracing_url = prompt("URL of image to use for tracing:", tracing_url);
-				if ( pattern1.test(tracing_url) || pattern2.test(tracing_url) ) { 
-					var trace_size_x = 480 * aspect_ratio;
-					var trace_size_y = 500;
+				trace_url = prompt("URL of image to use for tracing:", trace_url);
+				if ( trace_url == null ) { trace_url = ""; } 
+				if ( pattern1.test(trace_url) || pattern2.test(trace_url) ) { 
 					if ( curx_opposite != -1 && cury_opposite != -1 
 						&& ( curx_opposite != curx || cury_opposite != cury ) ) {
 						// We are in block select greater than 1x1
 						// Here the user wants the background to appear for only a subrectangle
 						// of the screen. Compute the position and size of this rectangle.
-						var trace_position_x = Math.min(curx, curx_opposite) * 12;
-						trace_position_x *= aspect_ratio;
-						var trace_position_y = Math.min(cury, cury_opposite) * 20;
-						var trace_size_x = ( Math.abs(curx - curx_opposite) + 1 ) * 12;
-						trace_size_x *= aspect_ratio;
-						var trace_size_y = ( Math.abs(cury - cury_opposite) + 1 ) * 20;
-						cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat "
-							+ trace_position_x + "px " + trace_position_y + "px";
+						trace_position_x = Math.min(curx, curx_opposite) * 12;
+						trace_position_y = Math.min(cury, cury_opposite) * 20;
+						trace_size_x = ( Math.abs(curx - curx_opposite) + 1 ) * 12;
+						trace_size_y = ( Math.abs(cury - cury_opposite) + 1 ) * 20;
+						trace_whole_area = 0;
 					} else { // regular cursor mode, or 1x1 block select. Fill the area!
-						cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat center top";
+						trace_position_x = 0;
+						trace_position_y = 0;
+						trace_size_x = 480;
+						trace_size_y = 500;
+						trace_whole_area = 1;
 					}
-					cfdiv.style.backgroundSize = trace_size_x + "px " + trace_size_y + "px";
-					cfdiv.style.backgroundOrigin = "content-box";
-					cf.style.opacity = 0.5;
-					invert_tracing = 1;
+					invert_trace = 1;
 				}
 			}
-			if ( tracing == 1 ) { 
-				cfdiv.style.background = "";	
-				cfdiv.style.backgroundSize = "";
-				cf.style.opacity = "";
-				invert_tracing = 1;
-			}
-			if ( invert_tracing == 1 ) { tracing = 1 - tracing; }
+			if ( trace == 1 ) { invert_trace = 1; }
+			if ( invert_trace == 1 ) { trace = 1 - trace; }
+
+			init_trace();
 		}
 
 		// If this action is to place a character code, do that, move
@@ -4351,7 +4377,7 @@ var init_font = function(charset) {
 	if ( charset == 5 ) { add_font_char(123,3,4,4,8,4,4,3,0,0); }
 		// open curly bracket
 	if ( charset == 6 ) { add_font_char(123,0,0,21,21,14,0,0,0,0); }
-		// old israeli shekel symbol (in circulation between 1980-5!)
+		// old Israeli shekel symbol (in circulation between 1980-5!)
 	if ( charset == 7 ) { add_font_char(123,0,0,21,21,21,21,31,0,0); }
 		// Cyrillic sha
 
