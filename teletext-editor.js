@@ -4574,6 +4574,7 @@ var draw_help_screen = function() {
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
 		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
+		[["9", "toggle metadata"],     ["=", "trace image"]],
 		[["x", "copy block"],          ["v", "paste block"]]
 	];
 	var footnotes = [
@@ -4591,21 +4592,21 @@ var draw_help_screen = function() {
 
 	ctx.textAlign = "center";
 	ctx.fillText("First press escape then the following:",
-		240*pix_scale, 16*1*pix_scale);
+		240*pix_scale, 15*1*pix_scale);
 
 	for ( var i = 0; i < columns.length; i++ ) { 
 		ctx.fillStyle = "#fff";
 		ctx.textAlign = "right";
 		ctx.fillText(columns[i][0][0], 90*pix_scale,
-			(16*(3+i))*pix_scale);
+			(15*(3+i))*pix_scale);
 		ctx.fillText(columns[i][1][0], 290*pix_scale,
-			(16*(3+i))*pix_scale);
+			(15*(3+i))*pix_scale);
 		ctx.fillStyle = "#ccc";
 		ctx.textAlign = "left";
 		ctx.fillText(columns[i][0][1], 100*pix_scale,
-			(16*(3+i))*pix_scale);
+			(15*(3+i))*pix_scale);
 		ctx.fillText(columns[i][1][1], 300*pix_scale,
-			(16*(3+i))*pix_scale);
+			(15*(3+i))*pix_scale);
 	}
 
 	ctx.fillStyle = "#ccc";
