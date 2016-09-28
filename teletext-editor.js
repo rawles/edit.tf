@@ -1583,7 +1583,7 @@ this.keypress = function(event) {
 			var cfdiv = document.querySelector("div#canvasframe");
 			var cf = document.querySelector("canvas#frame");
 			if ( tracing == 0 ) {
-				var pattern = new RegExp("^(https?:\/\/)?");
+				var pattern = new RegExp("^https?:\/\/");
 				tracing_url = prompt("URL of image to use for tracing:", tracing_url);
 				if ( pattern.test(tracing_url) ) { 
 					cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat center top";
