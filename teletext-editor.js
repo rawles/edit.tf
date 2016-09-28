@@ -1583,11 +1583,29 @@ this.keypress = function(event) {
 			var cfdiv = document.querySelector("div#canvasframe");
 			var cf = document.querySelector("canvas#frame");
 			if ( tracing == 0 ) {
-				var pattern = new RegExp("^https?:\/\/");
+				var pattern1 = new RegExp("^https?:\/\/");
+				var pattern2 = new RegExp("^file:\/\/");
 				tracing_url = prompt("URL of image to use for tracing:", tracing_url);
-				if ( pattern.test(tracing_url) ) { 
-					cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat center top";
-					cfdiv.style.backgroundSize = "contain";
+				if ( pattern1.test(tracing_url) || pattern2.test(tracing_url) ) { 
+					var trace_size_x = 480 * aspect_ratio;
+					var trace_size_y = 500;
+					if ( curx_opposite != -1 && cury_opposite != -1 
+						&& ( curx_opposite != curx || cury_opposite != cury ) ) {
+						// We are in block select greater than 1x1
+						// Here the user wants the background to appear for only a subrectangle
+						// of the screen. Compute the position and size of this rectangle.
+						var trace_position_x = Math.min(curx, curx_opposite) * 12;
+						trace_position_x *= aspect_ratio;
+						var trace_position_y = Math.min(cury, cury_opposite) * 20;
+						var trace_size_x = ( Math.abs(curx - curx_opposite) + 1 ) * 12;
+						trace_size_x *= aspect_ratio;
+						var trace_size_y = ( Math.abs(cury - cury_opposite) + 1 ) * 20;
+						cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat "
+							+ trace_position_x + "px " + trace_position_y + "px";
+					} else { // regular cursor mode, or 1x1 block select. Fill the area!
+						cfdiv.style.background = "url(\"" + tracing_url + "\") no-repeat center top";
+					}
+					cfdiv.style.backgroundSize = trace_size_x + "px " + trace_size_y + "px";
 					cfdiv.style.backgroundOrigin = "content-box";
 					cf.style.opacity = 0.5;
 					invert_tracing = 1;
