@@ -182,6 +182,11 @@ going to make it into a useful tool for everyone.
   used to define the rectangle. During this process, the editor stays in
   escape mode. Lowercase x cuts the rectangle, which can be pasted with 
   ESC-v.
+* You can add an image to the editing window to trace over with ESC-=. The
+  editor prompts you for a URL, the image at which will then appear, with
+  the editing window at half opacity. Pressing ESC-= again will make the
+  image disappear again. This is demonstrated in 
+  [this video by Steve Horsley](https://www.youtube.com/watch?v=CA8U4YW5JZM).
 
 ## Related links
 
