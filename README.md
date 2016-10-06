@@ -223,6 +223,10 @@ The editor has been used for various events and systems:
 * [Adam Dawes](http://www.adamdawes.com/) adapted this code to make 
   [a cool browser interface](http://www.uniquecodeanddata.co.uk/teletext76/bbc2-19830129/) for Jason's recovered frames, which enables you to select pages by 
   page number and step through subpages.
+* An easy way to share frames is to tweet your editor URLs to us at
+  <a href="https://twitter.com/edit_tf">@edit_tf</a> and we'll convert it to 
+  an image and retweet it. This allows other people to see how frames are  
+  constructed and learn from what you've done!
 
 The editor has starred in the following videos:
 
