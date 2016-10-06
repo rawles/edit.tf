@@ -589,7 +589,15 @@ var mouse_click = function(canvasx, canvasy, state) {
 // and extracts the position of the click relative to the canvas.
 var click_listener = function(event, state) {
 
-	// Compute the position of the canvas.
+    // Is it a right-click? If so, ignore it - the user is likely
+    // trying to save the canvas.
+    if ( ( event.which && event.which == 3 )
+	|| ( event.button && event.button == 2 ) ) {
+	// Just return the state which we're in already.
+	return state;
+	}
+
+    // Compute the position of the canvas.
     var offsetx = 0;
     var offsety = 0;
     var frame_element = document.getElementById(canvasid);
