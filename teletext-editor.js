@@ -115,8 +115,10 @@ var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
                  // look better zoomed in.
 var pix_scale = full_pix_scale;
-var aspect_ratio = 1.2;
 		 // specifies how much to stretch the x direction.
+var aspect_ratios = [1, 1.1, 1.2, 1.3, 1.33, 1.4, 1.5, 1.75, 2];
+var current_ratio = 2; // index of aspect_ratios
+var aspect_ratio = aspect_ratios[current_ratio];
 var pix_size = 1;
 		 // If all the pixels are 1:1
 
@@ -1326,7 +1328,7 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.75*spacing), 532*pix_scale);
 
 	// aspect ratio
-	ctx.fillText(aspect_ratio.toFixed(1)+":1", offset+10.35*spacing, 532*pix_scale);
+	ctx.fillText(aspect_ratio+":1", offset+10.35*spacing, 532*pix_scale);
 }
 
 // If we have hidden the status bar, we only want to do so until something
@@ -1539,14 +1541,20 @@ this.keypress = function(event) {
 		// [ and ] = narrower/wider screen
 		if ( code == 91 ) {
 			matched = 1;
-			aspect_ratio = Math.max(aspect_ratio-0.1, 1);
+			current_ratio--;
+			if ( current_ratio < 0 ) { current_ratio = 0; } 
+			aspect_ratio = aspect_ratios[current_ratio];
 			init_canvas();
 			render(0,0,40,25,0);
 		}
 
 		if ( code == 93 ) {
 			matched = 1;
-			aspect_ratio = Math.min(aspect_ratio+0.1, 1.5);
+			current_ratio++;
+			if ( current_ratio >= aspect_ratios.length ) {
+				current_ratio = aspect_ratios.length - 1;
+			} 
+			aspect_ratio = aspect_ratios[current_ratio];
 			init_canvas();
 			render(0,0,40,25,0);
 		}
