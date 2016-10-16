@@ -1328,7 +1328,7 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.75*spacing), 532*pix_scale);
 
 	// aspect ratio
-	ctx.fillText(aspect_ratio+":1", offset+10.35*spacing, 532*pix_scale);
+	ctx.fillText(aspect_ratio+"x", offset+10.30*spacing, 532*pix_scale);
 }
 
 // If we have hidden the status bar, we only want to do so until something
