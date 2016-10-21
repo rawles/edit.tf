@@ -224,9 +224,19 @@ The editor has been used for various events and systems:
   [a cool browser interface](http://www.uniquecodeanddata.co.uk/teletext76/bbc2-19830129/) for Jason's recovered frames, which enables you to select pages by 
   page number and step through subpages.
 * An easy way to share frames is to tweet your editor URLs to us at
-  <a href="https://twitter.com/edit_tf">@edit_tf</a> and we'll convert it to 
+  [@edit_tf](https://twitter.com/edit_tf) and we'll convert it to
   an image and retweet it. This allows other people to see how frames are  
   constructed and learn from what you've done!
+* Heather Merrick uses the editor to prepare
+  [Teletext News](https://teletextnews.com/). She describes the process in 
+  [an article](https://medium.com/@heathermerrick/teletext-news-behind-the-scenes-372ca36ec179#.aebjz5dz4).
+* Mr Biffo, of [Digitiser 2000](http://www.digitiser2000.com/) and 
+  [lots of other stuff besides](http://www.imdb.com/name/nm1044110/), 
+  uses the editor for graphics on the Digitiser2000 site.
+  He also is producing funny, surreal teletext graphics
+  [on his Twitter feed](https://twitter.com/mrbiffo) for
+  anybody who donates £10 or more to the Kickstarter for the excellent 
+  forthcoming [Mr. Biffo's Found Footage](https://www.kickstarter.com/projects/1534877882/mr-biffos-found-footage).
 
 The editor has starred in the following videos:
 
@@ -235,6 +245,9 @@ The editor has starred in the following videos:
   and some of its functions, using it alongside the wxTED editor. He's also behind the
   teletext-themed animation *[Le Télétexte Malicieux](https://www.youtube.com/watch?v=HBeDH3mlzNg)*.
 * Steve Horsley has captured some nice videos [showing how he builds up frames](http://www.horsenburger.com/videos) of his teletext art.
+* Mr Biffo used the editor to produce
+  [his bizarre ads](https://www.youtube.com/watch?v=RqnnxgmDBvk) and
+  [Digifest's intro video](https://www.youtube.com/watch?v=t0aOuPZDxG4).
 
 ## Compatibility
 
