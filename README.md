@@ -229,7 +229,7 @@ The editor has been used for various events and systems:
   constructed and learn from what you've done!
 * Heather Merrick uses the editor to prepare
   [Teletext News](https://teletextnews.com/). She describes the process in 
-  [an article](https://medium.com/@heathermerrick/teletext-news-behind-the-scenes-372ca36ec179#.aebjz5dz4).
+  [an article](https://medium.com/@heathermerrick/teletext-news-behind-the-scenes-372ca36ec179).
 * Mr Biffo, of [Digitiser 2000](http://www.digitiser2000.com/) and 
   [lots of other stuff besides](http://www.imdb.com/name/nm1044110/), 
   uses the editor for graphics on the Digitiser2000 site.
