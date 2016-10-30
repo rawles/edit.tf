@@ -110,6 +110,7 @@ var trace_position_y = 0;
 var trace_size_x = 0;
 var trace_size_y = 0;
 var trace_whole_area = 0; // Does the trace image fill the whole area?
+var trace_opacity = 1;
                  
 var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
@@ -210,6 +211,7 @@ var init_trace = function() {
 	if ( trace == 0 ) { 
 		cfdiv.style.background = "";	
 		cfdiv.style.backgroundSize = "";
+		trace_opacity = 1;
 		cf.style.opacity = "";
 	}
 	if ( trace == 1 ) { 
@@ -221,8 +223,16 @@ var init_trace = function() {
 		}
 		cfdiv.style.backgroundSize = ( trace_size_x * aspect_ratio ) + "px " + trace_size_y + "px";
 		cfdiv.style.backgroundOrigin = "content-box";
-		cf.style.opacity = 0.5;
+		set_trace_opacity(0.5);
 	}
+}
+
+var set_trace_opacity = function(new_trace_opacity) { 
+	// If trace is disabled, this makes no sense.
+	if ( trace == 0 ) { return; } 
+	var cf = document.querySelector("canvas#frame");
+	trace_opacity = new_trace_opacity;
+	cf.style.opacity = trace_opacity;
 }
 
 // Resets an individual character at position (x,y) to default 
@@ -1676,6 +1686,24 @@ this.keypress = function(event) {
 			if ( invert_trace == 1 ) { trace = 1 - trace; }
 
 			init_trace();
+		}
+
+		if ( code == 123 ) {
+			new_trace_opacity = trace_opacity + 0.25;
+			if ( new_trace_opacity > 1 ) { 
+				new_trace_opacity = 1;
+			}
+			set_trace_opacity(new_trace_opacity);
+			matched = 1;
+		}
+
+		if ( code == 125 ) {
+			new_trace_opacity = trace_opacity - 0.25;
+			if ( new_trace_opacity < 0.25 ) { 
+				new_trace_opacity = 0.25;
+			}
+			set_trace_opacity(new_trace_opacity);
+			matched = 1;
 		}
 
 		// If this action is to place a character code, do that, move
