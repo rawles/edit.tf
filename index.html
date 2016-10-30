@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+<script type="text/javascript" src="teletext-editor.js"></script>
+<script type="text/javascript">
+function init_frames() {
+
+	// Create a new editor:
+        var editor = new Editor();
+
+	// Make it the active editor so it receives keypresses:
+        active_editor = editor;
+
+	// Also make it the editor which reads from and writes to the 
+	// URL:
+        url_editor = editor;
+
+	// Initialise the editor, placing it in the canvas with HTML
+	// ID 'frame'.
+        editor.init_frame("frame");
+
+	// You can also give the editor an encoded URL hash string to 
+	// display/edit.
+	if ( editor.is_all_spaces() ) { 
+
+		// This is a welcome screen I made. It appears only 
+		// when there would otherwise be a blank screen. Feel
+		// free to replace it with your own creations for
+		// people to see when they load up the editor!
+		editor.load("0:QAoW_fr24eWtB00aeaDhhz5UHTeg54e2VB539eSDvv5a0CAo4cOHCAl4KKHDhw4cOHDhw4cOHDhw4cOHDhw4cOHDhw4cOCn79-JKH69IUXbnyZEq_fv379-_fv379-_fv379-_fv379-Kf__96T0f1hLwgI-P_Qor3________________________8ovXryWTwsXJyPj9____rAovXr169evXr169evXr169evXryvx4RwfPn7__fp1e____pSvz58-fPnz58-fPnz58-fPnz58KtyPj___r05Ph86Ed_9iVXL16_-vXr169ev___________8pwI736cns-f____1Ir_7wt__tUGr_q_6v5TgV__0Hz58KcCn_6wJrvvLf_____96sKfC39GhQav-Lnq_lN5X__Qf__8p_Kf_5NctJ7______rViwp_Lf_7X9__6v-r__QFf_9B_alFn8p__l9_sn6____9A-XrSn8t_QIP6D_q_6v5dYV__0H___Kfyn_-9J8PH_____y-zu_Kfy3_-1___-r_q__yqD__Qf2pTh_Kf_5P8vT4eH7ur28OHgp_Lf_7Vfv_6v6r__KoP_9B_alP_8p__k9_dmjVr163oyV_yn_hw4EfRThw4cOHDh04cOHDhw__yqxYkJq__zgR2vSfv-lKqFixIRalVCxYsWLFixYsWLFixYsKIECAv0Jo1__58_P05RAgQICOpCgB1IsyLUi2KiBAgQIECAogQF1X_-9WLMHxgUQIC6BAgItySAGgixJNSfSQIECBAgQICqwv4a7_5L99L__6rpw-fyf9p8KrFixYsWLFixYsWLFixYsKF_X_-yTkv78v__tWX___J_Wm8p8-fPnz58-fPnz58-fPnwvo_6v_9uS-F9rJfoaol-8mvRlPH___________________y65KuXryS5etLr169eUWLFixYvXr169evXr169evXr169evInSaQHQ5ZefNBFpw0CtBaB9N6DHsy4eSDpo080HPHyy5dyAidJpAdDll580EWnDQK0D8Hm38kHTRlQaMuzgg54-WXLuQICJ0ukDwuufmgw7siDll49cvPpzQd8uzHv25ciDD0dIECBAgInS6APo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCA");
+	}
+}
+</script>
+<title>edit-tf</title>
+<style type="text/css">
+body { 
+	background-color: #222;
+}
+table#hints {
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	border: 1px solid #353;
+}
+table#hints td, table#hints tr, table#hints th, div#export {
+	color: #9b9;
+	vertical-align: center; 
+	text-align: center;
+	font-family: sans-serif;
+	line-height: 1.1;
+	font-size: 12px;
+}
+div.exportbox {
+	margin-bottom: 1em;
+	background-color: #353;
+	padding: 3px;
+	border: 2px solid #9b9;
+}
+table#hints td, table#hints tr , table#hints th {
+	border: 1px solid #353;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;    
+}
+td a, div#export a {
+	color: inherit;
+}
+canvas {
+	/* The canvas should have no padding */
+	background-color: #000;
+	margin: 0;
+	cursor: crosshair;
+	position:relative;
+	z-index: 1;
+}
+div#canvasframe {
+	padding: 5px 10px 5px 10px;
+	background-color: #000;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	display: inline-block;
+	}
+tr.newsection {
+	background-color: #353;
+}
+div#a {
+	display: table;
+	position: fixed;
+	top: 0; left: 0;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+}
+div#b {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+[onclick] {
+	cursor: pointer;
+}
+</style>
+<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/favicons/manifest.json">
+<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#2d89ef">
+<meta name="theme-color" content="#000000">
+</head>
+<body onload="init_frames();">
+
+<div id="a"><div id="b">
+
+<div id="export">
+</div>
+<table id="hints">
+<tr class="newsection">
+<td colspan="4">First press escape then the following:</td>
+</tr>
+<tr>
+<th colspan="2">lowercase</th>
+<th colspan="2">uppercase</th>
+</tr>
+
+<tr><td onclick="fakepress('r')">r</td><td onclick="fakepress('r')">red text</td>
+	<td onclick="fakepress('R')">red graphics</td><td onclick="fakepress('R')">R</td></tr>
+<tr><td onclick="fakepress('g')">g</td><td onclick="fakepress('g')">green text</td>
+	<td onclick="fakepress('G')">green graphics</td><td onclick="fakepress('G')">G</td></tr>
+<tr><td onclick="fakepress('y')">y</td><td onclick="fakepress('y')">yellow text</td>
+	<td onclick="fakepress('Y')">yellow graphics</td><td onclick="fakepress('Y')">Y</td></tr>
+<tr><td onclick="fakepress('b')">b</td><td onclick="fakepress('b')">blue text</td>
+	<td onclick="fakepress('B')">blue graphics</td><td onclick="fakepress('B')">B</td></tr>
+<tr><td onclick="fakepress('m')">m</td><td onclick="fakepress('m')">magenta text</td>
+	<td onclick="fakepress('M')">magenta graphics</td><td onclick="fakepress('M')">M</td></tr>
+<tr><td onclick="fakepress('c')">c</td><td onclick="fakepress('c')">cyan text</td>
+	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
+<tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
+	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
+<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
+	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
+<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
+	<td onclick="fakepress('K')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
+
+<tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
+	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
+<tr><td onclick="fakepress('f')">f</td><td onclick="fakepress('f')">steady</td>
+	<td onclick="fakepress('F')">flash</td><td onclick="fakepress('F')">F</td></tr>
+<tr><td onclick="fakepress('h')">h</td><td onclick="fakepress('h')">release graphics</td>
+	<td onclick="fakepress('H')">hold graphics</td><td onclick="fakepress('H')">H</td></tr>
+<tr><td onclick="fakepress('i')">i</td><td onclick="fakepress('i')">insert row</td>
+	<td onclick="fakepress('I')">delete row</td><td onclick="fakepress('I')">I</td></tr>
+<tr><td onclick="fakepress('n')">n</td><td onclick="fakepress('n')">black background</td>
+	<td onclick="fakepress('N')">new background</td><td onclick="fakepress('N')">N</td></tr>
+<tr><td onclick="fakepress('q')">q</td><td onclick="fakepress('q')">hide codes</td>
+	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
+<tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
+	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
+<tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
+	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
+<tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
+	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
+<tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
+	<td onclick="fakepress('V')">toggle reveal</td><td onclick="fakepress('V')">V</td></tr>
+<tr><td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
+	<td onclick="fakepress('X')">toggle grid</td><td onclick="fakepress('X')">X</td></tr></tr>
+<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td>
+	<td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
+<tr><td>1-8</td><td>switch char. sets</td>
+	<td onclick="fakepress('0')">hide status bar</td><td onclick="fakepress('0')">0</td></tr>
+<tr><td onclick="fakepress('9')">9</td><td onclick="fakepress('9')">toggle metadata</td>
+	<td onclick="fakepress('=')">trace image</td><td onclick="fakepress('=')">=</td></tr>
+
+<tr class="newsection"><td colspan="4">Escape then &uarr;&larr;&rarr;&darr; to select then ...</td></tr>
+
+<tr>
+<td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">... cut selection</td>
+<td onclick="fakepress('v')">... paste</td><td onclick="fakepress('v')">v</td>
+</tr>
+
+<tr class="newsection"><td colspan="4">No escape required for:</td></tr>
+
+<tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
+<td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
+
+<tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
+
+<tr class="newsection"><td colspan="4"><a href="https://github.com/rawles/edit-tf">Bug reports and pull requests welcome</a>.</td></tr>
+
+<tr><td colspan="4">The frame's data is all in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
+
+</table>
+</div> 
+<div id="b">
+<div id="canvasframe">
+<canvas id="frame"></canvas>
+</div></div></div>
+
+</body>
+</html>
