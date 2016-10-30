@@ -926,6 +926,11 @@ var save_to_hash = function() {
 // using the data URI scheme. The user can save this link to their own computer
 // without the server needing to store it.
 var export_frame = function() {
+
+	// People have requested graphic file exports, so we hide the status
+	// bar in case we need to do this here.
+	hide_status_bar();
+
 	// We can't substitute characters for the base64 in the address bar
 	// becase the output must constain newlines and the addressbar uses
 	// seven bits for each character. Therefore we must export in a
@@ -1025,6 +1030,9 @@ var export_frame = function() {
 	var datauri_hs =
 		"data:text/plain;base64,"+window.btoa(hashstring);
 
+	var datauri_png =
+		document.getElementById('frame').toDataURL('image/png');
+
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as: "
 		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a></br>"
@@ -1034,6 +1042,8 @@ var export_frame = function() {
 		+ "<br/>or " 
 		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a> or "
         	+ "<a href=\""+datauri_ep1+"\">EP1 (experimental)</a>"
+		+ "<br/>or "
+        	+ "<a href=\""+datauri_png+"\">PNG screenshot</a>"
 		+ "</div>";
 	active_export = 1;
 }
