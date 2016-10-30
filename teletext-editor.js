@@ -1436,7 +1436,7 @@ this.keypress = function(event) {
 	// Stop Firefox interpreting this keypress as a shortcut for the
 	// app. Non-Latin keyboards sometimes send Latin character keypresses
 	// if a meta key is pressed.
-	if ( code >= 32 && code < 128 ) { event.preventDefault(); } 
+	if ( code >= 32 && code < 128 && typeof event.preventDefault === "function" ) { event.preventDefault(); }
 
 	unhide_status_bar();
 
@@ -4708,11 +4708,8 @@ var fakepress = function(character) {
 	if ( active_editor == null ) { return; } 
 
 	active_editor.set_escape(1);
-	// The following fix (#44) was contributed by ZXGuesser.
-	// event = new Object;
-	// event["charCode"] = character.charCodeAt(0);
-	event = new KeyboardEvent("keydown",
-		{charCode : character.charCodeAt(0)});
+	event = new Object;
+	event["charCode"] = character.charCodeAt(0);
 	page_keypress(event);
 }    
 
