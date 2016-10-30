@@ -1378,6 +1378,13 @@ this.set_escape = function(newvalue) {
 // this code with Firefox, so I also handle some of its quirks here. 
 
 this.keydown = function(event) {
+
+	// The editor does nothing with a modifier key event on its own.
+	// therefore, ignore any keydown event which is a modifier key.
+	if ( event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ) {
+		return;
+	}
+
 	var code = ('which' in event) ? event.which : event.keyCode;
 
 	// Escape key toggles the escape mode and redraws the status bar.
@@ -1593,7 +1600,6 @@ this.keypress = function(event) {
 
 				for ( var y = cury; y < y_max; y++ ) { 
 					for ( var x = curx; x < x_max; x++ ) { 
-						console.log("put: "+x+","+y+" <- "+ clipboard[y-cury][x-curx]);
 						put_char(x, y, clipboard[y-cury][x-curx]);
 					}
 					// hint that this span may have had graphics changed.
@@ -4459,8 +4465,6 @@ var init_font = function(charset) {
 // correct teletext character set code.
 
 var keymap = function(keypress, dead_key) {
-
-	//console.log("[key] " + keypress);
 
 	// The Hebrew character set (6) is identical to the English (0)
 	// one outside of the range 0x60..0x7b.
