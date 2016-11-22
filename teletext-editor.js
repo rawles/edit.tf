@@ -246,7 +246,6 @@ var clear_char = function(x,y) {
 // Sets the grid on or off and renders the whole 
 // frame again to show it.
 var show_grid = function(newgrid) {
-	console.log("newgrid = " + newgrid);
 	grid = newgrid;
 	render(0, 0, 40, 25);
 }
