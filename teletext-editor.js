@@ -3338,7 +3338,7 @@ var render = function(x, y, w, h) {
 							||	( ( sx + sy ) % 2 == 1 && sy == 19 && r == 23 && c < 2 ) 
 							||	( ( sx + sy ) % 2 == 0 && sx == 11 && r == 23 && c == 39 ) 
 							||	( ( sx + sy ) % 2 == 0 && sy == 19 && r == 23 && c > 37 ) 
-							||	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 0 && c == 7 ) 
+							||	( ( sx + sy ) % 2 == 0 && sx == 0 && sy < 10 && r == 0 && c == 7 ) 
 							) ) { 
 							ctx.fillStyle = cell_grid; } 
 						if ( statushidden == 0 && grid == 2 && 
@@ -3385,7 +3385,7 @@ var render = function(x, y, w, h) {
 						||	( ( sx + sy ) % 2 == 1 && sy == 19 && r == 23 && c < 2 ) 
 						||	( ( sx + sy ) % 2 == 0 && sx == 11 && r == 23 && c == 39 ) 
 						||	( ( sx + sy ) % 2 == 0 && sy == 19 && r == 23 && c > 37 ) 
-						||	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 0 && c == 7 ) 
+						||	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 0 && sy < 10 && c == 7 ) 
 						) ) { 
 						ctx.fillStyle = cell_grid; } 
 					if ( statushidden == 0 && grid == 2 && 
