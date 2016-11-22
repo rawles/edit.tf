@@ -1403,6 +1403,15 @@ var hide_status_bar = function() {
 var compliance_level = function() { 
 	for (var c = 0; c <= 39; c++) { if ( cc[0][c] != 32 ) return 0; }
 	for (var c = 0; c <= 39; c++) { if ( cc[24][c] != 32 ) return 1; }
+        // The last row might have double height on it.
+        if ( fs[23] == 1 ) {
+                // do any of the characters descend into row 24?
+                for (var c = 0; c <= 39; c++ ) {
+                        if ( nd[23][c] == 1 && cc[23][c] != 32 ) {
+                                return 1;
+                        }
+                }
+        }
 	return 2;
 }
 
