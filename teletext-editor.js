@@ -96,7 +96,7 @@ var helpscreenshown = 0; // is the help screen being shown?
 var showcc = 0;  // are we showing control characters? 0 if no, 1 if yes.
 var cset = 0;	 // the current character set (1..8).
 var reveal = 0;  // is reveal on? 0 if no, 1 if yes.
-var grid = 0;	 // is the grid shown? 0 if no, 1 if yes.
+var grid = 1;	 // is the grid shown? 0 if no, 1 if guides, 2 if yes.
 var blackfg = 0; // do we permit the use of black foreground (0x0 and
 		 // 0x10) control codes? 0 if not, 1 if so.
 
@@ -117,7 +117,7 @@ var full_pix_scale = 2;
                  // look better zoomed in.
 var pix_scale = full_pix_scale;
 		 // specifies how much to stretch the x direction.
-var aspect_ratios = [1, 1.1, 1.2, 1.3, 1.33, 1.4, 1.5, 1.75, 2];
+var aspect_ratios = [1, 1.1, 1.2, 1.22, 1.3, 1.33, 1.4, 1.5, 1.75, 2];
 var current_ratio = 2; // index of aspect_ratios
 var aspect_ratio = aspect_ratios[current_ratio];
 var pix_size = 1;
@@ -246,11 +246,14 @@ var clear_char = function(x,y) {
 // Sets the grid on or off and renders the whole 
 // frame again to show it.
 var show_grid = function(newgrid) {
+	console.log("newgrid = " + newgrid);
 	grid = newgrid;
 	render(0, 0, 40, 25);
 }
 var toggle_grid = function() { 
-	show_grid(1 - grid);
+	var newgrid = grid - 1;
+	if ( newgrid == -1 ) { newgrid = 2; } 
+	show_grid(newgrid);
 }
 
 // Changes whether we allow black foreground.
@@ -1330,25 +1333,43 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText(charsetname, offset, 532*pix_scale);
 
 	// is reveal on or off?
-	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.5*spacing), 532*pix_scale);
+	ctx.fillText(reveal==0?"reveal off":"reveal on", offset+(1.25*spacing), 532*pix_scale);
 
 	// released or held graphics?
-	ctx.fillText(hg[cury][curx]==0?"released":"held", offset+(3*spacing), 532*pix_scale);
+	ctx.fillText(hg[cury][curx]==0?"released":"held", offset+(2.75*spacing), 532*pix_scale);
 
 	// is this concealed? (shown or hidden?)
-	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(4.5*spacing), 532*pix_scale);
+	ctx.fillText(sc[cury][curx]==0?"shown":"hidden", offset+(4.25*spacing), 532*pix_scale);
 
 	// steady or flash?
-	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(5.75*spacing), 532*pix_scale);
+	ctx.fillText(sf[cury][curx]==0?"steady":"flash", offset+(5.5*spacing), 532*pix_scale);
 
 	// Are we allowing 0x0 chars?
-	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(7*spacing), 532*pix_scale);
+	ctx.fillText(blackfg==0?"no black fg":"black fg", offset+(6.65*spacing), 532*pix_scale);
 
 	// contiguous or separated?
-	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.75*spacing), 532*pix_scale);
+	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.3*spacing), 532*pix_scale);
 
 	// aspect ratio
-	ctx.fillText(aspect_ratio+"x", offset+10.30*spacing, 532*pix_scale);
+	ctx.fillText(aspect_ratio+"x", offset+9.9*spacing, 532*pix_scale);
+
+	// compliance light
+	ctx.beginPath();
+	ctx.arc(offset+10.8*spacing, 528*pix_scale, 6*pix_scale,
+		0, 2 * Math.PI, false);
+	ctx.fillStyle = "black";
+	ctx.fill();
+	ctx.closePath();
+	ctx.beginPath();
+	ctx.arc(offset+10.8*spacing, 528*pix_scale, 5*pix_scale,
+		0, 2 * Math.PI, false);
+
+	var compliance = compliance_level();
+	ctx.fillStyle = "#000000";
+	if ( compliance >= 0 ) { ctx.fillStyle = "#990000"; } 
+	if ( compliance >= 1 ) { ctx.fillStyle = "#999900"; } 
+	if ( compliance >= 2 ) { ctx.fillStyle = "#009900"; } 
+	ctx.fill();
 }
 
 // If we have hidden the status bar, we only want to do so until something
@@ -1378,6 +1399,12 @@ var hide_status_bar = function() {
 		init_canvas();
 		render(0,0,40,25,0);
 	}
+}
+
+var compliance_level = function() { 
+	for (var c = 0; c <= 39; c++) { if ( cc[0][c] != 32 ) return 0; }
+	for (var c = 0; c <= 39; c++) { if ( cc[24][c] != 32 ) return 1; }
+	return 2;
 }
 
 this.set_escape = function(newvalue) { 
@@ -3303,7 +3330,19 @@ var render = function(x, y, w, h) {
 						// differently in order to show they are usually
 						// not reproduced in a teletext frame (they are
 						// used for page metadata)
-						if ( grid == 1 && 
+						if ( statushidden == 0 && grid == 1 && // guides only
+							(	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 1 && c == 0 ) 
+							||	( ( sx + sy ) % 2 == 0 && sy == 0 && r == 1 && c < 2 ) 
+							||	( ( sx + sy ) % 2 == 1 && sx == 11 && r == 1 && c == 39 ) 
+							||	( ( sx + sy ) % 2 == 1 && sy == 0 && r == 1 && c > 37 ) 
+							||	( ( sx + sy ) % 2 == 1 && sx == 0 && r == 23 && c == 0 ) 
+							||	( ( sx + sy ) % 2 == 1 && sy == 19 && r == 23 && c < 2 ) 
+							||	( ( sx + sy ) % 2 == 0 && sx == 11 && r == 23 && c == 39 ) 
+							||	( ( sx + sy ) % 2 == 0 && sy == 19 && r == 23 && c > 37 ) 
+							||	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 0 && c == 7 ) 
+							) ) { 
+							ctx.fillStyle = cell_grid; } 
+						if ( statushidden == 0 && grid == 2 && 
 							(	( sx == 11 && !( r == 0 && c < 7 ) && !( r == 24 ) ) 
 							||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 							ctx.fillStyle = cell_grid; } 
@@ -3338,7 +3377,19 @@ var render = function(x, y, w, h) {
 					}
 
 					// If the grid is being shown, set the pixel as above.
-					if ( grid == 1 && 
+					if ( statushidden == 0 && grid == 1 && // guides only
+						(	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 1 && c == 0 ) 
+						||	( ( sx + sy ) % 2 == 0 && sy == 0 && r == 1 && c < 2 ) 
+						||	( ( sx + sy ) % 2 == 1 && sx == 11 && r == 1 && c == 39 ) 
+						||	( ( sx + sy ) % 2 == 1 && sy == 0 && r == 1 && c > 37 ) 
+						||	( ( sx + sy ) % 2 == 1 && sx == 0 && r == 23 && c == 0 ) 
+						||	( ( sx + sy ) % 2 == 1 && sy == 19 && r == 23 && c < 2 ) 
+						||	( ( sx + sy ) % 2 == 0 && sx == 11 && r == 23 && c == 39 ) 
+						||	( ( sx + sy ) % 2 == 0 && sy == 19 && r == 23 && c > 37 ) 
+						||	( ( sx + sy ) % 2 == 0 && sx == 0 && r == 0 && c == 7 ) 
+						) ) { 
+						ctx.fillStyle = cell_grid; } 
+					if ( statushidden == 0 && grid == 2 && 
 						(	( sx == 11 && !( r == 0 && c < 7 ) && !( r == 24 ) ) 
 						||	( sy == 0  && !( r == 0 && c < 8 ) ) ) ) {
 						ctx.fillStyle = cell_grid; } 
