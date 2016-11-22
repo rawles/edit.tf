@@ -1365,9 +1365,10 @@ var draw_status_bar_frame = function(ctx) {
 
 	var compliance = compliance_level();
 	ctx.fillStyle = "#000000";
-	if ( compliance >= 0 ) { ctx.fillStyle = "#990000"; } 
-	if ( compliance >= 1 ) { ctx.fillStyle = "#999900"; } 
-	if ( compliance >= 2 ) { ctx.fillStyle = "#009900"; } 
+	if ( compliance >= 0 ) { ctx.fillStyle = "#ff0000"; } 
+	if ( compliance >= 1 ) { ctx.fillStyle = "#990000"; } 
+	if ( compliance >= 2 ) { ctx.fillStyle = "#999900"; } 
+	if ( compliance >= 3 ) { ctx.fillStyle = "#009900"; } 
 	ctx.fill();
 }
 
@@ -1401,18 +1402,19 @@ var hide_status_bar = function() {
 }
 
 var compliance_level = function() { 
-	for (var c = 0; c <= 39; c++) { if ( cc[0][c] != 32 ) return 0; }
-	for (var c = 0; c <= 39; c++) { if ( cc[24][c] != 32 ) return 1; }
+	for (var c = 0; c <= 7; c++) { if ( cc[0][c] != 32 ) return 0; }
+	for (var c = 8; c <= 39; c++) { if ( cc[0][c] != 32 ) return 1; }
+	for (var c = 0; c <= 39; c++) { if ( cc[24][c] != 32 ) return 2; }
         // The last row might have double height on it.
         if ( fs[23] == 1 ) {
                 // do any of the characters descend into row 24?
                 for (var c = 0; c <= 39; c++ ) {
                         if ( nd[23][c] == 1 && cc[23][c] != 32 ) {
-                                return 1;
+                                return 2;
                         }
                 }
         }
-	return 2;
+	return 3;
 }
 
 this.set_escape = function(newvalue) { 
