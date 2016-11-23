@@ -1055,7 +1055,8 @@ var export_frame = function() {
 		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a> or "
         	+ "<a href=\""+datauri_ep1+"\">EP1 (experimental)</a>"
 		+ "<br/>or "
-        	+ "<a href=\""+datauri_png+"\">PNG screenshot</a>"
+        	+ "<a href=\""+datauri_png+"\">PNG screenshot</a> or "
+		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">open in zxnet editor</a>"
 		+ "</div>";
 	active_export = 1;
 }
