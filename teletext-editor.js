@@ -1369,6 +1369,7 @@ var draw_status_bar_frame = function(ctx) {
 	if ( compliance >= 1 ) { ctx.fillStyle = "#990000"; } 
 	if ( compliance >= 2 ) { ctx.fillStyle = "#999900"; } 
 	if ( compliance >= 3 ) { ctx.fillStyle = "#009900"; } 
+	if ( compliance >= 4 ) { ctx.fillStyle = "#00ff00"; } 
 	ctx.fill();
 }
 
@@ -1415,8 +1416,12 @@ var compliance_level = function() {
 	// Yellow means that row 24, reserved for Fastext, has been overwritten.
 	for (var c = 0; c <= 39; c++) { if ( cc[24][c] != 32 ) return 2; }
 
-	// Green means everything is groovy.
-	return 3;
+	// Dull green means the frames can be fixed without looking any
+	// different, for example by removing control characters, and be
+	// compliant.
+
+	// Bright green means everything is groovy.
+	return 4;
 }
 
 this.set_escape = function(newvalue) { 
