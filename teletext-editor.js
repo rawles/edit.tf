@@ -1403,8 +1403,11 @@ var hide_status_bar = function() {
 
 var compliance_level = function() { 
 	// Bright red means that the frame can't exist on a broadcast system.
-        if ( fs[23] == 1 || fs[24] > 0 ) { return 0; } 
 	for (var c = 0; c <= 7; c++) { if ( cc[0][c] != 32 ) return 0; }
+	for (var c = 0; c <= 39; c++) { 
+		if ( cc[0][c] == 13 || cc[23][c] == 13 || cc[24][c] == 13  )
+			return 0;
+	}
 
 	// Dull red means that the user has overwritten the header line.
 	for (var c = 8; c <= 39; c++) { if ( cc[0][c] != 32 ) return 1; }
