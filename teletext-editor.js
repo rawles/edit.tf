@@ -1,5 +1,5 @@
-// Copyright (C) 2015, Simon Rawles, Alan Davies, Tim Hutton, Steve
-// Horsley, ZXGuesser, and David Hall.
+// Copyright 2015-2017 Simon Rawles, Alan Davies, Tim Hutton, Steve
+// Horsley, Alistair Cree, Peter Fagan and David Hall.
 //
 // The JavaScript code in this page is free software: you can
 // redistribute it and/or modify it under the terms of the GNU
@@ -117,7 +117,7 @@ var full_pix_scale = 2;
                  // look better zoomed in.
 var pix_scale = full_pix_scale;
 		 // specifies how much to stretch the x direction.
-var aspect_ratios = [1, 1.1, 1.2, 1.22, 1.3, 1.33, 1.4, 1.5, 1.75, 2];
+var aspect_ratios = [1, 1.1, 1.2, 1.22, 1.3, 1.33, 1.36, 1.4, 1.5, 1.75, 2];
 var current_ratio = 2; // index of aspect_ratios
 var aspect_ratio = aspect_ratios[current_ratio];
 var pix_size = 1;

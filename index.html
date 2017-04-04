@@ -7,18 +7,18 @@
 function init_frames() {
 
 	// Create a new editor:
-        var editor = new Editor();
+		var editor = new Editor();
 
 	// Make it the active editor so it receives keypresses:
-        active_editor = editor;
+		active_editor = editor;
 
 	// Also make it the editor which reads from and writes to the 
 	// URL:
-        url_editor = editor;
+		url_editor = editor;
 
 	// Initialise the editor, placing it in the canvas with HTML
 	// ID 'frame'.
-        editor.init_frame("frame");
+		editor.init_frame("frame");
 
 	// You can also give the editor an encoded URL hash string to 
 	// display/edit.
@@ -62,57 +62,18 @@ function pick_block_party_frame() {
 </script>
 <title>edit-tf</title>
 <style type="text/css">
+/* Colour palette, dark to light: #222, #343, #797, #9b9 */
+
+
+/* layout ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+html { 
+  	-webkit-text-size-adjust: 100%;
+	    -ms-text-size-adjust: 100%;
+}
 body { 
-	background-color: #222;
-}
-table#hints {
-	margin-left: auto;
-	margin-right: auto;
-	border-collapse: collapse;
-	border: 1px solid #353;
-}
-table#hints td, table#hints tr, table#hints th, div#export {
-	color: #9b9;
-	vertical-align: center; 
-	text-align: center;
-	font-family: sans-serif;
-	line-height: 1.1;
-	font-size: 12px;
-}
-div.exportbox {
-	margin-bottom: 1em;
-	background-color: #353;
-	padding: 3px;
-	border: 2px solid #9b9;
-}
-table#hints td, table#hints tr , table#hints th {
-	border: 1px solid #353;
-	-moz-user-select: -moz-none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-	user-select: none;    
-}
-td a, div#export a {
-	color: inherit;
-}
-canvas {
-	/* The canvas should have no padding */
-	background-color: #000;
 	margin: 0;
-	cursor: crosshair;
-	position:relative;
-	z-index: 1;
-}
-div#canvasframe {
-	padding: 5px 10px 5px 10px;
-	background-color: #000;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	display: inline-block;
-	}
-tr.newsection {
-	background-color: #353;
+	background-color: #222;
 }
 div#a {
 	display: table;
@@ -124,15 +85,206 @@ div#a {
 	padding: 0;
 	border-collapse: collapse;
 }
-div#b {
+div.b { 
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
 	padding: 0;
 	margin: 0;
+	position: relative;
+}
+
+
+/* hints toolbar ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  */
+
+#hints {
+	/* em width adapts to different browsers' text width whilst permitting
+	us to have the export div match the hints table width */
+	min-width: 23em;
+	height: 518px; /* same as #canvasframe */
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	border: 1px solid #343;
+	text-align: left;
+}
+#hints tr, #hints th, #hints td, #export {
+	vertical-align: center; 
+	font-family: sans-serif;
+	line-height: 1.1;
+	font-size: 14px;
+	color: #9b9;
+	-webkit-user-select: none;
+	 -khtml-user-select: none;
+	   -moz-user-select: -moz-none;
+	    -ms-user-select: none;
+	        user-select: none;	  
+}
+small {
+	font-size: 14px;
+}
+#hints tr, #hints th, #hints td {
+	border: 1px solid #343;
+}
+#hints th {
+	height: 18px;
+	background-color: #343;
+	font-weight: normal;
+	text-align: center;
+	color: #797;
+	white-space: nowrap;
+}
+#hints td {
+	padding: 0 6px;
+	text-align: right;
+	white-space: nowrap;
+}
+#hints td span {
+	float: left;
+	text-align: left;
+	color: #797;
+}
+#hints td.note {
+	text-align: left;
+}
+td a, div#export a {
+	color: inherit;
 }
 [onclick] {
 	cursor: pointer;
+}
+
+/* glyphs table ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+#hints span.esc {
+	color: #9b9;
+}
+
+#hints td.glyphs { /* table container */
+	padding: 0;
+}
+#hints table {
+	width: 100%;	
+	height: 100%;
+	border-collapse: collapse;
+}
+/* inner borders only for the glyphs table */
+#hints table tr {
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+}
+#hints table tr:first-child {
+	border-top: none;
+}
+#hints table td {
+	border-top: none;
+	border-bottom: none;
+	border-right: none;
+}
+#hints table td:first-child,
+#hints table td.allowblack2,
+#hints table td.allowblack3 {
+	border-left: none;
+}
+/* end inner border style */
+
+@font-face {
+    font-family: 'ttkit';
+    src:url('fonts/TeletextKit.eot');
+    src:url('fonts/TeletextKit.eot?#iefix') format('embedded-opentype'),
+        url('fonts/TeletextKit.woff') format('woff'),
+        url('fonts/TeletextKit.ttf') format('truetype'),
+        url('fonts/TeletextKit.svg#icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.glypht:before,
+.glyphb:before,
+.glyphgs:before,
+.glyphg:before {
+    font-family: 'ttkit';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    text-decoration: none !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 19px;
+}
+.glypht:before  { content: "\e900\00a0" } /* text glyph */
+.glyphb:before  { content: "\e901\00a0"; } /* block character glyph */
+.glyphgs:before { content: "\e902\00a0"; } /* separated graphics glyph */
+.glyphg:before  { content: "\e903\00a0"; } /* contiguous graphics glyph */
+
+#hints table .r:before { color: red;     }
+#hints table .g:before { color: lime;    } /* lime is #0f0, green isn't */
+#hints table .y:before { color: yellow;  }
+#hints table .b:before { color: blue;    }
+#hints table .m:before { color: magenta; }
+#hints table .c:before { color: cyan;    }
+#hints table .w:before { color: white;   }
+#hints table .k:before { color: black;   }
+
+#hints table td {
+	height: 26px;
+}
+#hints table td.allowblack1 span:before,
+#hints table td.allowblack2 span:before {
+text-shadow: 1px 1px 0px #343;
+}
+#hints table td.allowblack3 {
+	height: 21px;
+	padding-top: 5px;
+}
+#hints table td.allowblack3 span.ctrl {
+	color: #9b9;
+}
+
+#hints table tr:first-child  td {
+	/* enforce one seventh width to each cell */
+	width: 14.28%; 
+}
+
+
+/* export box ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
+
+#export {
+	display: table; /* contract as small as possible */
+	/* em width adapts to different browsers' text width whilst permitting
+	us to have the export div match the hints table width */
+	min-width: 23em;
+	margin: 0 auto;
+	line-height: 1.5;
+}
+div.exportbox {
+	margin-top: 1em;
+	border: 2px solid #9b9;
+	background-color: #343;
+	padding: 5px 3.75em;
+}
+
+
+/* teletext canvas ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~  */
+
+#canvasframe {
+	display: inline-block;
+	-moz-border-radius: 10px;
+	    border-radius: 10px;
+	background-color: #000;
+	padding: 7px 10px;
+}
+#canvasframe canvas {
+	/* The canvas should have no padding */
+	background-color: #000;
+	margin: 0;
+	cursor: crosshair;
+	position:relative;
+	z-index: 1;
 }
 </style>
 <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
@@ -144,87 +296,189 @@ div#b {
 </head>
 <body onload="init_frames();">
 
-<div id="a"><div id="b">
+<div id="a"><div class="b">
 
-<div id="export">
-</div>
 <table id="hints">
-<tr class="newsection">
-<td colspan="4">First press escape then the following:</td>
-</tr>
-<tr><td onclick="fakepress('r')">r</td><td onclick="fakepress('r')">red text</td>
-	<td onclick="fakepress('R')">red graphics</td><td onclick="fakepress('R')">R</td></tr>
-<tr><td onclick="fakepress('g')">g</td><td onclick="fakepress('g')">green text</td>
-	<td onclick="fakepress('G')">green graphics</td><td onclick="fakepress('G')">G</td></tr>
-<tr><td onclick="fakepress('y')">y</td><td onclick="fakepress('y')">yellow text</td>
-	<td onclick="fakepress('Y')">yellow graphics</td><td onclick="fakepress('Y')">Y</td></tr>
-<tr><td onclick="fakepress('b')">b</td><td onclick="fakepress('b')">blue text</td>
-	<td onclick="fakepress('B')">blue graphics</td><td onclick="fakepress('B')">B</td></tr>
-<tr><td onclick="fakepress('m')">m</td><td onclick="fakepress('m')">magenta text</td>
-	<td onclick="fakepress('M')">magenta graphics</td><td onclick="fakepress('M')">M</td></tr>
-<tr><td onclick="fakepress('c')">c</td><td onclick="fakepress('c')">cyan text</td>
-	<td onclick="fakepress('C')">cyan graphics</td><td onclick="fakepress('C')">C</td></tr>
-<tr><td onclick="fakepress('w')">w</td><td onclick="fakepress('w')">white text</td>
-	<td onclick="fakepress('W')">white graphics</td><td onclick="fakepress('W')">W</td></tr>
-<tr><td onclick="fakepress('z')">a</td><td onclick="fakepress('a')">ignore black fg</td>
-	<td onclick="fakepress('A')">allow black fg</td><td onclick="fakepress('A')">A</td></tr>
-<tr><td onclick="fakepress('k')">k</td><td onclick="fakepress('k')">black text</td>
-	<td onclick="fakepress('K')">black graphics</td><td onclick="fakepress('K')">K</td></tr>
-
-<tr><td onclick="fakepress('d')">d</td><td onclick="fakepress('d')">normal height</td>
-	<td onclick="fakepress('D')">double height</td><td onclick="fakepress('D')">D</td></tr>
-<tr><td onclick="fakepress('f')">f</td><td onclick="fakepress('f')">steady</td>
-	<td onclick="fakepress('F')">flash</td><td onclick="fakepress('F')">F</td></tr>
-<tr><td onclick="fakepress('h')">h</td><td onclick="fakepress('h')">release graphics</td>
-	<td onclick="fakepress('H')">hold graphics</td><td onclick="fakepress('H')">H</td></tr>
-<tr><td onclick="fakepress('i')">i</td><td onclick="fakepress('i')">insert row</td>
-	<td onclick="fakepress('I')">delete row</td><td onclick="fakepress('I')">I</td></tr>
-<tr><td onclick="fakepress('n')">n</td><td onclick="fakepress('n')">black background</td>
-	<td onclick="fakepress('N')">new background</td><td onclick="fakepress('N')">N</td></tr>
-<tr><td onclick="fakepress('q')">q</td><td onclick="fakepress('q')">hide codes</td>
-	<td onclick="fakepress('Q')">show codes</td><td onclick="fakepress('Q')">Q</td></tr>
-<tr><td onclick="fakepress('s')">s</td><td onclick="fakepress('s')">contiguous graphics</td>
-	<td onclick="fakepress('S')">separated graphics</td><td onclick="fakepress('S')">S</td></tr>
-<tr><td onclick="fakepress('z')">z</td><td onclick="fakepress('z')">redraw screen</td>
-	<td onclick="fakepress('Z')">clear screen</td><td onclick="fakepress('Z')">Z</td></tr>
-<tr><td onclick="fakepress('[')">[</td><td onclick="fakepress('[')">narrower screen</td>
-	<td onclick="fakepress(']')">wider screen</td><td onclick="fakepress(']')">]</td></tr>
-<tr><td onclick="fakepress('o')">O</td><td onclick="fakepress('o')">conceal</td>
-	<td onclick="fakepress('V')">toggle reveal</td><td onclick="fakepress('V')">V</td></tr>
-<tr><td onclick="fakepress('u')">U</td><td onclick="fakepress('u')">duplicate row</td>
-	<td onclick="fakepress('X')">toggle grid</td><td onclick="fakepress('X')">X</td></tr></tr>
-<tr><td onclick="fakepress('e')">E</td><td onclick="fakepress('e')">export frame</td>
-	<td onclick="fakepress('j')">insert block char.</td><td onclick="fakepress('j')">J</td></tr>
-<tr><td>1-8</td><td>switch char. sets</td>
-	<td onclick="fakepress('0')">hide status bar</td><td onclick="fakepress('0')">0</td></tr>
-<tr><td onclick="fakepress('9')">9</td><td onclick="fakepress('9')">toggle metadata</td>
-	<td onclick="fakepress('=')">trace image</td><td onclick="fakepress('=')">=</td></tr>
-
-<tr class="newsection"><td colspan="4">Escape then &uarr;&larr;&rarr;&darr; to select then ...</td></tr>
-
 <tr>
-<td onclick="fakepress('x')">x</td><td onclick="fakepress('x')">... cut selection</td>
-<td onclick="fakepress('v')">... paste</td><td onclick="fakepress('v')">v</td>
+<th colspan="2">First press the <span class="esc">Esc</span> key
+	then the following:</th>
 </tr>
-
-<tr class="newsection"><td colspan="4">No escape required for:</td></tr>
-
-<tr><td onclick="cursor_tab()">TAB</td><td onclick="cursor_tab()">insert space</td>
-<td onclick="cursor_bs()">delete character</td><td onclick="cursor_bs()">BS</td></tr>
-
-<tr><td colspan="2">QWASZXRCF/keypad</td><td colspan="2">subpixel twiddling</td></tr>
-
-<tr class="newsection"><td colspan="4">
-<a href="doc/handy-howto.pdf" target="_blank">how-to guide</a> 
-&middot;
-<a href="https://github.com/rawles/edit-tf/issues/new" target="_blank">report a bug</a>
+<tr><td colspan="2" class="glyphs">
+	<table>
+	<tr class="glyphs1">
+		<td onclick="fakepress('r')">
+			<span class="glypht r" title="red text">r</span>
+			</td>
+		<td onclick="fakepress('g')">
+			<span class="glypht g" title="green text">g</span>
+			</td>
+		<td onclick="fakepress('y')">
+			<span class="glypht y" title="yellow text">y</span>
+			</td>
+		<td onclick="fakepress('b')">
+			<span class="glypht b" title="blue text">b</span>
+			</td>
+		<td onclick="fakepress('m')">
+			<span class="glypht m" title="magenta text">m</span>
+			</td>
+		<td onclick="fakepress('c')">
+			<span class="glypht c" title="cyan text">c</span>
+			</td>
+		<td onclick="fakepress('w')">
+			<span class="glypht w" title="white text">w</span>
+			</td>
+	</tr>
+	<tr class="glyphs1">
+		<td onclick="fakepress('R')">
+			<span class="glyphg r" title="red graphics">R</span>
+			</td>
+		<td onclick="fakepress('G')">
+			<span class="glyphg g" title="green graphics">G</span>
+			</td>
+		<td onclick="fakepress('Y')">
+			<span class="glyphg y" title="yellow graphics">Y</span>
+			</td>
+		<td onclick="fakepress('B')">
+			<span class="glyphg b" title="blue graphics">B</span>
+			</td>
+		<td onclick="fakepress('M')">
+			<span class="glyphg m" title="magenta graphics">M</span>
+			</td>
+		<td onclick="fakepress('C')">
+			<span class="glyphg c" title="cyan graphics">C</span>
+			</td>
+		<td onclick="fakepress('W')">
+			<span class="glyphg w" title="white graphics">W</span>
+			</td>
+	</tr>
+	<tr class="glyphs2">
+		<td onclick="fakepress('k')" class="allowblack1">
+			<span class="glypht k" title="black text">k</span>
+			</td>
+		<td onclick="fakepress('K')" class="allowblack2">
+			<span class="glyphg k" title="black mosaics">K</span>
+			</td>
+		<td colspan="2" class="allowblack3"><span onclick="fakepress('A')" title="Foreground black (compatibility limited)">allow:</span>
+			<span onclick="fakepress('A')" class="ctrl" title="Enable foreground black">&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;</span>
+			<span onclick="fakepress('a')" class="ctrl" title="Disable foreground black">&nbsp;&nbsp;a&nbsp;&nbsp;</span>
+			</td>
+		<td onclick="fakepress('j')">
+			<span class="glyphb" title="insert a block character">J</span>
+			</td>
+		<td onclick="fakepress('S')">
+			<span class="glyphgs s" title="separated graphics">S</span>
+			</td>
+		<td onclick="fakepress('s')">
+			<span class="glyphg s" title="contiguous graphics">s</span>
+			</td>
+	</tr>
+	</table>
 </td></tr>
 
-<tr><td colspan="4">The frame's data is all in the address bar.<br/>To save or share, bookmark/email/etc the URL.</td></tr>
+<tr><td colspan="2">
+	<span>Twiddle graphics pixels:</span> QWASZX / RFC / number pad
+	</td>
+</tr>
+
+<tr>
+	<td onclick="fakepress('N')"><span>Begin new background</span>&nbsp;&nbsp; N</td>
+	<td onclick="fakepress('n')"><span>end / black background</span> n</td>
+</tr>
+<tr>
+	<td><span>
+		<small onclick="fakepress('i')">insert</small> /
+		<small onclick="fakepress('I')">delete row</small>
+	</span>
+		<small onclick="fakepress('i')">&nbsp;i</small>
+		<small onclick="fakepress('I')">&nbsp;I</small>
+	</td>
+	<td onclick="fakepress('u')"><span>duplicate row</span> U</td>
+</tr>
+<tr>
+	<td><span>
+		<small onclick="fakepress('f')">steady</small> /
+		<small onclick="fakepress('F')">flash</small>
+	</span>
+		<small onclick="fakepress('f')">&nbsp;f</small>
+		<small onclick="fakepress('F')">&nbsp;F</small>
+	</td>
+	<td><span>
+		<small onclick="fakepress('h')" title="end hold graphics mode">release</small> /
+		<small onclick="fakepress('H')" title="code cells will mimic the most recent graphics cell">hold graphics</small>&nbsp;&nbsp;
+	</span>
+		<small onclick="fakepress('h')">&nbsp;h</small>
+		<small onclick="fakepress('H')">&nbsp;H</small>
+	</td>
+</tr>
+<tr>
+	<td onclick="fakepress('d')"><span>normal height text</span> d</td>
+	<td onclick="fakepress('D')"><span>double height text</span> D</td>
+</tr>
+<tr>
+	<td onclick="fakepress('o')"><span title="conceals until the next colour code">conceal</span> O</td>
+	<td onclick="fakepress('V')"><span>toggle conceal/reveal</span> V</td>
+</tr>
+<tr>
+	<td><span>
+		<small onclick="fakepress('q')">hide</small> /
+		<small onclick="fakepress('Q')">show codes</small>
+	</span>
+		<small onclick="fakepress('q')">&nbsp;q</small>
+		<small onclick="fakepress('Q')">&nbsp;Q</small>
+	</td>
+	<td onclick="fakepress('X')"><span>toggle grid</span> X</td>
+</tr>
+<tr>	
+	<td onclick="fakepress('z')"><span>redraw screen</span> z</td>
+	<td onclick="fakepress('Z')"><span>clear screen</span> Z</td>
+</tr>
+<tr>
+	<td onclick="fakepress('=')"><span>select character set</span> 1 - 8</td>
+	<td onclick="fakepress('9')"><span>toggle metadata</span> 9</td>
+</tr>
+<tr>
+	<td><span>
+		<small onclick="fakepress('[')" title="default 1.2, HDTV 1.36">narrow</small> /
+		<small onclick="fakepress(']')" title="default 1.2, HDTV 1.36">widen screen</small>
+	</span>
+		<small onclick="fakepress('[')" title="default 1.2, HDTV 1.36">&nbsp;[</small>
+		<small onclick="fakepress(']')" title="default 1.2, HDTV 1.36">&nbsp;]</small>
+	</td>
+	<td onclick="fakepress('0')"><span>hide status bar</span> 0</td>
+</tr>
+<tr>
+	<td onclick="fakepress('=')"><span>trace image</span> =</td>
+	<td onclick="fakepress('e')"><span>export teletext</span> E</td>
+</tr>
+
+<tr><th colspan="2">Select text cells: Esc, then arrow keys, then...</th></tr>
+
+<tr>
+<td onclick="fakepress('x')"><span>cut selected cells</span> x</td>
+<td onclick="fakepress('v')"><span>paste cut cells</span> v</td>
+</tr>
+
+<tr><th colspan="2">No Esc key required to:</th></tr>
+
+<tr>
+<td onclick="cursor_tab()"><span>delete char.</span> Backspace</td>
+<td onclick="cursor_bs()"><span>insert space</span> Tab</td></tr>
+
+<tr><td ><span>Help:</span>
+<a href="doc/handy-howto.pdf" target="edit-tf">how-to guide</a></td>
+<td colspan="2"><span>Bugs / feedback:</span>
+<a href="https://github.com/rawles/edit-tf/issues/new" target="edit-tf">GitHub</a></td></tr>
+
+<tr><td colspan="2" class="note">
+The teletext data (your work) is all in the web browser's
+<br>address bar. To save or share: bookmark, email, etc.
+</td></tr>
 
 </table>
+<div id="export"></div>
+
 </div> 
-<div id="b">
+<div class="b">
 <div id="canvasframe">
 <canvas id="frame"></canvas>
 </div></div></div>
