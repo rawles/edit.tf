@@ -2050,7 +2050,7 @@ var cursor_tab = function() {
 	// the code in question) needs to be copied.
 
 	// Default settings:
-	var newbg = 0; var newfg = 0; var newtg = 0;
+	var newbg = 0; var newfg = 7; var newtg = 0;
 	var newcs = 0; var newnd = 0; var newhg = 0;
 	var newsc = 0; var newsf = 0;
 
