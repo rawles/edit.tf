@@ -1613,8 +1613,8 @@ this.keypress = function(event) {
 			statusmode = 1 - statusmode;
 		} 
         
-		// [ and ] = narrower/wider screen
-		if ( code == 91 ) {
+		// { and } (formerly [ and ], still supported) = narrower/wider screen
+		if ( code == 91 || code == 123 ) {
 			matched = 1;
 			current_ratio--;
 			if ( current_ratio < 0 ) { current_ratio = 0; } 
@@ -1623,7 +1623,7 @@ this.keypress = function(event) {
 			render(0,0,40,25,0);
 		}
 
-		if ( code == 93 ) {
+		if ( code == 93 || code == 125 ) {
 			matched = 1;
 			current_ratio++;
 			if ( current_ratio >= aspect_ratios.length ) {
