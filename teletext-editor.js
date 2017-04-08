@@ -266,6 +266,11 @@ var set_blackfg = function(newblackfg) {
 
 // Enables or disables the display of control codes and
 // refreshes the affected cells.
+var toggle_codes = function() { 
+	showcc = 1 - showcc; 
+	show_codes(showcc);
+	}
+
 var show_codes = function(newcode) {
 	showcc = newcode;
 
@@ -1551,10 +1556,8 @@ this.keypress = function(event) {
 		if ( code == 65 ) { set_blackfg(1); matched = 1; }
 		if ( code == 97 ) { set_blackfg(0); matched = 1; }
 
-		// Q = hide and show control codes
-		if ( code == 81 ) { show_codes(1); matched = 1; }
-		if ( code == 113 ) { show_codes(0); matched = 1; }
-
+		// Q = toggle hide/show control codes
+		if ( code == 81 || code == 113 ) { toggle_codes(); matched = 1; }
 		// J = insert block
 		// This just resets the code and it falls through to the case
 		// where the user has pressed escape but no action is bound to
@@ -1562,7 +1565,7 @@ this.keypress = function(event) {
 		if ( code == 74 || code == 106 ) { code = 127; }
 
 		// X = toggle the grid
-		if ( code == 88 ) { matched = 1; toggle_grid(); }
+		if ( code == 88 || code == 120 ) { matched = 1; toggle_grid(); }
 
 		// I = insert and delete a row
 		if ( code == 73 ) { matched = 1; delete_row(cury); }
