@@ -266,6 +266,11 @@ var set_blackfg = function(newblackfg) {
 
 // Enables or disables the display of control codes and
 // refreshes the affected cells.
+var toggle_codes = function() { 
+	showcc = 1 - showcc; 
+	show_codes(showcc);
+	}
+
 var show_codes = function(newcode) {
 	showcc = newcode;
 
@@ -1551,10 +1556,8 @@ this.keypress = function(event) {
 		if ( code == 65 ) { set_blackfg(1); matched = 1; }
 		if ( code == 97 ) { set_blackfg(0); matched = 1; }
 
-		// Q = hide and show control codes
-		if ( code == 81 ) { show_codes(1); matched = 1; }
-		if ( code == 113 ) { show_codes(0); matched = 1; }
-
+		// Q = toggle hide/show control codes
+		if ( code == 81 || code == 113 ) { toggle_codes(); matched = 1; }
 		// J = insert block
 		// This just resets the code and it falls through to the case
 		// where the user has pressed escape but no action is bound to
@@ -1562,7 +1565,7 @@ this.keypress = function(event) {
 		if ( code == 74 || code == 106 ) { code = 127; }
 
 		// X = toggle the grid
-		if ( code == 88 ) { matched = 1; toggle_grid(); }
+		if ( code == 88 || code == 120 ) { matched = 1; toggle_grid(); }
 
 		// I = insert and delete a row
 		if ( code == 73 ) { matched = 1; delete_row(cury); }
@@ -1610,8 +1613,8 @@ this.keypress = function(event) {
 			statusmode = 1 - statusmode;
 		} 
         
-		// [ and ] = narrower/wider screen
-		if ( code == 91 ) {
+		// { and } (formerly [ and ], still supported) = narrower/wider screen
+		if ( code == 91 || code == 123 ) {
 			matched = 1;
 			current_ratio--;
 			if ( current_ratio < 0 ) { current_ratio = 0; } 
@@ -1620,7 +1623,7 @@ this.keypress = function(event) {
 			render(0,0,40,25,0);
 		}
 
-		if ( code == 93 ) {
+		if ( code == 93 || code == 125 ) {
 			matched = 1;
 			current_ratio++;
 			if ( current_ratio >= aspect_ratios.length ) {
@@ -2047,7 +2050,7 @@ var cursor_tab = function() {
 	// the code in question) needs to be copied.
 
 	// Default settings:
-	var newbg = 0; var newfg = 0; var newtg = 0;
+	var newbg = 0; var newfg = 7; var newtg = 0;
 	var newcs = 0; var newnd = 0; var newhg = 0;
 	var newsc = 0; var newsf = 0;
 
@@ -4693,10 +4696,10 @@ var draw_help_screen = function() {
 		[["h", "release graphics"],    ["H", "hold graphics"]],
 		[["i", "insert row"],          ["I", "delete row"]],
 		[["n", "black background"],    ["N", "new background"]],
-		[["q", "hide codes"],          ["Q", "show codes"]],
+		[["Q", "toggle codes"],        ["", ""]],
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
-		[["[", "narrower screen"],     ["]", "wider screen"]],
+		[["{", "narrower screen"],     ["}", "wider screen"]],
 		[["O", "conceal"],             ["V", "toggle reveal"]],
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
