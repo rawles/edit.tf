@@ -250,8 +250,8 @@ var show_grid = function(newgrid) {
 	render(0, 0, 40, 25);
 }
 var toggle_grid = function() { 
-	var newgrid = grid - 1;
-	if ( newgrid == -1 ) { newgrid = 2; } 
+	var newgrid = grid + 1;
+	if ( newgrid == 3 ) { newgrid = 0; } 
 	show_grid(newgrid);
 }
 
@@ -1523,6 +1523,13 @@ this.keypress = function(event) {
 
 	if ( escape == 1 ) { // if we're in escape mode...
 
+		var rectangle_select = 0;
+		if ( curx_opposite != -1 && cury_opposite != -1
+			&& ( curx_opposite != curx
+				|| cury_opposite != cury ) ) {
+			rectangle_select = 1;
+		}
+
 		// We keep track of whether we've found an action for this key
 		// with these two variables.
 		var matched = 0; var placed_code = -1;
@@ -1540,7 +1547,9 @@ this.keypress = function(event) {
 		if ( code == 121 ) { placed_code = 3; }  // [y]ellow
 		if ( code == 98 )  { placed_code = 4; }  // [b]lue
 		if ( code == 109 ) { placed_code = 5; }  // [m]agenta
-		if ( code == 99 )  { placed_code = 6; }  // [c]yan
+		if ( rectangle_select == 0 && code == 99 ) { // [c]yan
+			placed_code = 6;
+		}
 		if ( code == 119 ) { placed_code = 7; }  // [w]hite
 
 		if ( blackfg != 0 && code == 75 )  { placed_code = 16; } // Blac[K]
@@ -1565,7 +1574,9 @@ this.keypress = function(event) {
 		if ( code == 74 || code == 106 ) { code = 127; }
 
 		// X = toggle the grid
-		if ( code == 88 || code == 120 ) { matched = 1; toggle_grid(); }
+		if ( rectangle_select == 0 && ( code == 88 || code == 120 ) ) {
+			matched = 1; toggle_grid();
+		}
 
 		// I = insert and delete a row
 		if ( code == 73 ) { matched = 1; delete_row(cury); }
@@ -1586,8 +1597,10 @@ this.keypress = function(event) {
 		if ( code == 72 ) { placed_code = 30; }
 		if ( code == 104 ) { placed_code = 31; }
 
-		// V = toggle reveal 
-		if ( code == 86 ) { matched = 1; toggle_reveal_state(); }
+		// - = toggle reveal 
+		if ( code == 45 ) {
+			matched = 1; toggle_reveal_state();
+		}
 
 		// O = insert a conceal character
 		if ( code == 79 || code == 111 ) { placed_code = 24; }
@@ -1656,7 +1669,8 @@ this.keypress = function(event) {
 			show_help_screen();
 		}
 
-		if ( code == 118 ) { // [v] to paste
+		// [v] to paste
+		if ( code == 86 || code == 118 ) {
 			matched = 1;
 
 			if ( clipboard_size_x != -1 && clipboard_size_y != -1 ) { 
@@ -1681,8 +1695,17 @@ this.keypress = function(event) {
 			autorender(curx, cury, 40-curx, clipboard_size_y);
 		}
 
-		if ( code == 120 ) { // [x] to cut
+		// [x] to cut, [c] to copy
+		if ( rectangle_select == 1
+			&& ( code == 67 || code == 99
+				|| code == 88 || code == 120 )
+			) {
 			matched = 1;
+
+			// is this a cut or a copy (do we delete the cells)
+			var cut = 0;
+			if ( code == 88 || code == 120 ) { cut = 1; } 
+
 			var x1 = Math.min(curx_opposite, curx);
 			var x2 = Math.max(curx_opposite, curx);
 			var y1 = Math.min(cury_opposite, cury);
@@ -1690,15 +1713,17 @@ this.keypress = function(event) {
 			for (var y = y1; y <= y2; y++ ) { 
 				for (var x = x1; x <= x2; x++ ) {
 					clipboard[y-y1][x-x1] = cc[y][x];
-					put_char(x, y, 32);
+					if ( cut == 1 ) { put_char(x, y, 32); }
 				}
 				// hint that this span may have had graphics changed.
-				gfx_change(x1, y, x2, y);
+				if ( cut == 1 ) { gfx_change(x1, y, x2, y); }
 			}
 			clipboard_size_x = x2 - x1 + 1;
 			clipboard_size_y = y2 - y1 + 1;
 			disappear_cursor_rectangle();
-			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+			if ( cut == 1 ) { 
+				autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+			}
 		}
 
 		if ( code == 61 ) { // [=] to 'trace-me-do'
@@ -4700,12 +4725,12 @@ var draw_help_screen = function() {
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
 		[["<", "narrower screen"],     [">", "wider screen"]],
-		[["O", "conceal"],             ["V", "toggle reveal"]],
+		[["O", "conceal"],             ["-", "toggle reveal"]],
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
 		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
 		[["9", "toggle metadata"],     ["=", "trace image"]],
-		[["x", "copy block"],          ["v", "paste block"]]
+		[["X", "copy block"],          ["V", "paste block"]]
 	];
 	var footnotes = [
 		"To select a block, use the cursor keys in escape mode.",
