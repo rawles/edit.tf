@@ -2941,10 +2941,10 @@ var check_for_remove_code = function(x, y, andrender) {
 	if ( code == 8 || code == 9 ) {
 		var newsf = 0;
 		if ( code == 8 ) { // Set-after
-			newsf = hg[y][x];
+			newsf = sf[y][x];
 		}
 		if ( code == 9 && x > 0 ) { // Set-at
-			newsf = hg[y][x-1];
+			newsf = sf[y][x-1];
 		}
 		var limit = 40;
 		for ( var c = x + 1; c < 40; c++ ) {
