@@ -62,6 +62,9 @@ var sc = [];	 // is the character at (x,y) shown or concealed?
 var sf = [];	 // is the character at (x,y) steady or flashing?
              	 // sf[y][x] = 0 if steady, 1 if flashing.
 
+var bx = [];	 // is the character at (x,y) in a box?
+             	 // bx[y][x] = 0 if not in a box, 1 if in a box.
+
 var fs = [];	 // is row y the first or second row of double height?
             	 // fs[y] = 0 if unassigned, 1 if first, 2 if second.
 
@@ -158,9 +161,8 @@ var init_state = function() {
     
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
-		cc[r] = []; fg[r] = []; bg[r] = [];
-		tg[r] = []; cs[r] = []; nd[r] = [];
-		hg[r] = []; sc[r] = []; sf[r] = [];
+		cc[r] = []; fg[r] = []; bg[r] = []; tg[r] = []; cs[r] = [];
+		nd[r] = []; hg[r] = []; sc[r] = []; sf[r] = []; bx[r] = [];
 		fs[r] = 0; clipboard[r] = [];
 		for (var c = 0; c < 40; c++) {
 			clear_char(c,r);
@@ -241,6 +243,7 @@ var clear_char = function(x,y) {
 	cc[y][x] = 32; fg[y][x] = 7; bg[y][x] = 0;
 	tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
 	hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
+	bx[y][x] = 0;
 }
 
 // Sets the grid on or off and renders the whole 
@@ -301,7 +304,7 @@ var copy_char = function(x1,y1,x2,y2) {
 	bg[y2][x2] = bg[y1][x1]; tg[y2][x2] = tg[y1][x1];
 	cs[y2][x2] = cs[y1][x1]; nd[y2][x2] = nd[y1][x1];
 	hg[y2][x2] = hg[y1][x1]; sc[y2][x2] = sc[y1][x1];
-	sf[y2][x2] = sf[y1][x1];
+	sf[y2][x2] = sf[y1][x1]; bx[y2][x2] = bx[y1][x1];
 }
 
 // Deletes the row that the cursor is on.
@@ -372,9 +375,9 @@ var redraw = function() {
 	// Clear all attributes
 	for ( var y = 0; y < 25; y++ ) { 
 		for ( var x = 0; x < 40; x++ ) { 
-			fg[y][x] = 7; bg[y][x] = 0;
-			tg[y][x] = 0; cs[y][x] = 0; nd[y][x] = 0;
-			hg[y][x] = 0; sc[y][x] = 0; sf[y][x] = 0;
+			fg[y][x] = 7; bg[y][x] = 0; tg[y][x] = 0;
+			cs[y][x] = 0; nd[y][x] = 0; hg[y][x] = 0;
+			sc[y][x] = 0; sf[y][x] = 0; bx[y][x] = 0;
 		}
 	}
 
@@ -1322,7 +1325,8 @@ var draw_status_bar_frame = function(ctx) {
 
 	// In the spare space, a hint for getting more help, in case
 	// the editor is shown on a page without the key sequences table.
-	ctx.fillText("ESC-? for help", offset+(9.0*spacing), 516*pix_scale);
+	// There doesn't seem to be room for this at the moment...
+	// ctx.fillText("ESC-? for help", offset+(9.0*spacing), 516*pix_scale);
 
 	// Set the name for the character set
 	var charsetname = "Unknown";
@@ -1355,18 +1359,21 @@ var draw_status_bar_frame = function(ctx) {
 	// contiguous or separated?
 	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.3*spacing), 532*pix_scale);
 
+	// unboxed or boxed?
+	ctx.fillText(bx[cury][curx]==0?"unboxed":"boxed", offset+(9.85*spacing), 532*pix_scale);
+
 	// aspect ratio
-	ctx.fillText(aspect_ratio+"x", offset+9.9*spacing, 532*pix_scale);
+	ctx.fillText(aspect_ratio+"x", offset+9.9*spacing, 516*pix_scale);
 
 	// compliance light
 	ctx.beginPath();
-	ctx.arc(offset+10.8*spacing, 528*pix_scale, 6*pix_scale,
+	ctx.arc(offset+10.8*spacing, 511*pix_scale, 6*pix_scale,
 		0, 2 * Math.PI, false);
 	ctx.fillStyle = "black";
 	ctx.fill();
 	ctx.closePath();
 	ctx.beginPath();
-	ctx.arc(offset+10.8*spacing, 528*pix_scale, 5*pix_scale,
+	ctx.arc(offset+10.8*spacing, 511*pix_scale, 5*pix_scale,
 		0, 2 * Math.PI, false);
 
 	var compliance = compliance_level();
@@ -1613,6 +1620,10 @@ this.keypress = function(event) {
 		if ( code == 83 ) { placed_code = 26; }
 		if ( code == 115 ) { placed_code = 25; }
 
+		// [ and ] = start and end box
+		if ( code == 91 ) { placed_code = 11; }
+		if ( code == 93 ) { placed_code = 10; }
+
 		// Z = wipe or redraw the screen
 		if ( code == 90 ) { matched = 1; if (confirm("Clear whole screen?")) wipe(1); }
 		if ( code == 122 ) { matched = 1; redraw(); }
@@ -1627,7 +1638,7 @@ this.keypress = function(event) {
 		} 
         
 		// < and > (formerly [ and ], still supported) = narrower/wider screen
-		if ( code == 91 || code == 60 ) {
+		if ( code == 60 ) {
 			matched = 1;
 			current_ratio--;
 			if ( current_ratio < 0 ) { current_ratio = 0; } 
@@ -1636,7 +1647,7 @@ this.keypress = function(event) {
 			render(0,0,40,25,0);
 		}
 
-		if ( code == 93 || code == 62 ) {
+		if ( code == 62 ) {
 			matched = 1;
 			current_ratio++;
 			if ( current_ratio >= aspect_ratios.length ) {
@@ -2230,9 +2241,7 @@ var disappear_cursor_rectangle = function() {
 // called to test whether a code is handled by
 // place_code().
 var placeable = function(code) {
-	if (   ( code >= 0  && code <= 7 ) 
-		|| ( code == 8 || code == 9 )
-		|| ( code == 12 || code == 13 )
+	if (   ( code >= 0 && code <= 13 ) 
 		|| ( code >= 16 && code <= 23 )
 		|| ( code == 24 )
 		|| ( code == 25 || code == 26 )
@@ -2629,7 +2638,7 @@ var place_code = function(x,y,code,andrender) {
 		}
 	}
 
-	// Finally, we consider flashing characters. Flash is set-after and 
+	// Next, we consider flashing characters. Flash is set-after and 
 	// steady, which resets it, is set-at. Flashing characters are 
 	// independent of anything else (nothing else sets or unsets this
 	// attribute)
@@ -2654,6 +2663,32 @@ var place_code = function(x,y,code,andrender) {
 			for ( var c = x; c < limit; c++ ) {  // steady is set-at
 				sf[y][c] = newsf;
 			}
+		}
+
+		if ( andrender != 0 ) {
+			autorender(x, y, limit-x, 1);
+		}
+	}
+
+	// Finally, we consider boxing. Start box and end box are set-after.
+	// Boxed characters are independent of anything else (nothing else
+	// sets or unsets this attribute). Start box characters may be 
+	// repeated in case of errors.
+	if ( code == 10 || code == 11 ) {
+		cc[y][x] = code;
+
+		var newbx = 0;
+		if ( code == 11 ) { newbx = 1; } // Start box.
+
+		var limit = 40;
+		for ( var c = x + 1; c < 40; c++ ) {
+			if ( cc[y][c] == 10 || cc[y][c] == 11 ) {
+				limit = c+1; break; // set-after
+			}
+		}
+
+		for ( var c = x+1; c < limit; c++ ) { // flash is set-after
+			bx[y][c] = newbx;
 		}
 
 		if ( andrender != 0 ) {
@@ -2941,10 +2976,10 @@ var check_for_remove_code = function(x, y, andrender) {
 	if ( code == 8 || code == 9 ) {
 		var newsf = 0;
 		if ( code == 8 ) { // Set-after
-			newsf = hg[y][x];
+			newsf = sf[y][x];
 		}
 		if ( code == 9 && x > 0 ) { // Set-at
-			newsf = hg[y][x-1];
+			newsf = sf[y][x-1];
 		}
 		var limit = 40;
 		for ( var c = x + 1; c < 40; c++ ) {
@@ -2960,6 +2995,24 @@ var check_for_remove_code = function(x, y, andrender) {
 			for ( var c = x; c < limit; c++ ) { 
 				sf[y][c] = newsf;
 			}
+		}
+		if ( andrender != 0 ) {
+			autorender(x, y, limit-x, 1);
+		}
+	}
+
+	// Start and end box. Both are set-after.
+	if ( code == 10 || code == 11 ) {
+		var newbx = 0;
+		newbx = bx[y][x];
+		var limit = 40;
+		for ( var c = x + 1; c < 40; c++ ) {
+			if ( cc[y][c] == 10 || cc[y][c] == 11 ) {
+				limit = c+1; break; // Set-after
+			}
+		}
+		for ( var c = x+1; c < limit; c++ ) { 
+			bx[y][c] = newbx;
 		}
 		if ( andrender != 0 ) {
 			autorender(x, y, limit-x, 1);
@@ -3101,7 +3154,7 @@ var render = function(x, y, w, h) {
 			var ecc = cc[r][c]; var efg = fg[r][c]; var ebg = bg[r][c];
 			var etg = tg[r][c]; var ecs = cs[r][c]; var end = nd[r][c];
 			var ehg = hg[r][c]; var esc = sc[r][c]; var esf = sf[r][c];
-			var cop = 0;
+			var ebx = bx[r][c]; var cop = 0;
 
 			// If we're on the second row of double height, we copy
 			// the value of all attributes from the row above.
@@ -3109,6 +3162,7 @@ var render = function(x, y, w, h) {
 				ecc = cc[r-1][c]; efg = fg[r-1][c]; ebg = bg[r-1][c];
 				etg = tg[r-1][c]; ecs = cs[r-1][c]; end = nd[r-1][c];
 				ehg = hg[r-1][c]; esc = sc[r-1][c]; esf = sf[r-1][c];
+				ebx = bx[r-1][c];
 				cop = 1;
 			}
 			// If this is normal height, on the second line of a double
@@ -3125,6 +3179,7 @@ var render = function(x, y, w, h) {
 				ehg = 0; // Doesn't matter
 				esc = 0; // Doesn't matter
 				esf = 0; // Doesn't matter
+				ebx = 0; // Doesn't matter (either)
 				cop = 1;
 			}
 
@@ -3336,7 +3391,7 @@ var render = function(x, y, w, h) {
 						||   ( sx > 5 && esy > 5 && esy < 14 && b4 > 0 )
 						||   ( sx < 6 && esy > 13 && b5 > 0 )
 						||   ( sx > 5 && esy > 13 && b6 > 0 ) 
-						) {	col = 1; }
+						) { col = 1; }
 
 						// If we're drawing separated characters, some
 						// rows and columns just appear as the background
@@ -3356,6 +3411,12 @@ var render = function(x, y, w, h) {
 						// one of the pixels through which this line would
 						// be drawn, we set it.
 						if ( esf > 0 && ( ( sx + sy ) % 4 == 3 ) ) {
+							col = 1;
+						}
+
+						// This is really grody, but we use vertical lines
+						// for start and end box, for now.
+						if ( ebx > 0 && ( sx % 4 == 2 ) ) {
 							col = 1;
 						}
 
@@ -3412,6 +3473,9 @@ var render = function(x, y, w, h) {
 						bit = 1;
 					}
 					if ( esc > 0 && showcc == 1 && ( sy % 4 == 2 ) ) {
+						bit = 1;
+					}
+					if ( ebx > 0 && ( sx % 4 == 2 ) ) {
 						bit = 1;
 					}
 
@@ -3721,20 +3785,17 @@ var init_font = function(charset) {
 		// FL
 	add_font_char(9,12,16,8,4,24,0,7,2,2);
 		// ST
-
-	for ( var cc = 10; cc < 12; cc++ ) { 
-		// These are undefined, so we just use a diamond
-		// character.
-		add_font_char(cc,0,4,10,17,10,4,0,0,0);
-	}
-
+	add_font_char(10,28,16,28,16,28,6,6,5,6);
+		// EB
+	add_font_char(11,12,16,8,4,24,6,6,5,6);
+		// SB
 	add_font_char(12,24,20,20,20,0,5,7,5,5);
 		// NH
 	add_font_char(13,24,20,20,24,0,5,7,5,5);
 		// DH
 
 	for ( var cc = 14; cc < 16; cc++ ) { 
-		// More diamonds
+		// Diamonds show undefined characters.
 		add_font_char(cc,0,4,10,17,10,4,0,0,0);
 	}
 
