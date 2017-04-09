@@ -1773,7 +1773,7 @@ this.keypress = function(event) {
 		}
 
 		if ( code == 123 ) {
-			new_trace_opacity = trace_opacity + 0.25;
+			new_trace_opacity = trace_opacity + 0.125;
 			if ( new_trace_opacity > 1 ) { 
 				new_trace_opacity = 1;
 			}
@@ -1782,9 +1782,9 @@ this.keypress = function(event) {
 		}
 
 		if ( code == 125 ) {
-			new_trace_opacity = trace_opacity - 0.25;
-			if ( new_trace_opacity < 0.25 ) { 
-				new_trace_opacity = 0.25;
+			new_trace_opacity = trace_opacity - 0.125;
+			if ( new_trace_opacity < 0.125 ) { 
+				new_trace_opacity = 0.125;
 			}
 			set_trace_opacity(new_trace_opacity);
 			matched = 1;
