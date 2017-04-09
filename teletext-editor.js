@@ -1613,8 +1613,8 @@ this.keypress = function(event) {
 			statusmode = 1 - statusmode;
 		} 
         
-		// { and } (formerly [ and ], still supported) = narrower/wider screen
-		if ( code == 91 || code == 123 ) {
+		// < and > (formerly [ and ], still supported) = narrower/wider screen
+		if ( code == 91 || code == 60 ) {
 			matched = 1;
 			current_ratio--;
 			if ( current_ratio < 0 ) { current_ratio = 0; } 
@@ -1623,7 +1623,7 @@ this.keypress = function(event) {
 			render(0,0,40,25,0);
 		}
 
-		if ( code == 93 || code == 125 ) {
+		if ( code == 93 || code == 62 ) {
 			matched = 1;
 			current_ratio++;
 			if ( current_ratio >= aspect_ratios.length ) {
@@ -4699,7 +4699,7 @@ var draw_help_screen = function() {
 		[["Q", "toggle codes"],        ["", ""]],
 		[["s", "contiguous graphics"], ["S", "separated graphics"]],
 		[["z", "redraw screen"],       ["Z", "clear screen"]],
-		[["{", "narrower screen"],     ["}", "wider screen"]],
+		[["<", "narrower screen"],     [">", "wider screen"]],
 		[["O", "conceal"],             ["V", "toggle reveal"]],
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
