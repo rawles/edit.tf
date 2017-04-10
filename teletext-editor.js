@@ -114,6 +114,13 @@ var trace_size_x = 0;
 var trace_size_y = 0;
 var trace_whole_area = 0; // Does the trace image fill the whole area?
 var trace_opacity = 1;
+
+// We keep track of the number of boxes on the screen in order to know
+// when to dim the rest of the screen. This is updated when a start or 
+// end box code is placed or removed.
+var box_count = 0;
+// Keeps track of whether we might need to recompute this.
+var recompute_box_count = 0;
                  
 var full_pix_scale = 2;
 		 // draw at a higher resolution than we display at, to
@@ -394,6 +401,8 @@ var redraw = function() {
 	}
 
 	// Re-render the whole screen.
+	recompute_box_count = 1;
+	recompute_box_count_if_needed();
 	render(0,0,40,25);
 }
 
@@ -412,6 +421,9 @@ var wipe = function(andrender) {
 	if ( andrender != 0 ) {
 		render(0,0,40,25,0);
 	}
+
+	recompute_box_count = 1;
+	recompute_box_count_if_needed();
 }
 
 ////////////////////////////////
@@ -739,6 +751,8 @@ var load_from_hash = function() {
 	var hashstring = window.location.hash.substring(1);
 
 	load_from_hashstring(hashstring);
+	recompute_box_count = 1;
+	recompute_box_count_if_needed();
 }
 
 var load_from_hashstring = function(hashstring) {
@@ -1090,52 +1104,65 @@ var invalidate_export = function() {
 // The colour numbers are described below. For each colour the
 // option to return a highlighted version (highlight > 0 ) is given.
 // this is for the highlighting that a cursor does, mostly.
+
+// Highlight values are: 0 (background); 1 (rectangle); 2 (cursor)
+// 3 (ghosted for boxing).
+
 var colour = function(number, highlight) {
 
 	// 0: black
 	if ( number == 0 && highlight == 0 ) { return "#000000"; }
 	if ( number == 0 && highlight == 1 ) { return "#2c2c2c"; }
 	if ( number == 0 && highlight == 2 ) { return "#585858"; }
+	if ( number == 0 && highlight == 3 ) { return "#404040"; }
 
 	// 1: red
 	if ( number == 1 && highlight == 0 ) { return "#ff0000"; }
 	if ( number == 1 && highlight == 1 ) { return "#dd0000"; }
 	if ( number == 1 && highlight == 2 ) { return "#bb0000"; }
+	if ( number == 1 && highlight == 3 ) { return "#c04040"; }
 
 	// 2: green
 	if ( number == 2 && highlight == 0 ) { return "#00ff00"; }
 	if ( number == 2 && highlight == 1 ) { return "#00dd00"; }
 	if ( number == 2 && highlight == 2 ) { return "#00bb00"; }
+	if ( number == 2 && highlight == 3 ) { return "#40c040"; }
 
 	// 3: yellow
 	if ( number == 3 && highlight == 0 ) { return "#ffff00"; }
 	if ( number == 3 && highlight == 1 ) { return "#dddd00"; }
 	if ( number == 3 && highlight == 2 ) { return "#bbbb00"; }
+	if ( number == 3 && highlight == 3 ) { return "#c0c040"; }
 
 	// 4: blue
 	if ( number == 4 && highlight == 0 ) { return "#0000ff"; }
 	if ( number == 4 && highlight == 1 ) { return "#0000dd"; }
 	if ( number == 4 && highlight == 2 ) { return "#0000bb"; }
+	if ( number == 4 && highlight == 3 ) { return "#4040c0"; }
 
 	// 5: magenta
 	if ( number == 5 && highlight == 0 ) { return "#ff00ff"; }
 	if ( number == 5 && highlight == 1 ) { return "#dd00dd"; }
 	if ( number == 5 && highlight == 2 ) { return "#bb00bb"; }
+	if ( number == 5 && highlight == 3 ) { return "#c040c0"; }
 
 	// 6: cyan
 	if ( number == 6 && highlight == 0 ) { return "#00ffff"; }
 	if ( number == 6 && highlight == 1 ) { return "#00dddd"; }
 	if ( number == 6 && highlight == 2 ) { return "#00bbbb"; }
+	if ( number == 6 && highlight == 3 ) { return "#40c0c0"; }
 
 	// 7: white
 	if ( number == 7 && highlight == 0 ) { return "#ffffff"; }
 	if ( number == 7 && highlight == 1 ) { return "#dddddd"; }
 	if ( number == 7 && highlight == 2 ) { return "#bbbbbb"; }
+	if ( number == 7 && highlight == 3 ) { return "#c0c0c0"; }
 
 	// 8 is a special colour number for control characters
 	if ( number == 8 && highlight == 0 ) { return "#888888"; }
 	if ( number == 8 && highlight == 1 ) { return "#5c5c5c"; }
 	if ( number == 8 && highlight == 2 ) { return "#333333"; }
+	if ( number == 8 && highlight == 3 ) { return "#a0a0a0"; }
 
 	// 9 is for control characters copied from the line
 	// above in the case of double height, so we can see
@@ -1143,6 +1170,7 @@ var colour = function(number, highlight) {
 	if ( number == 9 && highlight == 0 ) { return "#555555"; }
 	if ( number == 9 && highlight == 1 ) { return "#3b3b3b"; }
 	if ( number == 9 && highlight == 2 ) { return "#222222"; }
+	if ( number == 9 && highlight == 3 ) { return "#909090"; }
 
 	// For all other values just return white!
 	return "#fff";
@@ -1704,6 +1732,7 @@ this.keypress = function(event) {
 			// the characters, still updating the control codes, and render at the
 			// end. We just render to the end of each line.
 			autorender(curx, cury, 40-curx, clipboard_size_y);
+			recompute_box_count_if_needed();
 		}
 
 		// [x] to cut, [c] to copy
@@ -1735,6 +1764,7 @@ this.keypress = function(event) {
 			if ( cut == 1 ) { 
 				autorender(x1, y1, 40 - x1, y2 - y1 + 1);
 			}
+			recompute_box_count_if_needed();
 		}
 
 		if ( code == 61 ) { // [=] to 'trace-me-do'
@@ -1795,6 +1825,7 @@ this.keypress = function(event) {
 		if ( placed_code > -1 ) {
 			check_for_remove_code(curx, cury, 1);
 			place_code(curx, cury, placed_code, 1); 
+			recompute_box_count_if_needed();
 			advance_cursor();
 			matched = 1;
 		} 
@@ -1815,6 +1846,7 @@ this.keypress = function(event) {
 				// Just overwrite it, and rerender
 				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
+				recompute_box_count_if_needed();
 
 				// The cursor move handles the rendering of this insertion, so
 				// we only need update the cell below if we're in double height.
@@ -1868,6 +1900,7 @@ this.keypress = function(event) {
 				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
 				autorender(curx, cury, 1, 1);
+				recompute_box_count_if_needed();
 
 				// Update held graphics if needed
 				gfx_change(curx, cury, curx, cury);
@@ -2188,6 +2221,7 @@ var cursor_bs = function() {
 	// If this is in a graphics bit, it may affect held graphics
 	// later on. (e.g. bs over graphics part)
 	gfx_change(curx,cury,curx,cury);
+	recompute_box_count_if_needed();
 
 }
 
@@ -2676,25 +2710,67 @@ var place_code = function(x,y,code,andrender) {
 	// repeated in case of errors.
 	if ( code == 10 || code == 11 ) {
 		cc[y][x] = code;
-
 		var newbx = 0;
 		if ( code == 11 ) { newbx = 1; } // Start box.
-
 		var limit = 40;
 		for ( var c = x + 1; c < 40; c++ ) {
 			if ( cc[y][c] == 10 || cc[y][c] == 11 ) {
 				limit = c+1; break; // set-after
 			}
 		}
-
 		for ( var c = x+1; c < limit; c++ ) { // flash is set-after
 			bx[y][c] = newbx;
 		}
-
+		recompute_box_count = 1;
 		if ( andrender != 0 ) {
 			autorender(x, y, limit-x, 1);
 		}
 	}
+}
+
+var recompute_box_count_if_needed = function() {
+	// if needed, recompute
+	if ( recompute_box_count == 0 ) { return; }  
+
+	var old_box_count = box_count;
+	box_count = get_box_count();
+
+	console.log("Box count: " + old_box_count + " -> " + box_count);
+
+	// if changed, re-render whole frame.
+	if (
+		( old_box_count == 0 && box_count > 0 ) 
+	||	( old_box_count > 0 && box_count == 0 ) 
+	) { 
+		console.log("Redrawing");
+		render(0,0,40,25);
+	}
+
+	recompute_box_count = 0;
+	}
+
+var get_box_count = function(except_x, except_y) {
+	var in_box = 0;
+	var box_count = 0;
+	for ( var y = 0; y < 25; y++ ) { 
+		in_box = 0;
+		for ( var x = 0; x < 40; x++ ) { 
+			if ( except_x == x && except_y == y ) { 
+				continue;
+			}
+			if ( cc[y][x] == 10 ) { 
+				if ( in_box == 1 ) { 
+					box_count++;
+				}
+				in_box = 0;
+			}
+			if ( cc[y][x] == 11 ) { 
+				in_box = 1;
+			}
+		}
+		if ( in_box == 1 ) { box_count++; }
+	}
+	return box_count;
 }
 
 
@@ -3014,6 +3090,7 @@ var check_for_remove_code = function(x, y, andrender) {
 		for ( var c = x+1; c < limit; c++ ) { 
 			bx[y][c] = newbx;
 		}
+		recompute_box_count = 1;
 		if ( andrender != 0 ) {
 			autorender(x, y, limit-x, 1);
 		}
@@ -3186,6 +3263,9 @@ var render = function(x, y, w, h) {
 			// Is this the cell with a cursor in?
 			var cursor_cell = 0;
 
+			// Where there's a box, we ghost out the rest of the screen a little.
+			if ( ebx == 0 && box_count > 0 ) { cursor_cell = 3; }
+
 			if ( statushidden == 0 ) { // No cursor when the status bar is hidden
 				if ( curx_opposite == -1 || cury_opposite == -1 ) { 
 					// This is just a normal cursor.
@@ -3208,6 +3288,7 @@ var render = function(x, y, w, h) {
 			// This affects the way that it's rendered. We pass the 
 			// cursor_cell value to the colour() function to implement
 			// the highlight. Same goes for the colour of the grid.
+
 			var cell_fg = colour(efg, cursor_cell);
 			var cell_bg = colour(ebg, cursor_cell);
 			var cell_grid = colour(9, cursor_cell);
@@ -3414,12 +3495,6 @@ var render = function(x, y, w, h) {
 							col = 1;
 						}
 
-						// This is really grody, but we use vertical lines
-						// for start and end box, for now.
-						if ( ebx > 0 && ( sx % 4 == 2 ) ) {
-							col = 1;
-						}
-
 						// Similarly, concealed characters appear with
 						// horizontal lines in the 'show control codes'
 						// mode.
@@ -3473,9 +3548,6 @@ var render = function(x, y, w, h) {
 						bit = 1;
 					}
 					if ( esc > 0 && showcc == 1 && ( sy % 4 == 2 ) ) {
-						bit = 1;
-					}
-					if ( ebx > 0 && ( sx % 4 == 2 ) ) {
 						bit = 1;
 					}
 
