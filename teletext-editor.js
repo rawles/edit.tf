@@ -291,7 +291,7 @@ var show_codes = function(newcode) {
 				( cc[r][c] >= 0 && cc[r][c] <= 31 ) // a control character
 			||	( sc[r][c] > 0 ) // a concealed character
 				) {
-				autorender(c, r, 1, 1, 2);
+				autorender(c, r, 1, 1);
 			}
 		}
 	}
@@ -401,8 +401,7 @@ var redraw = function() {
 	}
 
 	// Re-render the whole screen.
-	recompute_box_count = 1;
-	recompute_box_count_if_needed();
+	box_count = get_box_count();
 	render(0,0,40,25);
 }
 
@@ -418,12 +417,10 @@ var wipe = function(andrender) {
 		}
 		fs[r] = 0;
 	}
+	box_count = 0;
 	if ( andrender != 0 ) {
-		render(0,0,40,25,0);
+		render(0,0,40,25);
 	}
-
-	recompute_box_count = 1;
-	recompute_box_count_if_needed();
 }
 
 ////////////////////////////////
@@ -608,7 +605,7 @@ var mouse_click = function(canvasx, canvasy, state) {
 	}
 
 	// Render this character
-	autorender(ex,ey,1,1,0);
+	autorender(ex,ey,1,1);
 
 	// Update the last subpixel visited.
 	mouse_last_x = ex;
@@ -737,7 +734,8 @@ var init_mouse = function() {
 // A direct way to load and render a hashstring.
 this.load = function(hashstring) { 
 	load_from_hashstring(hashstring);	
-	render(0, 0, 40, 25, 0);
+	box_count = get_box_count();
+	render(0, 0, 40, 25);
 }
 
 // Loads data from the hash into the frame.
@@ -751,8 +749,7 @@ var load_from_hash = function() {
 	var hashstring = window.location.hash.substring(1);
 
 	load_from_hashstring(hashstring);
-	recompute_box_count = 1;
-	recompute_box_count_if_needed();
+	box_count = get_box_count();
 }
 
 var load_from_hashstring = function(hashstring) {
@@ -1426,7 +1423,7 @@ var unhide_status_bar = function() {
 		// to the full underlying resolution.
 		pix_scale = full_pix_scale;
 		init_canvas();
-		render(0,0,40,25,0);
+		render(0,0,40,25);
 		draw_status_bar();
 	}
 }
@@ -1439,7 +1436,7 @@ var hide_status_bar = function() {
 		// reduce the underlying resolution.
 		pix_scale = 1;
 		init_canvas();
-		render(0,0,40,25,0);
+		render(0,0,40,25);
 	}
 }
 
@@ -1672,7 +1669,7 @@ this.keypress = function(event) {
 			if ( current_ratio < 0 ) { current_ratio = 0; } 
 			aspect_ratio = aspect_ratios[current_ratio];
 			init_canvas();
-			render(0,0,40,25,0);
+			render(0,0,40,25);
 		}
 
 		if ( code == 62 ) {
@@ -1683,7 +1680,7 @@ this.keypress = function(event) {
 			} 
 			aspect_ratio = aspect_ratios[current_ratio];
 			init_canvas();
-			render(0,0,40,25,0);
+			render(0,0,40,25);
 		}
 
 		// We can also switch between character sets here.
@@ -1732,7 +1729,6 @@ this.keypress = function(event) {
 			// the characters, still updating the control codes, and render at the
 			// end. We just render to the end of each line.
 			autorender(curx, cury, 40-curx, clipboard_size_y);
-			recompute_box_count_if_needed();
 		}
 
 		// [x] to cut, [c] to copy
@@ -1763,8 +1759,9 @@ this.keypress = function(event) {
 			disappear_cursor_rectangle();
 			if ( cut == 1 ) { 
 				autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+			} else {
+				recompute_box_count_if_needed(1);
 			}
-			recompute_box_count_if_needed();
 		}
 
 		if ( code == 61 ) { // [=] to 'trace-me-do'
@@ -1825,7 +1822,7 @@ this.keypress = function(event) {
 		if ( placed_code > -1 ) {
 			check_for_remove_code(curx, cury, 1);
 			place_code(curx, cury, placed_code, 1); 
-			recompute_box_count_if_needed();
+			recompute_box_count_if_needed(1);
 			advance_cursor();
 			matched = 1;
 		} 
@@ -1846,7 +1843,7 @@ this.keypress = function(event) {
 				// Just overwrite it, and rerender
 				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
-				recompute_box_count_if_needed();
+				recompute_box_count_if_needed(1);
 
 				// The cursor move handles the rendering of this insertion, so
 				// we only need update the cell below if we're in double height.
@@ -1900,7 +1897,6 @@ this.keypress = function(event) {
 				check_for_remove_code(curx, cury, 1);
 				cc[cury][curx] = code;
 				autorender(curx, cury, 1, 1);
-				recompute_box_count_if_needed();
 
 				// Update held graphics if needed
 				gfx_change(curx, cury, curx, cury);
@@ -1966,7 +1962,7 @@ var cursor_right = function() {
 		if ( cury > 24 ) { cury = 0; } 
 
 		// Render, depending on whether it's a split or not.
-		if ( split == 0 ) { render(curx-1, cury, 2, 1, 1); }
+		if ( split == 0 ) { render(curx-1, cury, 2, 1); }
 		if ( split == 1 ) { 
 			render(old_curx, old_cury, 1, 1);
 			render(curx, cury, 1, 1);
@@ -1979,7 +1975,7 @@ var cursor_right = function() {
 		curx++;
 		var x_to_render = old_curx;
 		if ( curx > curx_opposite ) { x_to_render = curx; } 
-		render(curx-1, cury, 2, 1, 1);
+		render(curx-1, cury, 2, 1);
 		render(x_to_render, Math.min(cury, cury_opposite),
 			1, Math.abs(cury - cury_opposite) + 1);
 	}
@@ -1996,7 +1992,7 @@ var cursor_left_for_hebrew = function() {
 		curx--;
 		if ( curx < 0 ) { cury++; curx = 39; } else { split = 0; } 
 		if ( cury > 24 ) { cury = 0; } 
-		if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
+		if ( split == 0 ) { render(curx, cury, 2, 1); }
 		if ( split == 1 ) { 
 			render(old_curx, old_cury, 1, 1);
 			render(curx, cury, 1, 1);
@@ -2009,7 +2005,7 @@ var cursor_left_for_hebrew = function() {
 		curx--;
 		var x_to_render = old_curx;
 		if ( curx < curx_opposite ) { x_to_render = curx; } 
-		render(curx, cury, 2, 1, 1);
+		render(curx, cury, 2, 1);
 		render(x_to_render, Math.min(cury, cury_opposite),
 		1, Math.abs(cury - cury_opposite) + 1);
 	}
@@ -2025,7 +2021,7 @@ var cursor_left = function() {
 		curx--;
 		if ( curx < 0 ) { cury--; curx = 39; } else { split = 0; } 
 		if ( cury < 0 ) { cury = 24; } 
-		if ( split == 0 ) { render(curx, cury, 2, 1, 1); }
+		if ( split == 0 ) { render(curx, cury, 2, 1); }
 		if ( split == 1 ) {
 			render(old_curx, old_cury, 1, 1);
 			render(curx, cury, 1, 1);
@@ -2038,7 +2034,7 @@ var cursor_left = function() {
 		curx--;
 		var x_to_render = old_curx;
 		if ( curx < curx_opposite ) { x_to_render = curx; } 
-		render(curx, cury, 2, 1, 1);
+		render(curx, cury, 2, 1);
 		render(x_to_render, Math.min(cury, cury_opposite),
 			1, Math.abs(cury - cury_opposite) + 1);
 	}
@@ -2052,7 +2048,7 @@ var cursor_up = function() {
 		var split = 1; // is it necessary to call render() twice?
 		cury--;
 		if ( cury < 0 ) { cury = 24; } else { split = 0; } 
-		if ( split == 0 ) { render(curx, cury, 1, 2, 1); }
+		if ( split == 0 ) { render(curx, cury, 1, 2); }
 		if ( split == 1 ) {
 			render(old_curx, old_cury, 1, 1);
 			render(curx, cury, 1, 1);
@@ -2065,7 +2061,7 @@ var cursor_up = function() {
 		cury--;
 		var y_to_render = old_cury;
 		if ( cury < cury_opposite ) { y_to_render = cury; } 
-		render(curx, cury, 1, 2, 1);
+		render(curx, cury, 1, 2);
 		render(Math.min(curx, curx_opposite), y_to_render,
 			Math.abs(curx - curx_opposite) + 1, 1);
 	}
@@ -2079,7 +2075,7 @@ var cursor_down = function() {
 		var split = 1; // is it necessary to call render() twice?
 		cury++;
 		if ( cury > 24 ) { cury = 0; } else { split = 0; } 
-		if ( split == 0 ) { render(curx, cury-1, 1, 2, 1); }
+		if ( split == 0 ) { render(curx, cury-1, 1, 2); }
 		if ( split == 1 ) {
 			render(old_curx, old_cury, 1, 1);
 			render(curx, cury, 1, 1);
@@ -2092,7 +2088,7 @@ var cursor_down = function() {
 		cury++;
 		var y_to_render = old_cury;
 		if ( cury > cury_opposite ) { y_to_render = cury; } 
-		render(curx, cury-1, 1, 2, 1);
+		render(curx, cury-1, 1, 2);
 		render(Math.min(curx, curx_opposite), y_to_render,
 			Math.abs(curx - curx_opposite) + 1, 1);
 	}
@@ -2211,7 +2207,7 @@ var cursor_bs = function() {
 			copy_char(c+1, cury, c, cury);
 		}
 		cc[cury][39] = 32;
-		autorender(curx, cury, 40 - curx, 1, 0);
+		autorender(curx, cury, 40 - curx, 1);
 	}
 	if ( split == 1 ) {
 		render(old_curx, old_cury, 1, 1);
@@ -2221,7 +2217,6 @@ var cursor_bs = function() {
 	// If this is in a graphics bit, it may affect held graphics
 	// later on. (e.g. bs over graphics part)
 	gfx_change(curx,cury,curx,cury);
-	recompute_box_count_if_needed();
 
 }
 
@@ -2333,7 +2328,7 @@ var adjustdh = function(x,y,andrender,removal) {
 
 		// Now render the line.
 		if ( andrender == 1 ) { 
-			render(0, r, 40, 1, 0);
+			render(0, r, 40, 1);
 		}
 
 		// We can stop after this point if we wouldn't make a
@@ -2366,7 +2361,7 @@ var adjustdh_fullscreen = function(andrender) {
 		above = fs_to;
 		fs[r] = fs_to;
 		if ( andrender == 1 ) { 
-			render(0, r, 40, 1, 0);
+			render(0, r, 40, 1);
 		}
 	}
 }
@@ -2723,41 +2718,36 @@ var place_code = function(x,y,code,andrender) {
 		}
 		recompute_box_count = 1;
 		if ( andrender != 0 ) {
-			autorender(x, y, limit-x, 1);
+			// We need to defer the box render until the character
+			// is removed. (fifth argument)
+			autorender(x, y, limit-x, 1, 1);
 		}
 	}
 }
 
-var recompute_box_count_if_needed = function() {
-	// if needed, recompute
+var recompute_box_count_if_needed = function(andrender) {
+	// If needed, recompute the box count.
 	if ( recompute_box_count == 0 ) { return; }  
 
 	var old_box_count = box_count;
 	box_count = get_box_count();
 
-	console.log("Box count: " + old_box_count + " -> " + box_count);
-
 	// if changed, re-render whole frame.
-	if (
+	if ( andrender != 0 && (
 		( old_box_count == 0 && box_count > 0 ) 
-	||	( old_box_count > 0 && box_count == 0 ) 
-	) { 
-		console.log("Redrawing");
+	||	( old_box_count > 0 && box_count == 0 ) )) { 
 		render(0,0,40,25);
 	}
 
 	recompute_box_count = 0;
 	}
 
-var get_box_count = function(except_x, except_y) {
+var get_box_count = function() {
 	var in_box = 0;
 	var box_count = 0;
 	for ( var y = 0; y < 25; y++ ) { 
 		in_box = 0;
 		for ( var x = 0; x < 40; x++ ) { 
-			if ( except_x == x && except_y == y ) { 
-				continue;
-			}
 			if ( cc[y][x] == 10 ) { 
 				if ( in_box == 1 ) { 
 					box_count++;
@@ -3120,7 +3110,7 @@ var check_for_remove_code = function(x, y, andrender) {
 
 // Renders the rectangle of cells with top-left corner at (x,y) with 
 // height h and width w, and its dependent cells.
-var autorender = function(x,y,w,h) {
+var autorender = function(x,y,w,h,defer_box) {
 
 	// We keep track of whether we're also affecting the next line.
 	// Value is 1 if we are, or 0 if not.
@@ -3139,9 +3129,9 @@ var autorender = function(x,y,w,h) {
 		if ( affectnext > 0 ) { 
 			var from = Math.min(x, nextfrom);
 			var to = Mat.max(x+w, nextto);
-			render(from, r, to-from, 1);
+			render(from, r, to-from, 1, defer_box);
 		} else { 
-			render(x, r, w, 1);
+			render(x, r, w, 1, defer_box);
 		}
 
 		// Reset the span.
@@ -3187,7 +3177,7 @@ var autorender = function(x,y,w,h) {
 	// If we've got to the end of the box, and still need to render the
 	// next row, it won't be handled unless we do it now.
 	if ( affectnext > 0 && y+h < 25 ) {
-		render(nextfrom, y+h, nextto-nextfrom, 1);
+		render(nextfrom, y+h, nextto-nextfrom, 1, defer_box);
 	}
 
 }
@@ -3199,7 +3189,7 @@ var autorender = function(x,y,w,h) {
 
 // Control codes in teletext can be "set-at" or "set-after", which affects
 // rendering a bit. Check out the place and remove functions for more.
-var render = function(x, y, w, h) {
+var render = function(x, y, w, h, defer_box) {
 
 	// Sometimes things go wrong, so we trim the box to the size of the
 	// frame.
@@ -3209,6 +3199,21 @@ var render = function(x, y, w, h) {
 	if ( y > 24 ) { y = 24; }
 	if ( x + w > 40 ) { w = 40 - x; } 
 	if ( y + h > 40 ) { h = 25 - y; } 
+
+	// If we've changed something to do with box counts, we need
+	// to recompute here and do the whole screen if we're switching
+	// between subtitles/newsflashes being enabled/disabled.
+	if ( recompute_box_count != 0 && defer_box == 0 ) {  
+		var old_box_count = box_count;
+		box_count = get_box_count();
+
+		// if changed, we need to render everything.
+		if ( ( old_box_count == 0 && box_count > 0 ) 
+		||	( old_box_count > 0 && box_count == 0 ) ) { 
+			x = 0; y = 0; w = 40; h = 25;
+		}
+		recompute_box_count = 0;
+	}
 
 	// It's time to save the frame to the hash. This is inefficient - 
 	// we should do this only when there's been a change.
@@ -3824,7 +3829,7 @@ var add_font_char = function(code, l1, l2, l3, l4, l5, l6, l7, l8, l9) {
 var set_charset = function(charset) {
 	cset = charset;
 	init_font(cset);
-	render(0,0,40,25,0);
+	render(0,0,40,25);
 }
 
 // Given the number of a character set, init_font loads the
@@ -4921,7 +4926,7 @@ var hide_help_screen = function() {
 		helpscreenshown = 0;
 
 		init_canvas();
-		render(0,0,40,25,0);
+		render(0,0,40,25);
 		draw_status_bar();
 	}
 }
@@ -4962,7 +4967,7 @@ this.init_frame = function(id) {
 
 	// Set up the screen and render it.
 	init_state();
-	render(0, 0, 40, 25, 0);
+	render(0, 0, 40, 25);
 
 	// Set up listeners for events
 	init_mouse();
