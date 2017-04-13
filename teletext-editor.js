@@ -1385,7 +1385,7 @@ var draw_status_bar_frame = function(ctx) {
 	ctx.fillText(cs[cury][curx]==0?"contiguous":"separated", offset+(8.3*spacing), 532*pix_scale);
 
 	// unboxed or boxed?
-	ctx.fillText(bx[cury][curx]==0?"unboxed":"boxed", offset+(9.85*spacing), 532*pix_scale);
+	ctx.fillText((bx[cury][curx]==0?"unbox":"box") + "/" + box_count, offset+(9.85*spacing), 532*pix_scale);
 
 	// aspect ratio
 	ctx.fillText(aspect_ratio+"x", offset+9.9*spacing, 516*pix_scale);
@@ -2743,22 +2743,33 @@ var recompute_box_count_if_needed = function(andrender) {
 	}
 
 var get_box_count = function() {
-	var in_box = 0;
+	// Boxes need two adjacent codes to start or end the box.
+
 	var box_count = 0;
 	for ( var y = 0; y < 25; y++ ) { 
-		in_box = 0;
+		var in_box = 0; 
+		var start_in_a_row = 0;
+		var end_in_a_row = 0;
 		for ( var x = 0; x < 40; x++ ) { 
-			if ( cc[y][x] == 10 ) { 
-				if ( in_box == 1 ) { 
+			if ( cc[y][x] == 10 ) {
+				end_in_a_row++;
+				if ( end_in_a_row == 2 && in_box == 1 ) { 
+					in_box = 0;
 					box_count++;
+					}
+			} else {
+				end_in_a_row = 0;
 				}
-				in_box = 0;
-			}
-			if ( cc[y][x] == 11 ) { 
-				in_box = 1;
-			}
+			if ( cc[y][x] == 11 ) {
+				start_in_a_row++;
+				if ( start_in_a_row == 2 && in_box == 0 ) { 
+					in_box = 1;
+					}
+			} else {
+				start_in_a_row = 0;
+				}
 		}
-		if ( in_box == 1 ) { box_count++; }
+		if ( in_box > 0 ) { box_count++; }
 	}
 	return box_count;
 }
