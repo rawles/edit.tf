@@ -1062,6 +1062,7 @@ var export_frame = function() {
 		+ "<br/>or "
         	+ "<a href=\""+datauri_png+"\">PNG screenshot</a> or "
 		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">open in zxnet editor</a>"
+		+ "<br/> or <a href=\"http://twitter.com/home?status=@edit_tf http://edit.tf/%23"+hashstring+"\">tweet this frame to examples.edit.tf</a>";
 		+ "</div>";
 	active_export = 1;
 }
