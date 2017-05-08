@@ -11,12 +11,12 @@ or preparing viewdata frames.
 Most of the functionality of the editor is accessed through key 
 sequences beginning with the escape key. They are summarised in a table 
 to the left of the the editor. Alternatively, the table can be viewed in 
-the editor by entering the key sequence `ESC-?`.
+the editor by entering the key sequence `Esc ?`.
 
 Pressing the escape key takes you into command mode, in which the status 
 bar is coloured yellow, and then typing a (possibly shifted) letter will 
 insert a control character or perform some other function. The status 
-bar can also be used to view teletext metadata. The key sequence `ESC-9` 
+bar can also be used to view teletext metadata. The key sequence `Esc 9` 
 toggles this.
 
 Everything you need to run the editor is in two files. `teletext-editor.js`
@@ -49,14 +49,14 @@ appears at bit positions _280r+7c_ to _280r+7c+6_ inclusive, the most
 significant bit appearing first. There are therefore two bits at the
 end of the encoding which are not used.
 
-The key combination `ESC-E` will pop up a box allowing you to export the 
+The key combination `Esc E` will pop up a box allowing you to export the 
 frame. It will appear as a data URI. There are three formats at present. 
 Two are raw and differ in how they deal with character codes in the 
 range 0x00 to 0x1f. One raw format leaves them untouched, the other sets 
 the high bit so they appear as characters in the range 0x80 to 0x9f when 
 exported. The other format is 8-bit TTI, designed for use with wxTED, by 
 @peterkvt80 - Peter Kwan. This includes metadata which can be viewed 
-with `ESC-9` but which unfortunately cannot yet be edited.
+with `Esc 9` but which unfortunately cannot yet be edited.
 
 Alternatively, a script, `url2raw.pl`, in the `tools/` directory, is 
 provided to assist with conversion on the command line. Supply an editor 
@@ -167,7 +167,7 @@ going to make it into a useful tool for everyone.
   first eight characters of the first line are never transmitted, instead
   being used to encode the page metadata. The television usually displays
   the page number here instead. A reminder of these restrictions is given
-  when the grid is enabled (with `ESC-X`). Cells to avoid are not included
+  when the grid is enabled (with `Esc X`). Cells to avoid are not included
   in the grid shown.
 * Another application of the editor is for designing BBC Micro frames.
   There are subtle differences in the way each system displays the frame, 
@@ -178,14 +178,14 @@ going to make it into a useful tool for everyone.
   characters having different colours, or even different characters
   entirely, may be achieved. This editor does not yet display such effects.
 * The editor has a cut and paste function. Firstly, you must define the 
-  rectangle you want to cut. After pressing `ESC`, the arrow keys can be 
+  rectangle you want to cut. After pressing `Esc`, the arrow keys can be 
   used to define the rectangle. During this process, the editor stays in
-  escape mode. Lowercase x cuts the rectangle, which can be pasted with 
-  `ESC-v`.
-* You can add an image to the editing window to trace over with `ESC-=`. The
+  escape mode. Lowercase x cuts the rectangle and lowercase c copies it.
+  It can then be pasted with `Esc v`.
+* You can add an image to the editing window to trace over with `Esc =`. The
   editor prompts you for a URL. The image at this URL will appear beneath
   the editor window, with the editor itself at half opacity.
-  Pressing `ESC-=` again will make the image disappear again. This is
+  Pressing `Esc =` again will make the image disappear again. This is
   demonstrated in 
   [this video by Steve Horsley](https://www.youtube.com/watch?v=CA8U4YW5JZM).
   If you press `=` while defining a rectangle, the image will appear 
@@ -233,10 +233,6 @@ The editor has been used for various events and systems:
 * Mr Biffo, of [Digitiser 2000](http://www.digitiser2000.com/) and 
   [lots of other stuff besides](http://www.imdb.com/name/nm1044110/), 
   uses the editor for graphics on the Digitiser2000 site.
-  He also is producing funny, surreal teletext graphics
-  [on his Twitter feed](https://twitter.com/mrbiffo) for
-  anybody who donates £10 or more to the Kickstarter for the excellent 
-  forthcoming [Mr. Biffo's Found Footage](https://www.kickstarter.com/projects/1534877882/mr-biffos-found-footage).
 
 The editor has starred in the following videos:
 
@@ -268,8 +264,11 @@ we keep them here.
 
 ## Example frames 
 
-There is a growing [gallery of frames submitted to the Twitter account](http://rawl.es/teletext/gallery/).
+There is a growing [gallery of frames submitted to the Twitter account](http://examples.edit.tf/), intended as a starting point for new users.
 Clicking on any frame will cause it to load in the editor.
+Please consider contributing your own. Assuming that you're logged into
+Twitter, a very easy way to do this is to go to the export teletext menu
+using `Esc E` and then click the link to tweet the frame to the archive.
 
 ### Test frames
 
