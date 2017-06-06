@@ -1052,17 +1052,15 @@ var export_frame = function() {
 
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as: "
-		+ "<a href=\""+datauri_hs+"\">URI hash fragment</a></br>"
-		+ " or <a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>"
-		+ " or " 
-		+ "<a href=\""+datauri_1+"\">raw (0x20-0x9f)</a>"
-		+ "<br/>or " 
-		+ "<a href=\""+datauri_tti+"\">TTI (8-bit)</a> or "
-        	+ "<a href=\""+datauri_ep1+"\">EP1 (experimental)</a>"
-		+ "<br/>or "
-        	+ "<a href=\""+datauri_png+"\">PNG screenshot</a> or "
-		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">open in zxnet editor</a>"
-		+ "<br/> or <a href=\"http://twitter.com/home?status=@edit_tf http://edit.tf/%23"+hashstring+"\" target=\"_blank\">tweet this frame to examples.edit.tf</a>";
+		+ "<a href=\""+datauri_hs+"\">URI hash</a>, "
+		+ "<a href=\""+datauri_0+"\">raw (0x00-0x7f)</a>, "
+		+ "<a href=\""+datauri_1+"\">raw (0x20-0x9f)</a>, "
+		+ "<a href=\""+datauri_tti+"\">TTI</a>,<br/>"
+        	+ "<a href=\""+datauri_ep1+"\">EP1</a>, "
+        	+ "<a href=\""+datauri_png+"\">PNG</a>, "
+		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">zxnet editor</a><br/>"
+		+ "<a href=\"http://twitter.com/home?status=@edit_tf http://edit.tf/%23"+hashstring+"\" target=\"_blank\">Tweet this frame to examples.edit.tf</a><br/>"
+		+ "Experimental: <a href=\"http://s.edit.tf/shorten/"+hashstring+"\" target=\"_blank\">Make a short URL</a> (this URL is public)."
 		+ "</div>";
 	active_export = 1;
 }
