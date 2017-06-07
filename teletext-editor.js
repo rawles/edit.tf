@@ -738,6 +738,9 @@ var load_from_hash = function() {
 	load_from_hashstring(hashstring);
 }
 
+var hashStringKeys = [];
+var hashStringValues = [];
+
 var load_from_hashstring = function(hashstring) {
 	// It's a good idea to have a bit of metadata here describing
 	// which character set we're using. If the colon is there, this
@@ -770,6 +773,23 @@ var load_from_hashstring = function(hashstring) {
 		// The data replaces the value in hashstring ready for 
 		// decoding.
 		hashstring = parts[1];
+		
+		// store any extended page hash key=value pairs
+		hashStringKeys = [];
+		hashStringValues = [];
+		
+		for (i = 2; i < parts.length; i++){
+			var keyPair = parts[i];
+			var delimOffset = keyPair.search("=");
+			if (delimOffset > 0){
+				hashStringKeys.push(keyPair.slice(0,delimOffset));
+				hashStringValues.push(keyPair.slice(delimOffset+1));
+			} else {
+				console.log("invalid keypair ",keyPair);
+			}
+		}
+		
+		console.log(hashStringKeys, hashStringValues);
 	}
 
 	// We may be dealing with old hexadecimal format, in which the
@@ -934,6 +954,12 @@ var save_to_hash = function() {
 	for ( var i = 0; i < 1167; i++ ) {
 		encoding += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".charAt(b64[i]); 
 	}
+
+	/* restore extended hash key=value pairs */
+	for (var i = 0; i < hashStringKeys.length; i++){
+		encoding += ":"+hashStringKeys[i]+"="+hashStringValues[i];
+	}
+	
 	if (window.location.hash != encoding) { window.location.hash = encoding; }
 }
 
