@@ -399,6 +399,10 @@ var redraw = function() {
 // frame.
 var wipe = function(andrender) {
 	invalidate_export();
+	
+	// clear out stored extended hash string key=value pairs
+	hashStringKeys = [];
+	hashStringValues = [];
 
 	for ( var r = 0; r < 25; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
