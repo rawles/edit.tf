@@ -403,6 +403,16 @@ var wipe = function(andrender) {
 	// clear out stored extended hash string key=value pairs
 	hashStringKeys = [];
 	hashStringValues = [];
+	
+	m_page = 0x100;
+	m_subcode = 0x3f7f;
+	for ( var i = 4; i <= 14; i++ ) { m_control[i] = 0; }
+	m_fastext_red = 0;
+	m_fastext_green = 0;
+	m_fastext_yellow = 0;
+	m_fastext_cyan = 0;
+	m_fastext_link = 0;
+	m_fastext_index = 0;
 
 	for ( var r = 0; r < 25; r++ ) { 
 		for ( var c = 0; c < 40; c++ ) { 
@@ -793,7 +803,68 @@ var load_from_hashstring = function(hashstring) {
 			}
 		}
 		
-		console.log(hashStringKeys, hashStringValues);
+		var hashPageNumber;
+		if (hashStringKeys.indexOf("PN") > -1){
+			hashPageNumber = parseInt(hashStringValues[hashStringKeys.indexOf("PN")],16);
+		} else {
+			hashPageNumber = 0x8FF;
+		}
+		if (hashPageNumber < 0x100 || hashPageNumber > 0x8FF || (hashPageNumber & 0xFF) == 0xFF || isNaN(hashPageNumber)){
+			m_page = 0x8FF;
+		} else {
+			m_page = hashPageNumber;
+		}
+		
+		var hashSubpageNumber;
+		if (hashStringKeys.indexOf("SC") > -1){
+			hashSubpageNumber = parseInt(hashStringValues[hashStringKeys.indexOf("SC")],16);
+		} else {
+			hashSubpageNumber = 0x3F7F;
+		}
+		if (hashSubpageNumber & 0xC080 || hashSubpageNumber > 0x3F7E || isNaN(hashSubpageNumber)){
+			m_subcode = 0x3F7F;
+		} else {
+			m_subcode = hashSubpageNumber;
+		}
+		
+		var hashPageOptions;
+		if (hashStringKeys.indexOf("PS") > -1){
+			hashPageOptions = parseInt(hashStringValues[hashStringKeys.indexOf("PS")],16);
+		} else {
+			hashPageOptions = 0;
+		}
+		if (hashPageOptions > 0xC3FF || isNaN(hashPageOptions)){
+			hashPageOptions = 0;
+		}
+		m_control[4] = (hashPageOptions & 0x4000) ? true : false;
+		m_control[5] = (hashPageOptions & 0x0001) ? true : false;
+		m_control[6] = (hashPageOptions & 0x0002) ? true : false;
+		m_control[7] = (hashPageOptions & 0x0004) ? true : false;
+		m_control[8] = (hashPageOptions & 0x0008) ? true : false;
+		m_control[9] = (hashPageOptions & 0x0010) ? true : false;
+		m_control[10] = (hashPageOptions & 0x0020) ? true : false;
+		m_control[11] = (hashPageOptions & 0x0040) ? true : false;
+		m_control[12] = (hashPageOptions & 0x0200) ? true : false;
+		m_control[13] = (hashPageOptions & 0x0100) ? true : false;
+		m_control[14] = (hashPageOptions & 0x0080) ? true : false;
+		
+		var hashFasttextLinks = "";
+		var navigationPages = [];
+		if (hashStringKeys.indexOf("X270") > -1){
+			hashFasttextLinks = hashStringValues[hashStringKeys.indexOf("X270")];
+		} else {
+			/* clear navigation links */
+			for (var i=0; i<6; i++){
+				hashFasttextLinks += "8FF3F7F";
+			}
+		}
+		
+		m_fastext_red = parseInt(hashFasttextLinks.slice(0,3), 16);
+		m_fastext_green = parseInt(hashFasttextLinks.slice(7,10), 16);
+		m_fastext_yellow = parseInt(hashFasttextLinks.slice(14,17), 16);
+		m_fastext_cyan = parseInt(hashFasttextLinks.slice(21,24), 16);
+		m_fastext_link = parseInt(hashFasttextLinks.slice(28,31), 16);
+		m_fastext_index = parseInt(hashFasttextLinks.slice(35,38), 16);
 	}
 
 	// We may be dealing with old hexadecimal format, in which the
@@ -1232,35 +1303,35 @@ var draw_status_bar_metadata = function(ctx) {
 		padstring("0", 2, m_subpage.toString()),
 		offset+(0.75*spacing), 516*pix_scale);
 	ctx.fillText("subcode=" +
-		padstring(" ", 4, m_subcode.toString(16).toUpperCase()),
+		padstring("0", 4, m_subcode.toString(16).toUpperCase()),
 		offset+(2.5*spacing), 516*pix_scale);
 	ctx.fillText("fastext links: ", offset+(4.75*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#f00";
 	// XXX is displayed when there is no link.
 	var displayed_page = "XXX";
-	if ( m_fastext_red >= 0x100 && m_fastext_red <= 0x8ff ) { 
+	if ( m_fastext_red >= 0x100 && m_fastext_red < 0x8ff ) { 
 		displayed_page = m_fastext_red.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(6.5*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0f0";
 	displayed_page = "XXX";
-	if ( m_fastext_green >= 0x100 && m_fastext_green <= 0x8ff ) { 
+	if ( m_fastext_green >= 0x100 && m_fastext_green < 0x8ff ) { 
 		displayed_page = m_fastext_green.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(7.25*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#ff0";
 	displayed_page = "XXX";
-	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow <= 0x8ff ) { 
+	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow < 0x8ff ) { 
 		displayed_page = m_fastext_yellow.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(8*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0ff";
 	displayed_page = "XXX";
-	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan <= 0x8ff ) { 
+	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan < 0x8ff ) { 
 		displayed_page = m_fastext_cyan.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(8.75*spacing), 516*pix_scale);
@@ -1270,7 +1341,7 @@ var draw_status_bar_metadata = function(ctx) {
 	// it's less important, I used grey.
 	ctx.fillStyle = "#666";
 	displayed_page = "XXX";
-	if ( m_fastext_link >= 0x100 && m_fastext_link <= 0x8ff ) { 
+	if ( m_fastext_link >= 0x100 && m_fastext_link < 0x8ff ) { 
 		displayed_page = m_fastext_link.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(9.5*spacing), 516*pix_scale);
@@ -1278,7 +1349,7 @@ var draw_status_bar_metadata = function(ctx) {
 	// The index link is white.
 	ctx.fillStyle = "#fff";
 	displayed_page = "XXX";
-	if ( m_fastext_index >= 0x100 && m_fastext_index <= 0x8ff ) { 
+	if ( m_fastext_index >= 0x100 && m_fastext_index < 0x8ff ) { 
 		displayed_page = m_fastext_index.toString(16);
 	}
 	ctx.fillText(displayed_page, offset+(10.25*spacing), 516*pix_scale);
@@ -1309,9 +1380,9 @@ var draw_status_bar_metadata = function(ctx) {
 	// This is the national option character subset. We display it as a 
 	// binary string.
 	var charsubset =
-		((m_control[12]!=0)?"0":"1")
-	+	((m_control[13]!=0)?"0":"1")
-	+	((m_control[14]!=0)?"0":"1");
+		((m_control[12]!=0)?"1":"0")
+	+	((m_control[13]!=0)?"1":"0")
+	+	((m_control[14]!=0)?"1":"0");
 	ctx.fillText("c12..c14=" + charsubset, offset+(9.25*spacing),
 		532*pix_scale);
 }
