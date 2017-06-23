@@ -3151,6 +3151,8 @@ var check_for_remove_code = function(x, y, andrender) {
 			var end = x;
 			while ( end < 39 && cc[y][end+1] == code ) { end++; }
 			
+			// Start to end inclusive is the range of codes which are
+			// repeated.
 			if ( end - start > 0 ) { // multiple codes
 				// We need to copy the bx value at the first 
 				// character through to the first character of
@@ -3166,9 +3168,22 @@ var check_for_remove_code = function(x, y, andrender) {
 					}
 				}
 			}
+
+			// We actually want to start clearing at the first position that
+			// we're going to encounter a double-code.
+			var new_start = start;
+			var in_a_row_code = 0; 
+			for ( var i = start; i <= end; i++ ) { 
+				if ( cc[y][c] == code ) { in_a_row_code++; } else { in_a_row_code = 0; } 
+				if ( i == x ) { in_a_row_code = 0; } 
+				if ( in_a_row_code == 2 ) {
+					new_start = i - 1; break;
+				} 
+			}
+			start = new_start;
 		}
 
-		for ( var c = start+1; c < limit; c++ ) {
+		for ( var c = start; c < limit; c++ ) {
 			bx[y][c] = newbx;
 		}
 		recompute_box_count = 1;
