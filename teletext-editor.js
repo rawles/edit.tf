@@ -141,14 +141,14 @@ var m_subcode = 0x3f7f;  // This page's subcode/subpage number.
 		    // 0 to 7.
 var m_control = [];  // The control bits for this page.
 
-var m_fastext_red = 0;
-var m_fastext_green = 0;
-var m_fastext_yellow = 0;
-var m_fastext_cyan = 0;
-var m_fastext_link = 0;
-var m_fastext_index = 0;
+var m_fastext_red = 0x8FF;
+var m_fastext_green = 0x8FF;
+var m_fastext_yellow = 0x8FF;
+var m_fastext_cyan = 0x8FF;
+var m_fastext_link = 0x8FF;
+var m_fastext_index = 0x8FF;
 		    // These are fastext links to other pages.
-		    // Also hexadecimal, but may be 0 to indicate
+		    // Also hexadecimal, but may be 0x8FF to indicate
 		    // no link.
 
 // Initialises the state of the screen.
@@ -990,31 +990,44 @@ var export_frame = function() {
 		+ "\r\n";
 
 	for ( var r=0; r<25; r++ ) {
-		// OL: output line
-		if ( r > 0 ) { ttistring = ttistring + "OL," + r + ","; }
+		var ttirowstring = "";
+		var blankrow = true;
 		for ( var c=0; c<40; c++ ) {
 			var xcc = cc[r][c];
+			if (xcc != 0x20) { blankrow = false; }
 			rawstring_0 = rawstring_0 + String.fromCharCode(xcc);
-			if ( xcc < 32 ) { xcc += 128; } 
-			rawstring_1 = rawstring_1 + String.fromCharCode(xcc);
-			if ( r > 0 ) { 
-				ttistring = ttistring + String.fromCharCode(xcc);
+			if ( xcc < 32 ) { 
+				rawstring_1 = rawstring_1 + String.fromCharCode(xcc + 128);
+				if ( r > 0 ) { 
+					ttirowstring = ttirowstring + String.fromCharCode(0x1B);
+					ttirowstring = ttirowstring + String.fromCharCode(xcc + 64);
+				}
+			} else {
+				rawstring_1 = rawstring_1 + String.fromCharCode(xcc);
+				if ( r > 0 ) { 
+					ttirowstring = ttirowstring + String.fromCharCode(xcc);
+				}
 			}
 		}
 		rawstring_0 = rawstring_0 + "\n";
 		rawstring_1 = rawstring_1 + "\n";
-		if ( r > 0 ) { ttistring = ttistring + "\r\n"; }
+		if ( r > 0 && !blankrow) {
+			// OL: output line
+			ttistring = ttistring + "OL," + r + "," + ttirowstring + "\r\n";
+		}
 	}
 
 	// FL: fastext link
-	ttistring = ttistring + "FL,"
-		+ m_fastext_red.toString(16)
-		+","+ m_fastext_green.toString(16)
-		+","+ m_fastext_yellow.toString(16)
-		+","+ m_fastext_cyan.toString(16)
-		+","+ m_fastext_link.toString(16)
-		+","+ m_fastext_index.toString(16)
-		+"\r\n";
+	if ((m_fastext_red & m_fastext_green & m_fastext_yellow & m_fastext_cyan & m_fastext_link & m_fastext_index) != 0x8FF){
+		ttistring = ttistring + "FL,"
+			+ m_fastext_red.toString(16)
+			+","+ m_fastext_green.toString(16)
+			+","+ m_fastext_yellow.toString(16)
+			+","+ m_fastext_cyan.toString(16)
+			+","+ m_fastext_link.toString(16)
+			+","+ m_fastext_index.toString(16)
+			+"\r\n";
+	}
 
         // We provide an experimental EP1 format. This probably isn't
         // compliant with any specification. Particularly, the values at
@@ -1209,29 +1222,29 @@ var draw_status_bar_metadata = function(ctx) {
 	ctx.fillStyle = "#f00";
 	// XXX is displayed when there is no link.
 	var displayed_page = "XXX";
-	if ( m_fastext_red >= 0x100 && m_fastext_red <= 0x8ff ) { 
-		displayed_page = m_fastext_red.toString(16);
+	if ( m_fastext_red >= 0x100 && m_fastext_red < 0x8ff ) { 
+		displayed_page = m_fastext_red.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(6.5*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0f0";
 	displayed_page = "XXX";
-	if ( m_fastext_green >= 0x100 && m_fastext_green <= 0x8ff ) { 
-		displayed_page = m_fastext_green.toString(16);
+	if ( m_fastext_green >= 0x100 && m_fastext_green < 0x8ff ) { 
+		displayed_page = m_fastext_green.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(7.25*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#ff0";
 	displayed_page = "XXX";
-	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow <= 0x8ff ) { 
-		displayed_page = m_fastext_yellow.toString(16);
+	if ( m_fastext_yellow >= 0x100 && m_fastext_yellow < 0x8ff ) { 
+		displayed_page = m_fastext_yellow.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(8*spacing), 516*pix_scale);
 
 	ctx.fillStyle = "#0ff";
 	displayed_page = "XXX";
-	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan <= 0x8ff ) { 
-		displayed_page = m_fastext_cyan.toString(16);
+	if ( m_fastext_cyan >= 0x100 && m_fastext_cyan < 0x8ff ) { 
+		displayed_page = m_fastext_cyan.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(8.75*spacing), 516*pix_scale);
 
@@ -1240,16 +1253,16 @@ var draw_status_bar_metadata = function(ctx) {
 	// it's less important, I used grey.
 	ctx.fillStyle = "#666";
 	displayed_page = "XXX";
-	if ( m_fastext_link >= 0x100 && m_fastext_link <= 0x8ff ) { 
-		displayed_page = m_fastext_link.toString(16);
+	if ( m_fastext_link >= 0x100 && m_fastext_link < 0x8ff ) { 
+		displayed_page = m_fastext_link.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(9.5*spacing), 516*pix_scale);
 
 	// The index link is white.
 	ctx.fillStyle = "#fff";
 	displayed_page = "XXX";
-	if ( m_fastext_index >= 0x100 && m_fastext_index <= 0x8ff ) { 
-		displayed_page = m_fastext_index.toString(16);
+	if ( m_fastext_index >= 0x100 && m_fastext_index < 0x8ff ) { 
+		displayed_page = m_fastext_index.toString(16).toUpperCase();
 	}
 	ctx.fillText(displayed_page, offset+(10.25*spacing), 516*pix_scale);
 
