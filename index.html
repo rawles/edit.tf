@@ -12,7 +12,7 @@ function init_frames() {
 	// Make it the active editor so it receives keypresses:
 	active_editor = editor;
 
-	// Also make it the editor which reads from and writes to the 
+	// Also make it the editor which reads from and writes to the
 	// URL:
 	url_editor = editor;
 
@@ -29,11 +29,11 @@ function init_frames() {
 
 /* layout ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ */
 
-html { 
-  	-webkit-text-size-adjust: 100%;
+html {
+	-webkit-text-size-adjust: 100%;
 	    -ms-text-size-adjust: 100%;
 }
-body { 
+body {
 	margin: 0;
 	background-color: #222;
 }
@@ -47,7 +47,7 @@ div#a {
 	padding: 0;
 	border-collapse: collapse;
 }
-div.b { 
+div.b {
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
@@ -71,7 +71,7 @@ div.b {
 	text-align: left;
 }
 #hints tr, #hints th, #hints td, #export {
-	vertical-align: center; 
+	vertical-align: center;
 	font-family: sans-serif;
 	line-height: 1.1;
 	font-size: 14px;
@@ -80,7 +80,7 @@ div.b {
 	 -khtml-user-select: none;
 	   -moz-user-select: -moz-none;
 	    -ms-user-select: none;
-	        user-select: none;	  
+		user-select: none;
 }
 small {
 	font-size: 14px;
@@ -126,7 +126,7 @@ td a, div#export a {
 	padding: 0;
 }
 #hints table {
-	width: 100%;	
+	width: 100%;
 	height: 100%;
 	border-collapse: collapse;
 }
@@ -155,9 +155,9 @@ td a, div#export a {
     font-family: 'ttkit';
     src:url('fonts/TeletextKit.eot');
     src:url('fonts/TeletextKit.eot?#iefix') format('embedded-opentype'),
-        url('fonts/TeletextKit.woff') format('woff'),
-        url('fonts/TeletextKit.ttf') format('truetype'),
-        url('fonts/TeletextKit.svg#icons') format('svg');
+	url('fonts/TeletextKit.woff') format('woff'),
+	url('fonts/TeletextKit.ttf') format('truetype'),
+	url('fonts/TeletextKit.svg#icons') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -209,7 +209,7 @@ text-shadow: 1px 1px 0px #343;
 
 #hints table tr:first-child  td {
 	/* enforce one seventh width to each cell */
-	width: 14.28%; 
+	width: 14.28%;
 }
 
 
@@ -387,7 +387,7 @@ div.exportbox {
 	</td>
 	<td onclick="fakepress('X')"><span>toggle grid</span> X</td>
 </tr>
-<tr>	
+<tr>
 	<td onclick="fakepress('z')"><span>redraw screen</span> z</td>
 	<td onclick="fakepress('Z')"><span>clear screen</span> Z</td>
 </tr>
@@ -417,6 +417,17 @@ div.exportbox {
 <td onclick="fakepress('C')"><span>copy selected cells</span> C</td>
 </tr>
 
+<tr>
+<td onclick="fakepress('W')"><span>shift sixels up</span> W</td>
+<td onclick="fakepress('S')"><span>shift sixels down</span> S</td>
+</tr>
+
+<tr>
+<td onclick="fakepress('A')"><span>shift sixels left</span> A</td>
+<td onclick="fakepress('D')"><span>shift sixels right</span> D</td>
+</tr>
+
+
 <tr><th colspan="2">No Esc key required to:</th></tr>
 
 <tr>
@@ -424,7 +435,7 @@ div.exportbox {
 <td onclick="cursor_bs()"><span>insert space</span> Tab</td></tr>
 
 <tr><td colspan="2" class="note">
-For help see the 
+For help see the
 <a href="doc/handy-howto.pdf" target="edit-tf">how-to guide</a>,
 or tweet <a href="https://twitter.com/edit_tf" target="_blank">@edit_tf</a>.
 <br/>
@@ -439,7 +450,7 @@ The teletext data (your work) is all in the web browser's
 </table>
 <div id="export"></div>
 
-</div> 
+</div>
 <div class="b">
 <div id="canvasframe">
 <canvas id="frame" width="960" height="1000" style="width: 576px; height: 500px;"></canvas>
