@@ -264,6 +264,7 @@ div.exportbox {
 <tr>
 <th colspan="2">Click below or press <span class="esc">Esc</span> then the following keys:</th>
 </tr>
+<tbody id="rectangle-off">
 <tr><td colspan="2" class="glyphs">
 	<table>
 	<tr class="glyphs1">
@@ -409,7 +410,9 @@ div.exportbox {
 	<td onclick="fakepress('=')"><span>trace image</span> =</td>
 	<td onclick="fakepress('V')"><span>paste cut cells</span> V</td>
 </tr>
+</tbody>
 
+<tbody id="rectangle-on">
 <tr><th colspan="2">Select a block of cells: Esc, then arrow keys, then...</th></tr>
 
 <tr>
@@ -426,13 +429,16 @@ div.exportbox {
 <td onclick="fakepress('A')"><span>shift sixels left</span> A</td>
 <td onclick="fakepress('D')"><span>shift sixels right</span> D</td>
 </tr>
+</tbody>
 
-
+<tbody id="esc-off">
 <tr><th colspan="2">No Esc key required to:</th></tr>
 
 <tr>
 <td onclick="cursor_tab()"><span>delete char.</span> Backspace</td>
 <td onclick="cursor_bs()"><span>insert space</span> Tab</td></tr>
+
+</tbody>
 
 <tr><td colspan="2" class="note">
 For help see the

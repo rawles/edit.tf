@@ -1312,6 +1312,8 @@ var draw_status_bar = function() {
 
 	if ( statusmode == 0 ) { draw_status_bar_frame(ctx); }
 	if ( statusmode == 1 ) { draw_status_bar_metadata(ctx); }
+	
+	highlight_hints();
 }
 
 var draw_status_bar_metadata = function(ctx) {
@@ -1513,6 +1515,7 @@ var unhide_status_bar = function() {
 		init_canvas();
 		render(0,0,40,25,0);
 		draw_status_bar();
+		highlight_hints();
 	}
 }
 
@@ -1525,6 +1528,34 @@ var hide_status_bar = function() {
 		pix_scale = 1;
 		init_canvas();
 		render(0,0,40,25,0);
+		highlight_hints();
+	}
+}
+
+var highlight_hints = function() { 
+	var rectangle_select = 0;
+	if ( curx_opposite != -1 && cury_opposite != -1
+		&& ( curx_opposite != curx
+			|| cury_opposite != cury ) ) {
+		rectangle_select = 1;
+	}
+	var roffgroup = document.getElementById("rectangle-off");
+	if ( escape == 1 && ( ! ( rectangle_select == 1 ) ) ) { 
+		roffgroup.style.background = "#111";
+	} else {
+		roffgroup.style.background = "#222";
+	}
+	var rongroup = document.getElementById("rectangle-on");
+	if ( escape == 1 && rectangle_select == 1 ) { 
+		rongroup.style.background = "#111";
+	} else {
+		rongroup.style.background = "#222";
+	}
+	var eoffgroup = document.getElementById("esc-off");
+	if ( escape == 0 ) { 
+		eoffgroup.style.background = "#111";
+	} else {
+		eoffgroup.style.background = "#222";
 	}
 }
 
@@ -2349,6 +2380,8 @@ var disappear_cursor_rectangle = function() {
 		if ( x1 > x2 ) { var t = x1; x1 = x2; x2 = t; }
 		if ( y1 > y2 ) { var t = y1; y1 = y2; y2 = t; }
 		render(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
+		
+		highlight_hints();
 	}
 }
 
