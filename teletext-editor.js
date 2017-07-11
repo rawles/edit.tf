@@ -3763,28 +3763,31 @@ var shift_sixels = function(x1, y1, x2, y2, xd, yd) {
 		shift_sixels(x1, y1, x2, y2, 0, yd);
 		return;
 	}
-	console.log("shift_sixels("+x1+","+y1+","+x2+","+y2+","+xd+","+yd+")");
 	var newblock = [];
+	var newblocklock = []; // if 1, cell is 'locked' against writing.
 	var weights = [1,2,4,8,16,64];
 	for ( var r = y1; r <= y2; r++ ) {
 		newblock[r-y1] = [];
+		newblocklock[r-y1] = [];
 		for ( var c = x1; c <= x2; c++ ) {
 			newblock[r-y1][c-x1] = 32;
+			newblocklock[r-y1][c-x1] = 0;
 		}
 	}
 	var size_x = x2 - x1 + 1; // includes both ends
 	var size_y = y2 - y1 + 1;
-	console.log("Size: " + size_x + "x" + size_y);
 	for ( var c = x1; c <= x2; c++ ) {
 		for ( var r = y1; r <= y2; r++ ) {
 			if ( tg[r][c] == 0 ) {
 				newblock[r-y1][c-x1] = cc[r][c];
+				newblocklock[r-y1][c-x1] = 1;
 				continue;
 				}
 			if ( tg[r][c] == 1
 				&& ( ! ( ( cc[r][c] >= 32 && cc[r][c] < 64 )
 				|| ( cc[r][c] >= 96 && cc[r][c] < 128 ) ) ) ) {
 				newblock[r-y1][c-x1] = cc[r][c];
+				newblocklock[r-y1][c-x1] = 1;
 				continue;
 			}
 			for ( var sy = 0; sy < 3; sy++ ) {
@@ -3797,11 +3800,18 @@ var shift_sixels = function(x1, y1, x2, y2, xd, yd) {
 					var new_sx = new_xpos % 2;
 					var new_r = parseInt( new_ypos / 3 );
 					var new_sy = new_ypos % 3;
-
+					
+					// We shouldn't write outside of the rectangle.
 					if ( ( new_r - y1 < 0 )
 					|| ( new_r - y1 >= size_y )
 					|| ( new_c - x1 < 0 )
 					|| ( new_c - x1 >= size_x ) ) { continue; }
+					
+					// We shouldn't write any data here unless it's going to be
+					// into a graphics character.
+					if ( newblocklock[new_r-y1][new_c-x1] != 0 ) {
+						continue;
+					}
 
 					var weight = weights[(sy*2)+sx];
 					var value = cc[r][c] & weight;
@@ -3809,11 +3819,7 @@ var shift_sixels = function(x1, y1, x2, y2, xd, yd) {
 
 					var new_weight = weights[(new_sy*2)+new_sx];
 
-					console.log("new_r is " + new_r + " and y1 is " + y1);
-
 					newblock[new_r-y1][new_c-x1] |= value * new_weight;
-
-					console.log("("+c+","+r+") s("+sx+","+sy+") " + weight + " -> " + value + " ("+new_c+","+new_r+") s("+new_sx+","+new_sy+") " + new_weight);
 				}
 			}
 		}
@@ -3822,7 +3828,6 @@ var shift_sixels = function(x1, y1, x2, y2, xd, yd) {
 	// Finally, replace the characters.
 	for ( var r = y1; r <= y2; r++ ) {
 		for ( var c = x1; c <= x2; c++ ) {
-			console.log("(" + c  + "," + r + ") <- " + newblock[r-y1][c-x1]);
 			put_char(c, r, newblock[r-y1][c-x1]);
 		}
 	}
