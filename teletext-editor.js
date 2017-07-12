@@ -1906,10 +1906,9 @@ this.keypress = function(event) {
 								shift_sixels(x1, y1, x2, y2, 1, 0)
 						}
 			gfx_change(x1, y1, x2, y2);
-						// disappear_cursor_rectangle();
-						autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
 			retain_rectangle = 1;
-				}
+			}
 
 		if ( code == 61 ) { // [=] to 'trace-me-do'
 			matched = 1;
@@ -3195,7 +3194,7 @@ var autorender = function(x,y,w,h) {
 		// Otherwise send the row off for rendering as normal.
 		if ( affectnext > 0 ) {
 			var from = Math.min(x, nextfrom);
-			var to = Mat.max(x+w, nextto);
+			var to = Math.max(x+w, nextto);
 			render(from, r, to-from, 1);
 		} else {
 			render(x, r, w, 1);
