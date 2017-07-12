@@ -1842,12 +1842,22 @@ this.keypress = function(event) {
 					// hint that this span may have had graphics changed.
 					gfx_change(x1, y, x2, y);
 				}
+				
+				// When we paste, we select the pasted cells so we can more easily
+				// re-cut.
+				curx_opposite = curx + clipboard_size_x - 1;
+				if ( curx_opposite > 39 ) { curx_opposite = 39; }
+				cury_opposite = cury + clipboard_size_y - 1;
+				if ( cury_opposite > 24 ) { cury_opposite = 24; }
+				retain_rectangle = 1;
+				
+				// Normally we'd render as we wrote each character. This isn't a good
+				// idea since we'll end up re-rendering the cell lots. Instead we put
+				// the characters, still updating the control codes, and render at the
+				// end. We just render to the end of each line.
+				autorender(curx, cury, 40-curx, clipboard_size_y);
 			}
-			// Normally we'd render as we wrote each character. This isn't a good
-			// idea since we'll end up re-rendering the cell lots. Instead we put
-			// the characters, still updating the control codes, and render at the
-			// end. We just render to the end of each line.
-			autorender(curx, cury, 40-curx, clipboard_size_y);
+
 		}
 
 		// [x] to cut, [c] to copy
@@ -1875,36 +1885,42 @@ this.keypress = function(event) {
 			}
 			clipboard_size_x = x2 - x1 + 1;
 			clipboard_size_y = y2 - y1 + 1;
+			
+			// When we cut we move the cursor to the top left corner of the 
+			// rectangle so we can more easily re-paste.
+			curx = x1;
+			cury = y1;
+			
 			disappear_cursor_rectangle();
 			if ( cut == 1 ) {
 				autorender(x1, y1, 40 - x1, y2 - y1 + 1);
 			}
 		}
 
-				// Shift sixels with [w], [a], [s], [d]
-				if ( rectangle_select == 1 &&
-						( ( code == 87 || code == 119 ) // W
-						|| ( code == 65 || code == 97 ) // A
-						|| ( code == 83 || code == 115 ) // S
-						|| ( code == 68 || code == 100 ) ) // D
-				) {
-						matched = 1;
-						var x1 = Math.min(curx_opposite, curx);
-						var x2 = Math.max(curx_opposite, curx);
-						var y1 = Math.min(cury_opposite, cury);
-						var y2 = Math.max(cury_opposite, cury);
-						if ( code == 87 || code == 119 ) {
-								shift_sixels(x1, y1, x2, y2, 0, -1)
-						}
-						if ( code == 65 || code == 97 ) {
-								shift_sixels(x1, y1, x2, y2, -1, 0)
-						}
-						if ( code == 83 || code == 115 ) {
-								shift_sixels(x1, y1, x2, y2, 0, 1)
-						}
-						if ( code == 68 || code == 100 ) {
-								shift_sixels(x1, y1, x2, y2, 1, 0)
-						}
+		// Shift sixels with [w], [a], [s], [d]
+		if ( rectangle_select == 1 &&
+			( ( code == 87 || code == 119 ) // W
+			|| ( code == 65 || code == 97 ) // A
+			|| ( code == 83 || code == 115 ) // S
+			|| ( code == 68 || code == 100 ) ) // D
+			) {
+			matched = 1;
+			var x1 = Math.min(curx_opposite, curx);
+			var x2 = Math.max(curx_opposite, curx);
+			var y1 = Math.min(cury_opposite, cury);
+			var y2 = Math.max(cury_opposite, cury);
+			if ( code == 87 || code == 119 ) {
+					shift_sixels(x1, y1, x2, y2, 0, -1)
+			}
+			if ( code == 65 || code == 97 ) {
+					shift_sixels(x1, y1, x2, y2, -1, 0)
+			}
+			if ( code == 83 || code == 115 ) {
+					shift_sixels(x1, y1, x2, y2, 0, 1)
+			}
+			if ( code == 68 || code == 100 ) {
+					shift_sixels(x1, y1, x2, y2, 1, 0)
+			}
 			gfx_change(x1, y1, x2, y2);
 			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
 			retain_rectangle = 1;
