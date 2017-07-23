@@ -128,6 +128,8 @@ var active_export = 0;
 		 // which should be invalidated on a change.
 var canvasid = "canvas";
 		 // The HTML id for the canvas.
+var tipid = "tip";
+		 // The HTML id for the canvas.
 
 // Page metadata:
 var m_page = 0x100; // This page's number within the magazine.
@@ -156,6 +158,8 @@ var init_state = function() {
 
 	init_canvas();
 
+	init_tip();
+
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
 		cc[r] = []; fg[r] = []; bg[r] = [];
@@ -175,6 +179,23 @@ var init_state = function() {
 
 	// Load the page data from the hash, if possible.
 	load_from_hash();
+}
+
+// init_tip() updates the 'tip' part of the hints table, if it exists
+// on the page this editor is on, with a new, randomly-chosen hint.
+var init_tip = function() { 
+
+	var tip_element = document.getElementById(tipid);
+
+	if ( tip_element != null ) { 
+		var tips = [];
+		tips[0] = "Get started with <a href=\"http://examples.edit.tf/\" target=\"_blank\">the archive of example frames</a>.";
+		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>, or tweet <a href=\"https://twitter.com/edit_tf\" target=\"_blank\">@edit_tf</a>.";
+		tips[2] = "Other gratis editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
+
+		var randomIndex = Math.floor(Math.random()*3);
+		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
+	}
 }
 
 // init_canvas() is called also when the aspect ratio is adjusted.
