@@ -1895,6 +1895,12 @@ this.keypress = function(event) {
 			if ( cut == 1 ) {
 				autorender(x1, y1, 40 - x1, y2 - y1 + 1);
 			}
+			// If we haven't changed the content of the cells, we just need
+			// to do a simple render to remove the shading that shows the
+			// rectangle.
+			if ( cut == 0 ) {
+				render(x1, y1, 40 - x1, y2 - y1 + 1);
+			}
 		}
 
 		// Shift sixels with [w], [a], [s], [d]
