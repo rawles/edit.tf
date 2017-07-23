@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" /> 
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <script type="text/javascript" src="teletext-editor.js"></script>
 <script type="text/javascript">
 function init_frames() {
@@ -63,7 +63,7 @@ div.b {
 	/* em width adapts to different browsers' text width whilst permitting
 	us to have the export div match the hints table width */
 	min-width: 23em;
-	height: 518px; /* same as #canvasframe */
+	/* height: 518px; -- same as #canvasframe */
 	margin-left: auto;
 	margin-right: auto;
 	border-collapse: collapse;
@@ -90,6 +90,7 @@ small {
 }
 #hints th {
 	height: 18px;
+	padding: 1px 6px;
 	background-color: #343;
 	font-weight: normal;
 	text-align: center;
@@ -97,7 +98,7 @@ small {
 	white-space: nowrap;
 }
 #hints td {
-	padding: 0 6px;
+	padding: 1px 6px;
 	text-align: right;
 	white-space: nowrap;
 }
