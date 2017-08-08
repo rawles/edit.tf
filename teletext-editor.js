@@ -189,11 +189,14 @@ var init_tip = function() {
 
 	if ( tip_element != null ) { 
 		var tips = [];
-		tips[0] = "Get started with <a href=\"http://examples.edit.tf/\" target=\"_blank\">the archive of example frames</a>.";
-		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>, or tweet <a href=\"https://twitter.com/edit_tf\" target=\"_blank\">@edit_tf</a>.";
-		tips[2] = "Other gratis editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
+		tips[0] = "Get started with <a href=\"http://examples.edit.tf/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
+		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>,<br/>or tweet <a href=\"https://twitter.com/edit_tf\" target=\"_blank\">@edit_tf</a>.";
+		tips[2] = "Other gratis teletext editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
+		tips[3] = "The <a href=\"http://novaparty.org/\" target=\"edit-tf\">Nova</a>&middot18 demoparty will have a teletext compo.<br/>22-24 June 2018, Budleigh Salterton, UK.";
+		tips[4] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
+		tips[5] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
 
-		var randomIndex = Math.floor(Math.random()*3);
+		var randomIndex = Math.floor(Math.random()*6);
 		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
 	}
 }
@@ -1321,8 +1324,16 @@ var draw_status_bar = function() {
 	var ctx = c.getContext("2d");
 
 	// If we're in escape mode, colour the status bar to make it clear.
-	if ( escape == 1 ) { ctx.fillStyle = "#993"; }
-		else { ctx.fillStyle = "#808080"; }
+	if ( escape == 1 ) { 
+		if ( curx_opposite != -1 && cury_opposite != -1
+			&& ( curx_opposite != curx
+			|| cury_opposite != cury ) ) {
+				ctx.fillStyle = "#399";
+			} else {
+				ctx.fillStyle = "#993";
+			}
+	}
+	if ( escape != 1 ) { ctx.fillStyle = "#808080"; }
 
 	// Draw the background to the bar and set up the font.
 	ctx.fillRect(0, (25*20+2)*pix_scale, 40*12*pix_scale, 36*pix_scale);
