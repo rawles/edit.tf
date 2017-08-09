@@ -1325,9 +1325,8 @@ var draw_status_bar = function() {
 
 	// If we're in escape mode, colour the status bar to make it clear.
 	if ( escape == 1 ) { 
-		if ( curx_opposite != -1 && cury_opposite != -1
-			&& ( curx_opposite != curx
-			|| cury_opposite != cury ) ) {
+		if ( curx_opposite != -1 && cury_opposite != -1 
+			&& ( curx_opposite != curx || cury_opposite != cury ) ) {
 				ctx.fillStyle = "#399";
 			} else {
 				ctx.fillStyle = "#993";
@@ -1634,8 +1633,9 @@ this.keydown = function(event) {
 
 	// The editor does nothing with a modifier key event on its own.
 	// therefore, ignore any keydown event which is a modifier key.
+	var shifted = 0;
 	if ( event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ) {
-		return;
+		shifted = 1;
 	}
 
 	var code = ('which' in event) ? event.which : event.keyCode;
@@ -1658,11 +1658,30 @@ this.keydown = function(event) {
 	unhide_status_bar();
 	hide_help_screen();
 
-	// The four cursor keys are handled by their own functions.
-	if ( code == 37 ) { cursor_left(); return; }
-	if ( code == 39 ) { cursor_right(); return; }
-	if ( code == 40 ) { cursor_down(); return; }
-	if ( code == 38 ) { cursor_up(); return; }
+	var rectangle_select = is_rectangle_select();
+	
+	if ( rectangle_select == 0 || ( rectangle_select == 1 && shifted == 0 ) ) {
+		// The four cursor keys are handled by their own functions.
+		if ( code == 37 ) { cursor_left(); return; }
+		if ( code == 39 ) { cursor_right(); return; }
+		if ( code == 40 ) { cursor_down(); return; }
+		if ( code == 38 ) { cursor_up(); return; }
+	}
+	
+	if ( rectangle_select == 1 && shifted == 1 ) { 
+		var x1 = Math.min(curx_opposite, curx);
+		var x2 = Math.max(curx_opposite, curx);
+		var y1 = Math.min(cury_opposite, cury);
+		var y2 = Math.max(cury_opposite, cury);
+		
+		if ( code == 37 ) { shift_sixels(x1, y1, x2, y2, -1, 0); }
+		if ( code == 39 ) { shift_sixels(x1, y1, x2, y2, 1, 0); }
+		if ( code == 40 ) { shift_sixels(x1, y1, x2, y2, 0, 1); }
+		if ( code == 38 ) { shift_sixels(x1, y1, x2, y2, 0, -1); }
+		
+		gfx_change(x1, y1, x2, y2);
+		autorender(x1, y1, 40 - x1, y2 - y1 + 1);
+	}
 
 	// Pressing return is considered a cursor action here.
 	if ( code == 13 ) { cursor_nl(); return; }
@@ -1737,7 +1756,7 @@ this.keypress = function(event) {
 		if ( rectangle_select == 0 && code == 99 ) { // [c]yan
 			placed_code = 6;
 		}
-		if ( rectangle_select == 0 && code == 119 ) { placed_code = 7; }  // [w]hite
+		if ( code == 119 ) { placed_code = 7; }  // [w]hite
 
 		if ( blackfg != 0 && code == 75 )  { placed_code = 16; } // Blac[K]
 		if ( code == 82 )  { placed_code = 17; } // [R]ed
@@ -1746,7 +1765,7 @@ this.keypress = function(event) {
 		if ( code == 66 )  { placed_code = 20; } // [B]lue
 		if ( code == 77 )  { placed_code = 21; } // [M]agenta
 		if ( code == 67 )  { placed_code = 22; } // [C]yan
-		if ( rectangle_select == 0 && code == 87 )  { placed_code = 23; } // [W]hite
+		if ( code == 87 )  { placed_code = 23; } // [W]hite
 
 		// A = allow or disallow black foreground
 		if ( rectangle_select == 0 && code == 65 ) { set_blackfg(1); matched = 1; }
@@ -1935,35 +1954,6 @@ this.keypress = function(event) {
 			}
 		}
 
-		// Shift sixels with [w], [a], [s], [d]
-		if ( rectangle_select == 1 &&
-			( ( code == 87 || code == 119 ) // W
-			|| ( code == 65 || code == 97 ) // A
-			|| ( code == 83 || code == 115 ) // S
-			|| ( code == 68 || code == 100 ) ) // D
-			) {
-			matched = 1;
-			var x1 = Math.min(curx_opposite, curx);
-			var x2 = Math.max(curx_opposite, curx);
-			var y1 = Math.min(cury_opposite, cury);
-			var y2 = Math.max(cury_opposite, cury);
-			if ( code == 87 || code == 119 ) {
-					shift_sixels(x1, y1, x2, y2, 0, -1)
-			}
-			if ( code == 65 || code == 97 ) {
-					shift_sixels(x1, y1, x2, y2, -1, 0)
-			}
-			if ( code == 83 || code == 115 ) {
-					shift_sixels(x1, y1, x2, y2, 0, 1)
-			}
-			if ( code == 68 || code == 100 ) {
-					shift_sixels(x1, y1, x2, y2, 1, 0)
-			}
-			gfx_change(x1, y1, x2, y2);
-			autorender(x1, y1, 40 - x1, y2 - y1 + 1);
-			retain_rectangle = 1;
-			}
-
 		if ( code == 61 ) { // [=] to 'trace-me-do'
 			matched = 1;
 			invert_trace = 0;
@@ -2124,7 +2114,6 @@ var put_char = function(c, r, code) {
 		cc[r][c] = code;
 	}
 }
-
 
 //////////////////
 ///// CURSOR /////
@@ -5135,6 +5124,15 @@ this.is_all_spaces = function() {
 	return true;
 }
 
+var is_rectangle_select = function() { 
+	var rectangle_select = 0;
+	if ( curx_opposite != -1 && cury_opposite != -1
+		&& ( curx_opposite != curx
+			|| cury_opposite != cury ) ) {
+		rectangle_select = 1;
+	}
+	return rectangle_select;
+}
 
 //////////////////////////
 ///// INITIALISATION /////
