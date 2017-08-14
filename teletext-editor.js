@@ -1854,6 +1854,11 @@ this.keypress = function(event) {
 		}
 
 		// We can also switch between character sets here.
+		// & cycles to the next one.
+		if ( code == 38 ) { matched = 1; cycle_charset(); }
+		
+		// The use of digits to select character set is obsolete, but will
+		// remain here until the keys are needed.
 		if ( code == 49 ) { matched = 1; set_charset(0); }   // [1] English
 		if ( code == 50 ) { matched = 1; set_charset(1); }   // [2] German
 		if ( code == 51 ) { matched = 1; set_charset(2); }   // [3] Swedish
@@ -3996,6 +4001,12 @@ var set_charset = function(charset) {
 	render(0,0,40,25,0);
 }
 
+var cycle_charset = function() {
+	cset = ( cset + 1 ) % 8;
+	init_font(cset);
+	render(0,0,40,25,0);
+}
+
 // Given the number of a character set, init_font loads the
 // font into the font array via add_font_char, which implicitly
 // smooths it. Labels for control codes are also loaded, in
@@ -5032,7 +5043,7 @@ var draw_help_screen = function() {
 		[["O", "conceal"],             ["-", "toggle reveal"]],
 		[["U", "duplicate row"],       ["X", "toggle grid"]],
 		[["E", "export frame"],        ["J", "insert block character"]],
-		[["1-8", "switch char sets"],  ["0", "hide status bar"]],
+		[["&", "cycle char sets"],     ["0", "hide status bar"]],
 		[["=", "trace image"],         ["(block) WASD", "shift sixels"]],
 		[["(block) X", "copy block"],  ["(block) V", "paste block"]]
 	];
