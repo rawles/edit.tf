@@ -195,8 +195,9 @@ var init_tip = function() {
 		tips[3] = "The <a href=\"http://novaparty.org/\" target=\"edit-tf\">Nova</a>&middot18 demoparty will have a teletext compo.<br/>22-24 June 2018, Budleigh Salterton, UK.";
 		tips[4] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
 		tips[5] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
+		tips[6] = "Have you seen Mr. Biffo's <a href=\"https://www.youtube.com/playlist?list=PLdmivFeOI4qm27xdZs9-O8wdm2s91uRyx\" target=\"edit-tf\">Found Footage</a> yet?";
 
-		var randomIndex = Math.floor(Math.random()*6);
+		var randomIndex = Math.floor(Math.random()*7);
 		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
 	}
 }
