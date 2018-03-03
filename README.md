@@ -223,10 +223,6 @@ The editor has been used for various events and systems:
 * [Adam Dawes](http://www.adamdawes.com/) adapted this code to make 
   [a cool browser interface](http://www.uniquecodeanddata.co.uk/teletext76/bbc2-19830129/) for Jason's recovered frames, which enables you to select pages by 
   page number and step through subpages.
-* An easy way to share frames is to tweet your editor URLs to us at
-  [@edit_tf](https://twitter.com/edit_tf) and we'll convert it to
-  an image and retweet it. This allows other people to see how frames are  
-  constructed and learn from what you've done!
 * Heather Merrick uses the editor to prepare
   [Teletext News](https://teletextnews.com/). She describes the process in 
   [an article](https://medium.com/@heathermerrick/teletext-news-behind-the-scenes-372ca36ec179).
@@ -264,11 +260,8 @@ we keep them here.
 
 ## Example frames 
 
-There is a growing [gallery of frames submitted to the Twitter account](http://examples.edit.tf/), intended as a starting point for new users.
+There is a growing [gallery of frames](http://examples.edit.tf/), intended as a starting point for new users.
 Clicking on any frame will cause it to load in the editor.
-Please consider contributing your own. Assuming that you're logged into
-Twitter, a very easy way to do this is to go to the export teletext menu
-using `Esc E` and then click the link to tweet the frame to the archive.
 
 ### Test frames
 

@@ -190,7 +190,7 @@ var init_tip = function() {
 	if ( tip_element != null ) { 
 		var tips = [];
 		tips[0] = "Get started with <a href=\"http://examples.edit.tf/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
-		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>, or tweet <a href=\"https://twitter.com/edit_tf\" target=\"_blank\">@edit_tf</a>.";
+		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>.";
 		tips[2] = "Other gratis teletext editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
 		tips[3] = "Have you seen Mr. Biffo's <a href=\"https://www.youtube.com/playlist?list=PLdmivFeOI4qm27xdZs9-O8wdm2s91uRyx\" target=\"edit-tf\">Found Footage</a> yet?";
 		tips[4] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
@@ -1204,8 +1204,7 @@ var export_frame = function() {
 		+ "<a href=\""+datauri_tti+"\">TTI</a>, "
 			+ "<a href=\""+datauri_ep1+"\">EP1</a>, "
 			+ "<a href=\""+datauri_png+"\">PNG</a>, "
-		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">zxnet editor</a>, "
-		+ "<a href=\"http://twitter.com/home?status=@edit_tf http://edit.tf/%23"+hashstring+"\" target=\"_blank\">tweet this frame to examples.edit.tf</a>"
+		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">zxnet editor</a>"
 		+ "</div>";
 	active_export = 1;
 }
