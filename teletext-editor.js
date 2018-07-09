@@ -2615,8 +2615,7 @@ var place_code = function(x,y,code,andrender) {
 
 		if ( sc[y][x] == 1 ) {
 			// If we're concealing, this got cancelled by this
-			// colour code. Note that conceal is set-at.
-			sc[y][x] = 0;
+			// colour code. Remains concealed for this character
 			sc_affected = 0;
 			}
 
@@ -2842,7 +2841,7 @@ var place_code = function(x,y,code,andrender) {
 			|| ( cc[y][c] > 16 && cc[y][c] < 24 )
 			|| ( blackfg != 0 && cc[y][c] == 0 )
 			|| ( blackfg != 0 && cc[y][c] == 16 ) ) {
-				limit = c; break;
+				limit = c + 1; break;
 			}
 			// If another conceal character is encountered, then
 			// it has 'taken over' and we can stop. Conceal is
@@ -3154,7 +3153,7 @@ var check_for_remove_code = function(x, y, andrender) {
 			|| ( blackfg != 0 && cc[y][c] == 0 )
 			|| ( blackfg != 0 && cc[y][c] == 16 ) ) {
 				// text or graphics character has been found.
-				limit = c; break;
+				limit = c + 1; break;
 			}
 			if  ( cc[y][c] == 24 ) {
 				// Another conceal character has taken over. It's
@@ -3399,12 +3398,6 @@ var render = function(x, y, w, h) {
 					// We're not showing control characters, so this
 					// appears as the space.
 
-					// Concealed text with reveal off appears as text
-					// spaces.
-					if ( esc == 1 && reveal == 0 ) {
-						ecc = spacecc; etg = 0;
-					}
-
 					// These unsupported character codes appear as spaces
 					// too, but only if in text mode. In graphics mode, these
 					// might be substituted by the held graphics character.
@@ -3490,6 +3483,12 @@ var render = function(x, y, w, h) {
 							etg = tg[copyfromy][copyfromx];
 						}
 
+					}
+					
+					// Concealed text with reveal off appears as text
+					// spaces.
+					if ( esc == 1 && reveal == 0 ) {
+						ecc = spacecc; etg = 0;
 					}
 				}
 				else {
