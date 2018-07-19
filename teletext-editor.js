@@ -189,7 +189,7 @@ var init_tip = function() {
 
 	if ( tip_element != null ) { 
 		var tips = [];
-		tips[0] = "Get started with <a href=\"http://examples.edit.tf/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
+		tips[0] = "Get started with <a href=\"https://www.rawles.net/teletext/examples/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
 		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>.";
 		tips[2] = "Other gratis teletext editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
 		tips[3] = "Have you seen Mr. Biffo's <a href=\"https://www.youtube.com/playlist?list=PLdmivFeOI4qm27xdZs9-O8wdm2s91uRyx\" target=\"edit-tf\">Found Footage</a> yet?";

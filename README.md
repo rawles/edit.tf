@@ -260,7 +260,7 @@ we keep them here.
 
 ## Example frames 
 
-There is a growing [gallery of frames](http://examples.edit.tf/), intended as a starting point for new users.
+There is a growing [gallery of frames](https://www.rawles.net/teletext/examples/), intended as a starting point for new users.
 Clicking on any frame will cause it to load in the editor.
 
 ### Test frames
