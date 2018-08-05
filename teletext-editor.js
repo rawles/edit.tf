@@ -1,3 +1,6 @@
+// @licstart  The following is the entire license notice for the 
+//  JavaScript code in this page.
+//
 // Copyright 2015-2017 Simon Rawles, Alan Davies, Tim Hutton, Steve
 // Horsley, Alistair Cree, Peter Fagan and David Hall.
 //
@@ -14,6 +17,9 @@
 // that code without the copy of the GNU GPL normally required by
 // section 4, provided you include this license notice and a URL
 // through which recipients can access the Corresponding Source.
+//
+// @licend  The above is the entire license notice for the JavaScript
+//  code in this page.
 
 // Several editors can be on a single page. We need to keep track of
 // which editor receives keypresses and mouse events.
