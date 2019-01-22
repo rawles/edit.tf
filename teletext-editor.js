@@ -198,12 +198,13 @@ var init_tip = function() {
 		tips[0] = "Get started with <a href=\"https://www.rawles.net/teletext/examples/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
 		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>.";
 		tips[2] = "Other gratis teletext editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
-		tips[3] = "Have you seen Mr. Biffo's <a href=\"https://www.youtube.com/playlist?list=PLdmivFeOI4qm27xdZs9-O8wdm2s91uRyx\" target=\"edit-tf\">Found Footage</a> yet?";
-		tips[4] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
-		tips[5] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
-		tips[6] = "The <a href=\"http://db.viewdata.org.uk/\" target=\"edit-tf\">Viewdata Frame Database</a> contains many<br/>frames which you can open in this editor.";
+		tips[3] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
+		tips[4] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
+		tips[5] = "The <a href=\"http://db.viewdata.org.uk/\" target=\"edit-tf\">Viewdata Frame Database</a> contains many<br/>frames which you can open in this editor.";
+		tips[6] = "Please remember to post your editor URLs on the web or social media platforms so others can play with your design!";
+		tips[7] = "Please remember to post your editor URLs on the web or social media platforms so others can play with your design!";
 
-		var randomIndex = Math.floor(Math.random()*7);
+		var randomIndex = Math.floor(Math.random()*8);
 		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
 	}
 }
