@@ -201,8 +201,8 @@ var init_tip = function() {
 		tips[3] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
 		tips[4] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
 		tips[5] = "The <a href=\"http://db.viewdata.org.uk/\" target=\"edit-tf\">Viewdata Frame Database</a> contains many<br/>frames which you can open in this editor.";
-		tips[6] = "Please remember to post your editor URLs on the web or social media platforms so others can play with your design!";
-		tips[7] = "Please remember to post your editor URLs on the web or social media platforms so others can play with your design!";
+		tips[6] = "Please remember to post your editor URLs on the web or<br/>social media platforms so others can play with your design!";
+		tips[7] = "Please remember to post your editor URLs on the web or<br/>social media platforms so others can play with your design!";
 
 		var randomIndex = Math.floor(Math.random()*8);
 		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
