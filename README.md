@@ -1,3 +1,11 @@
+Quick links:
+* [edit-tf development blog](https://www.rawles.net/teletext/edit-tf/)
+* Free teletext editors:
+[edit-tf](http://edit.tf),
+[zxnet](https://zxnet.co.uk/teletext/editor/),
+[wxTED](https://github.com/peterkvt80/wxted)
+* [How-to guide](http://edit.tf/doc/handy-howto.pdf)
+
 # The edit.tf teletext editor
 
 This is a teletext editor implemented in JavaScript, so that people now 
@@ -243,7 +251,7 @@ The editor has starred in the following videos:
 
 ## Compatibility
 
-* The Windows-based teletext editor [wxTED](http://teastop.co.uk/teletext/wxted/) by Peter Kwan - @peterkvt80 - has 
+* The Windows-based teletext editor [wxTED](https://github.com/peterkvt80/wxted/releases) by Peter Kwan - @peterkvt80 - has 
   implemented import from, and export to, the URLs used in this editor.
   Peter has also produced a Raspberry Pi teletext editor and other cool 
   teletext technologies.

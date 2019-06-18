@@ -134,8 +134,6 @@ var active_export = 0;
 		 // which should be invalidated on a change.
 var canvasid = "canvas";
 		 // The HTML id for the canvas.
-var tipid = "tip";
-		 // The HTML id for the canvas.
 
 // Page metadata:
 var m_page = 0x100; // This page's number within the magazine.
@@ -164,8 +162,6 @@ var init_state = function() {
 
 	init_canvas();
 
-	init_tip();
-
 	// Set up the arrays...
 	for (var r = 0; r <= 24; r++) {
 		cc[r] = []; fg[r] = []; bg[r] = [];
@@ -187,27 +183,6 @@ var init_state = function() {
 	load_from_hash();
 }
 
-// init_tip() updates the 'tip' part of the hints table, if it exists
-// on the page this editor is on, with a new, randomly-chosen hint.
-var init_tip = function() { 
-
-	var tip_element = document.getElementById(tipid);
-
-	if ( tip_element != null ) { 
-		var tips = [];
-		tips[0] = "Get started with <a href=\"https://www.rawles.net/teletext/examples/\" target=\"_blank\">the archive of example frames</a><br/>and consider submitting your own.";
-		tips[1] = "For help see the <a href=\"doc/handy-howto.pdf\" target=\"edit-tf\">how-to guide</a>.";
-		tips[2] = "Other gratis teletext editors are available!<br/>Check out <a href=\"http://zxnet.co.uk/teletext/editor/\" target=\"edit-tf\">the zxnet editor</a> and <a href=\"http://teastop.co.uk/teletext/wxted/\" target=\"edit-tf\">wxTED</a>.";
-		tips[3] = "Why not submit your frames to <a href=\"http://teastop.plus.com:8080/\" target=\"edit-tf\">Teefax</a>,<br/>the community teletext service?";
-		tips[4] = "Please consider supporting teletext artists!<br/><a href=\"https://www.patreon.com/horsenburger\" target=\"edit-tf\">Horsenburger's Patreon page</a>.";
-		tips[5] = "The <a href=\"http://db.viewdata.org.uk/\" target=\"edit-tf\">Viewdata Frame Database</a> contains many<br/>frames which you can open in this editor.";
-		tips[6] = "Please remember to post your editor URLs on the web<br/>or social media for others to play with!";
-		tips[7] = "Please remember to post your editor URLs on the web<br/>or social media for others to play with!";
-
-		var randomIndex = Math.floor(Math.random()*8);
-		tip_element.innerHTML = "&#x1f4a1;" + tips[randomIndex];
-	}
-}
 
 // init_canvas() is called also when the aspect ratio is adjusted.
 var init_canvas = function() {
