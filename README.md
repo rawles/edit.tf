@@ -1,10 +1,12 @@
 Quick links:
-* [edit-tf development blog](https://www.rawles.net/teletext/edit-tf/)
+* [edit-tf development blog](https://www.rawles.net/teletext/edit-tf/).
 * Free teletext editors:
 [edit-tf](http://edit.tf),
 [zxnet](https://zxnet.co.uk/teletext/editor/),
-[wxTED](https://github.com/peterkvt80/wxted)
-* [How-to guide](http://edit.tf/doc/handy-howto.pdf)
+[wxTED](https://github.com/peterkvt80/wxted).
+* [How-to guide](http://edit.tf/doc/handy-howto.pdf),
+[how-to video](https://www.youtube.com/watch?v=S5WNmw9AHWQ),
+[example frames](https://www.rawles.net/teletext/examples/).
 
 # The edit.tf teletext editor
 
