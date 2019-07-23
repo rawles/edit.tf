@@ -1,7 +1,7 @@
 Quick links:
-* [edit-tf development blog](https://www.rawles.net/teletext/edit-tf/).
+* [edit.tf development blog](https://www.rawles.net/teletext/edit-tf/).
 * Free teletext editors:
-[edit-tf](http://edit.tf),
+[edit.tf](http://edit.tf),
 [zxnet](https://zxnet.co.uk/teletext/editor/),
 [wxTED](https://github.com/peterkvt80/wxted).
 * [How-to guide](http://edit.tf/doc/handy-howto.pdf),
@@ -131,7 +131,7 @@ follows.
 
     }
     </script>
-    <title>edit-tf</title>
+    <title>edit.tf</title>
     </head>
     
     <!-- The editor canvas is set up by a call to the function above. -->
@@ -164,7 +164,7 @@ way, please comment on issue #3 so that everybody can suggest ways for
 you to help.
 
 Another very useful way to help is to read
-[the issues for which opinions are currently sought](https://github.com/rawles/edit-tf/labels/opinions%20sought) and contribute to the discussion. The
+[the issues for which opinions are currently sought](https://github.com/rawles/edit.tf/labels/opinions%20sought) and contribute to the discussion. The
 more opinions we have on how we can develop the editor, the more likely we're
 going to make it into a useful tool for everyone.
 
