@@ -153,6 +153,8 @@ var m_fastext_index = 0x8FF;
 			// Also hexadecimal, but may be 0x8FF to indicate
 			// no link.
 
+var update_hash_timeout; // timer to throttle url updates
+
 // Initialises the state of the screen.
 var init_state = function() {
 
@@ -3315,7 +3317,8 @@ var render = function(x, y, w, h) {
 
 	// It's time to save the frame to the hash. This is inefficient -
 	// we should do this only when there's been a change.
-	save_to_hash();
+	clearTimeout( update_hash_timeout );
+	update_hash_timeout = setTimeout( save_to_hash ,100); // wait 100 milliseconds before calculating a url hash
 
 	var c = document.getElementById(canvasid);
 	var ctx = c.getContext("2d");
