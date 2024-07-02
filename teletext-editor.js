@@ -1193,8 +1193,17 @@ var export_frame = function() {
 	var datauri_hs =
 		"data:text/plain;base64,"+window.btoa(hashstring);
 
-	var datauri_png =
-		document.getElementById('frame').toDataURL('image/png');
+	var pngCanvas = document.createElement("canvas");
+	var pngCanvasContext = pngCanvas.getContext("2d");
+	pngCanvas.width = 576;
+	pngCanvas.height = 500;
+	pngCanvasContext.drawImage(document.getElementById("frame"),0,0,480,500,0,0,576,500);
+	var datauri_png = pngCanvas.toDataURL('image/png');
+	pngCanvas.width = 2880;
+	pngCanvas.height = 2500;
+	pngCanvasContext.imageSmoothingEnabled = false;
+	pngCanvasContext.drawImage(document.getElementById("frame"),0,0,480,500,0,0,2880,2500);
+	var datauri_pnghires = pngCanvas.toDataURL('image/png');
 
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as: "
@@ -1204,6 +1213,7 @@ var export_frame = function() {
 		+ "<a href=\""+datauri_tti+"\">TTI</a>, "
 			+ "<a href=\""+datauri_ep1+"\">EP1</a>, "
 			+ "<a href=\""+datauri_png+"\">PNG</a>, "
+			+ "<a href=\""+datauri_pnghires+"\">High res PNG</a>, "
 		+ "<a href=\"http://zxnet.co.uk/teletext/editor/#"+hashstring+"\" target=\"_blank\">zxnet editor</a>"
 		+ "</div>";
 	active_export = 1;
