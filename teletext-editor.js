@@ -1178,6 +1178,77 @@ var export_frame = function() {
 	var datauri_png =
 		document.getElementById('frame').toDataURL('image/png');
 
+
+/* BEGIN 7r1x patch: adding hash data as png metadata chunk *****/
+  const str2bytes = s => s.split('').map(c => c.charCodeAt(0))
+  const ube32 = n => [3,2,1,0].map(s => (n >> s * 8) & 0xff)
+  const makeCRCTable = () => {
+    var c;
+    var crcTable = [];
+    for(var n =0; n < 256; n++){
+      c = n;
+      for(var k =0; k < 8; k++){
+        c = ((c&1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+      }
+      crcTable[n] = c;
+    }
+    return crcTable;
+  }
+
+  const crc32 = (bytes) => {
+    var crcTable = window.crcTable || (window.crcTable = makeCRCTable());
+    var crc = 0 ^ (-1);
+
+    for (var i = 0; i < bytes.length; i++ ) {
+      crc = (crc >>> 8) ^ crcTable[(crc ^ bytes[i]) & 0xFF];
+    }
+
+    return (crc ^ (-1)) >>> 0;
+  };
+
+  var b64str = datauri_png.substring(datauri_png.indexOf(',') + 1)
+  var pngData = Uint8Array.from(atob(b64str), v => v.charCodeAt(0))
+
+  // split the png after the IHDR
+  const splitPoint = 33
+  const head = pngData.subarray(0, splitPoint)
+  const tail = pngData.subarray(splitPoint)
+
+  // NB. Modify this to add whatever data is desired in the comment field
+  // Or even add new fields
+  var payloadText = 'Comment\0' + window.location // datauri_hs // datauri_0
+  /////////////////////////////////////////
+
+  var chunkBytes = [...str2bytes('tEXt'), ...str2bytes(payloadText)]
+  var chunkCRC = crc32(chunkBytes)
+  // console.log('CHUNK CRC', chunkCRC.toString(16))
+  // you can verify this once saved using: 'pngcheck -vt image.png', it will complain about the crc if wrong!
+
+  var injectedPngData = Uint8Array.from([
+    ...head,
+    ...ube32(payloadText.length),
+    ...chunkBytes,
+    ...ube32(chunkCRC),
+    ...tail
+  ])
+
+  // ugliness to turn a uint8array into a string before calling btoa
+  const uint8array2base64 = uint8array2 => btoa(uint8array2.reduce((acc, v) => acc.concat(String.fromCharCode(v)), []).join(''))
+  // TODO do we need to base64url this instead?
+
+  // Now overwrite the old png uri with our new metadata-injected version
+  datauri_png = "data:image/png;base64," + uint8array2base64(injectedPngData)
+
+  // TODO offer a named download
+  // TODO consider hijacking the right click on canvas to make it offer the metadata png too?
+  // const blob = new Blob([injectedPngData], { type: 'image/png' })
+  // const url = window.URL.createObjectURL(blob)
+  // const link = document.createElement('a')
+  // link.href = window.URL.createObjectURL(blob)
+  // link.download = "frame.png"
+  // link.click()
+  /* END 7r1x patch ***************************************************/
+
 	document.getElementById('export').innerHTML =
 		"<div class=\"exportbox\">Export as: "
 		+ "<a href=\""+datauri_hs+"\">URI hash</a>, "
