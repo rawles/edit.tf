@@ -92,56 +92,57 @@ those frames.
 Some HTML source to do this, as well as to set some other options,
 follows.
 
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    
-    <!-- Read in the editor source -->
-    <script type="text/javascript" src="http://edit.tf/teletext-editor.js"></script>
-    
-    <!-- Set up an editor -->
-    <script type="text/javascript">
-    function init_frames() {
-    
-        // Create a new editor:
-        var editor = new Editor();
-    
-        // Make it the active editor so it receives keypresses:
-        active_editor = editor;
-    
-        // Also make it the editor which reads from and writes to the URL:
-        url_editor = editor;
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-        // Set the relative size of the editor. We might like it to be rendered
-        // at half size (full size is 480x540). This can be omitted.
-        editor.set_size(0.5);
-    
-        // Initialise the editor, placing it in the canvas with HTML ID 'frame'.
-        editor.init_frame("frame");
+<!-- Read in the editor source -->
+<script type="text/javascript" src="http://edit.tf/teletext-editor.js"></script>
 
-        // Set the editor to display the frame with reveal enabled. Possible
-        // values are 0 (off) and 1 (on).
-        editor.set_reveal(1);
-    
-        // You can also give the editor an encoded URL hash string to 
-        // display/edit. Here's the teletext engineering testcard!
-        editor.load("0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAueH8yZosePmAg06Dizo8mdFi0pM6OgJHBh7mVHER5QeHYMi54fzJmix4-YCDToOLOjyZ0WLSkzo6AkcGHuZUcRHlB4dgy_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2DQoaPcyJkqAKgRqAKdBVMvPogoYc-VAgODDxLmWMEwBcwBYNSho9zImSoAqBGoAp0FUy8-iChhz5UCA4MPEuZYwTAFzAFg1AgAKAAgAnkB5AXWEyZYsSJEipUiRKFCiBAUAAQAEABAAWDf9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YOAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBg5_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2LACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAYsf3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_39iyAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgGLP9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YtAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBi1_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2Lavo09MoOzl2bN_cND84dwKPyy5dwWbhz5d3TCBpZcgSFs65S5pCiRk0iVMnLKFKpWSWLVy8ywYsmZVo1bNyLhy6dlHj18_QIEKJGgSJUydAoUqlaBYtXL0DBiyZoGjVs3QOHLp2gePXz9BAgwoaCJFjR0EiTKloJk2dPQUKNKmgqVa1dBYs2raC5dvX0GDDixoMmXNnQaNOrWg2bd29Bw48uaDp17d0Hjz69oPn39_KYMOLGRyZc2cro06tZLZt3bzXDjy5lunXt3J-PPr2X-ff38GYh792PLh2CI2zDz0A1QsXC3-BNPplw5PJiPv3ZRQp-WvfwUXdn07suXlp3Z0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+<!-- Set up an editor -->
+<script type="text/javascript">
+function init_frames() {
 
-    }
-    </script>
-    <title>edit.tf</title>
-    </head>
-    
-    <!-- The editor canvas is set up by a call to the function above. -->
-    <body onload="init_frames();">
-    
-    <!-- A canvas is defined with the appropriate name. -->
-    <canvas id="frame"></canvas>
-    
-    </body>
-    </html>
+    // Create a new editor:
+    var editor = new Editor();
 
+    // Make it the active editor so it receives keypresses:
+    active_editor = editor;
+
+    // Also make it the editor which reads from and writes to the URL:
+    url_editor = editor;
+
+    // Set the relative size of the editor. We might like it to be rendered
+    // at half size (full size is 480x540). This can be omitted.
+    editor.set_size(0.5);
+
+    // Initialise the editor, placing it in the canvas with HTML ID 'frame'.
+    editor.init_frame("frame");
+
+    // Set the editor to display the frame with reveal enabled. Possible
+    // values are 0 (off) and 1 (on).
+    editor.set_reveal(1);
+
+    // You can also give the editor an encoded URL hash string to 
+    // display/edit. Here's the teletext engineering testcard!
+    editor.load("0:QIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECBAgQIECAueH8yZosePmAg06Dizo8mdFi0pM6OgJHBh7mVHER5QeHYMi54fzJmix4-YCDToOLOjyZ0WLSkzo6AkcGHuZUcRHlB4dgy_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2DQoaPcyJkqAKgRqAKdBVMvPogoYc-VAgODDxLmWMEwBcwBYNSho9zImSoAqBGoAp0FUy8-iChhz5UCA4MPEuZYwTAFzAFg1AgAKAAgAnkB5AXWEyZYsSJEipUiRKFCiBAUAAQAEABAAWDf9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YOAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBg5_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2LACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAYsf3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_39iyAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgGLP9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9_YtAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIACAAgAIBi1_f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f_3_9__f2Lavo09MoOzl2bN_cND84dwKPyy5dwWbhz5d3TCBpZcgSFs65S5pCiRk0iVMnLKFKpWSWLVy8ywYsmZVo1bNyLhy6dlHj18_QIEKJGgSJUydAoUqlaBYtXL0DBiyZoGjVs3QOHLp2gePXz9BAgwoaCJFjR0EiTKloJk2dPQUKNKmgqVa1dBYs2raC5dvX0GDDixoMmXNnQaNOrWg2bd29Bw48uaDp17d0Hjz69oPn39_KYMOLGRyZc2cro06tZLZt3bzXDjy5lunXt3J-PPr2X-ff38GYh792PLh2CI2zDz0A1QsXC3-BNPplw5PJiPv3ZRQp-WvfwUXdn07suXlp3Z0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+}
+</script>
+<title>edit.tf</title>
+</head>
+
+<!-- The editor canvas is set up by a call to the function above. -->
+<body onload="init_frames();">
+
+<!-- A canvas is defined with the appropriate name. -->
+<canvas id="frame"></canvas>
+
+</body>
+</html>
+```
 When this page is loaded, an editor frame should appear, populated with
 the encoded page. When you edit it, the URL will reflect the changing
 contents of the frame.
